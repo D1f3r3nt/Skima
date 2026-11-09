@@ -1,0 +1,228 @@
+{
+  "version": 1,
+  "documents": [
+    {
+      "id": "agent-clis-headless-reference",
+      "title": "Coding agent CLIs - headless usage, skills and MCP locations (maintainers)",
+      "description": "Reference for maintainers of Skima's agent bridge - how to run each CLI without UI, its flags for model, effort, permissions, output and web access, and where each agent stores skills and MCP config. Never sent to a model.",
+      "tags": [
+        "maintainers",
+        "agent-bridge",
+        "cli",
+        "claude-code",
+        "codex",
+        "opencode",
+        "gemini-cli",
+        "paths"
+      ],
+      "audience": "maintainers",
+      "appliesTo": [
+        "agent-bridge",
+        "provider-registry"
+      ],
+      "confidence": "medium",
+      "retrievedAt": "2026-11-09",
+      "reviewAfter": "2027-01-09",
+      "estimatedTokens": 1612,
+      "file": "agent-clis-headless-reference.md"
+    },
+    {
+      "id": "mcp-server-best-practices-and-security",
+      "title": "MCP servers - configuration basics and security risks",
+      "description": "How MCP servers are configured per agent and the main risks (local command execution, token passthrough, SSRF, excessive scopes) with the mitigations to apply when installing or reviewing one. Read it before installing or reviewing an MCP server.",
+      "tags": [
+        "mcp",
+        "security",
+        "configuration",
+        "install",
+        "review"
+      ],
+      "audience": "ai",
+      "appliesTo": [
+        "mcp-install",
+        "mcp-security-review"
+      ],
+      "confidence": "medium",
+      "retrievedAt": "2026-11-09",
+      "reviewAfter": "2027-02-09",
+      "estimatedTokens": 1114,
+      "file": "mcp-server-best-practices-and-security.md"
+    },
+    {
+      "id": "skill-authoring-best-practices",
+      "title": "How to write an effective skill",
+      "description": "Practical rules for writing a SKILL.md that an agent follows well - conciseness, degrees of freedom, progressive disclosure, workflows, examples and common mistakes. Read it before writing or rewriting skill content.",
+      "tags": [
+        "skills",
+        "authoring",
+        "conciseness",
+        "progressive-disclosure",
+        "workflows"
+      ],
+      "audience": "ai",
+      "appliesTo": [
+        "skill-optimize-en",
+        "skill-wizard"
+      ],
+      "confidence": "high",
+      "retrievedAt": "2026-11-09",
+      "reviewAfter": "2027-05-09",
+      "estimatedTokens": 1120,
+      "file": "skill-authoring-best-practices.md"
+    },
+    {
+      "id": "skill-description-writing",
+      "title": "Writing the skill description field",
+      "description": "Rules and good/bad examples for the SKILL.md description, the text agents use to decide when to activate a skill. Read it whenever you write or rewrite a description.",
+      "tags": [
+        "skills",
+        "description",
+        "triggers",
+        "discovery"
+      ],
+      "audience": "ai",
+      "appliesTo": [
+        "skill-optimize-en",
+        "skill-wizard"
+      ],
+      "confidence": "high",
+      "retrievedAt": "2026-11-09",
+      "reviewAfter": "2027-05-09",
+      "estimatedTokens": 735,
+      "file": "skill-description-writing.md"
+    },
+    {
+      "id": "skill-instruction-style-for-llms",
+      "title": "Writing instructions an AI agent follows, and translating them safely",
+      "description": "Style rules for imperative, unambiguous agent instructions, plus how to translate and condense user text into English without losing code, commands, paths or identifiers. Read it before rewriting or translating skill content.",
+      "tags": [
+        "instructions",
+        "style",
+        "translation",
+        "condensing",
+        "prompting"
+      ],
+      "audience": "ai",
+      "appliesTo": [
+        "skill-optimize-en"
+      ],
+      "confidence": "medium",
+      "retrievedAt": "2026-11-09",
+      "reviewAfter": "2027-05-09",
+      "estimatedTokens": 870,
+      "file": "skill-instruction-style-for-llms.md"
+    },
+    {
+      "id": "skill-quality-optimization-criteria",
+      "title": "Criteria to judge whether a skill is well optimised",
+      "description": "A rubric for token cost, size, redundancy, activation precision, progressive disclosure and testability of a skill. Read it when scoring or improving an existing skill.",
+      "tags": [
+        "skills",
+        "quality",
+        "optimization",
+        "tokens",
+        "rubric"
+      ],
+      "audience": "ai",
+      "appliesTo": [
+        "skill-quality-review"
+      ],
+      "confidence": "medium",
+      "retrievedAt": "2026-11-09",
+      "reviewAfter": "2027-05-09",
+      "estimatedTokens": 795,
+      "file": "skill-quality-optimization-criteria.md"
+    },
+    {
+      "id": "skill-security-review",
+      "title": "Security review criteria for skills",
+      "description": "Risk signals and a severity rubric to judge whether a skill (instructions, scripts and supply chain) is safe to install. Read it when reviewing or scoring a third-party skill.",
+      "tags": [
+        "security",
+        "skills",
+        "review",
+        "prompt-injection",
+        "supply-chain",
+        "rubric"
+      ],
+      "audience": "ai",
+      "appliesTo": [
+        "skill-security-review"
+      ],
+      "confidence": "medium",
+      "retrievedAt": "2026-11-09",
+      "reviewAfter": "2027-02-09",
+      "estimatedTokens": 1033,
+      "file": "skill-security-review.md"
+    },
+    {
+      "id": "skill-spec",
+      "title": "Agent Skills format specification (SKILL.md)",
+      "description": "Exact folder layout, frontmatter fields and limits, naming rules and validation for an Agent Skill. Read it to generate or validate a SKILL.md.",
+      "tags": [
+        "skills",
+        "specification",
+        "frontmatter",
+        "validation",
+        "limits"
+      ],
+      "audience": "ai",
+      "appliesTo": [
+        "skill-optimize-en",
+        "skill-wizard",
+        "installed-scanner",
+        "skill-manifest-validator"
+      ],
+      "confidence": "high",
+      "retrievedAt": "2026-11-09",
+      "reviewAfter": "2027-05-09",
+      "estimatedTokens": 1112,
+      "file": "skill-spec.md"
+    },
+    {
+      "id": "skill-structure-template",
+      "title": "Optimal SKILL.md structure used by Skima",
+      "description": "The section-by-section SKILL.md template Skima generates, with the purpose of each section and what each slot must contain. Read it to fill or check the template slots.",
+      "tags": [
+        "skills",
+        "template",
+        "structure",
+        "sections"
+      ],
+      "audience": "ai",
+      "appliesTo": [
+        "skill-optimize-en",
+        "skill-wizard",
+        "skill-template"
+      ],
+      "confidence": "medium",
+      "retrievedAt": "2026-11-09",
+      "reviewAfter": "2027-05-09",
+      "estimatedTokens": 831,
+      "file": "skill-structure-template.md"
+    },
+    {
+      "id": "untrusted-content-and-prompt-injection",
+      "title": "Handling untrusted content and prompt injection",
+      "description": "How to pass READMEs, form answers and third-party files to a model safely - delimit data, read-only, no tools, validate output. Read it whenever a prompt includes text the application does not control.",
+      "tags": [
+        "security",
+        "prompt-injection",
+        "untrusted-input",
+        "delimiting",
+        "validation"
+      ],
+      "audience": "ai",
+      "appliesTo": [
+        "skill-optimize-en",
+        "skill-security-review",
+        "readme-summary"
+      ],
+      "confidence": "high",
+      "retrievedAt": "2026-11-09",
+      "reviewAfter": "2027-02-09",
+      "estimatedTokens": 906,
+      "file": "untrusted-content-and-prompt-injection.md"
+    }
+  ]
+}

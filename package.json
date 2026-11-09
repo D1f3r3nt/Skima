@@ -1,0 +1,88 @@
+{
+  "name": "skima",
+  "version": "1.0.0",
+  "description": "Gestor de skills, servidores MCP y artefactos de IA para agentes de programación.",
+  "license": "ISC",
+  "author": "Marc Santisteban",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test \"test/**/*.test.js\"",
+    "sot:index": "node scripts/sourceOfTruthTasks.js index",
+    "sot:check": "node scripts/sourceOfTruthTasks.js check",
+    "sot:stale": "node scripts/sourceOfTruthTasks.js stale",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "26.18.0"
+  },
+  "dependencies": {
+    "fflate": "0.7.5",
+    "highlight.js": "11.12.0",
+    "jsonc-parser": "3.3.1",
+    "marked": "18.1.1",
+    "marked-highlight": "2.2.4",
+    "sanitize-html": "2.18.1",
+    "smol-toml": "1.9.1",
+    "tar": "7.5.22",
+    "yaml": "2.9.1"
+  },
+  "build": {
+    "appId": "com.skima.app",
+    "productName": "Skima",
+    "directories": {
+      "output": "dist",
+      "buildResources": "src/assets/icons"
+    },
+    "files": [
+      "main.js",
+      "package.json",
+      "src/**/*",
+      "!**/*.map"
+    ],
+    "extraResources": [
+      {
+        "from": "source-of-truth",
+        "to": "source-of-truth",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "src/assets/icons/skima.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.developer-tools",
+      "icon": "src/assets/icons/skima.png",
+      "identity": null
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Development",
+      "icon": "src/assets/icons/skima.png",
+      "maintainer": "Marc Santisteban <santistebanmarc@gmail.com>"
+    }
+  }
+}

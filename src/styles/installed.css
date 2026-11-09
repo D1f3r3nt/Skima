@@ -1,0 +1,104 @@
+.installed-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.installed-list__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.installed-list__search {
+    flex: 1;
+}
+
+.installed-list__agent {
+    width: 220px;
+}
+
+.installed-list__status {
+    margin: 0;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.installed-list--loading .installed-list__items {
+    opacity: 0.6;
+}
+
+.installed-list__items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.installed-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-large);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.installed-row:hover {
+    background: var(--color-surface-raised);
+    border-color: var(--color-border);
+}
+
+.installed-row .search-result__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: var(--radius-medium);
+    background: color-mix(in srgb, var(--artifact-color) 16%, transparent);
+    color: var(--artifact-color);
+}
+
+.installed-row__text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.installed-row__title-row,
+.installed-row__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.installed-row__name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-strong);
+}
+
+.installed-row__description {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--color-text-muted);
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.installed-row__origin {
+    font-size: 11.5px;
+    color: var(--color-text-muted);
+}

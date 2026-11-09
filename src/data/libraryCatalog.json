@@ -1,0 +1,282 @@
+[
+    {
+        "type": "subagent",
+        "name": "code-reviewer",
+        "description": "Revisa el código a fondo buscando problemas de calidad, vulnerabilidades de seguridad y desviaciones de las buenas prácticas.",
+        "source": "VoltAgent/awesome-claude-code-subagents",
+        "url": "https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/04-quality-security/code-reviewer.md"
+    },
+    {
+        "type": "subagent",
+        "name": "debugger",
+        "description": "Diagnostica y corrige bugs, encuentra la causa raíz de los fallos y analiza logs de errores y stack traces.",
+        "source": "VoltAgent/awesome-claude-code-subagents",
+        "url": "https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/04-quality-security/debugger.md"
+    },
+    {
+        "type": "subagent",
+        "name": "security-auditor",
+        "description": "Realiza auditorías de seguridad, evaluaciones de cumplimiento y análisis de riesgos de sistemas e infraestructura.",
+        "source": "VoltAgent/awesome-claude-code-subagents",
+        "url": "https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/04-quality-security/security-auditor.md"
+    },
+    {
+        "type": "subagent",
+        "name": "test-automator",
+        "description": "Construye y mejora frameworks de tests automatizados, crea scripts de prueba y los integra en pipelines de CI/CD.",
+        "source": "VoltAgent/awesome-claude-code-subagents",
+        "url": "https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/04-quality-security/test-automator.md"
+    },
+    {
+        "type": "subagent",
+        "name": "frontend-developer",
+        "description": "Desarrolla aplicaciones frontend completas con React, Vue o Angular e integración con el resto del stack.",
+        "source": "VoltAgent/awesome-claude-code-subagents",
+        "url": "https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/01-core-development/frontend-developer.md"
+    },
+    {
+        "type": "subagent",
+        "name": "backend-developer",
+        "description": "Construye APIs de servidor, microservicios y sistemas backend robustos, escalables y listos para producción.",
+        "source": "VoltAgent/awesome-claude-code-subagents",
+        "url": "https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/01-core-development/backend-developer.md"
+    },
+    {
+        "type": "subagent",
+        "name": "electron-pro",
+        "description": "Especialista en aplicaciones de escritorio con Electron: integración nativa, seguridad, rendimiento e instaladores firmados.",
+        "source": "VoltAgent/awesome-claude-code-subagents",
+        "url": "https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/01-core-development/electron-pro.md"
+    },
+    {
+        "type": "subagent",
+        "name": "typescript-pro",
+        "description": "Experto en TypeScript avanzado: genéricos complejos, programación a nivel de tipos y tipado seguro de extremo a extremo.",
+        "source": "VoltAgent/awesome-claude-code-subagents",
+        "url": "https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/02-language-specialists/typescript-pro.md"
+    },
+    {
+        "type": "subagent",
+        "name": "python-pro",
+        "description": "Escribe código Python tipado y listo para producción: APIs web, utilidades de sistema y patrones asíncronos modernos.",
+        "source": "VoltAgent/awesome-claude-code-subagents",
+        "url": "https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/02-language-specialists/python-pro.md"
+    },
+    {
+        "type": "subagent",
+        "name": "devops-engineer",
+        "description": "Automatiza infraestructura, pipelines de CI/CD, contenedores y despliegues manteniendo fiabilidad y seguridad.",
+        "source": "VoltAgent/awesome-claude-code-subagents",
+        "url": "https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/03-infrastructure/devops-engineer.md"
+    },
+    {
+        "type": "skill",
+        "name": "docx",
+        "description": "Crea, lee y edita documentos de Word (.docx) con tablas, índices, estilos y control de cambios.",
+        "source": "anthropics/skills",
+        "url": "https://github.com/anthropics/skills/tree/main/skills/docx"
+    },
+    {
+        "type": "skill",
+        "name": "pdf",
+        "description": "Trabaja con archivos PDF: extraer texto y tablas, unir, dividir, rotar, añadir marcas de agua, rellenar formularios y OCR.",
+        "source": "anthropics/skills",
+        "url": "https://github.com/anthropics/skills/tree/main/skills/pdf"
+    },
+    {
+        "type": "skill",
+        "name": "pptx",
+        "description": "Genera, lee y modifica presentaciones de PowerPoint (.pptx): diapositivas, plantillas, notas y layouts.",
+        "source": "anthropics/skills",
+        "url": "https://github.com/anthropics/skills/tree/main/skills/pptx"
+    },
+    {
+        "type": "skill",
+        "name": "xlsx",
+        "description": "Crea y edita hojas de cálculo (.xlsx, .csv): fórmulas, formato, gráficos y limpieza de datos tabulares.",
+        "source": "anthropics/skills",
+        "url": "https://github.com/anthropics/skills/tree/main/skills/xlsx"
+    },
+    {
+        "type": "skill",
+        "name": "skill-creator",
+        "description": "Ayuda a crear nuevas skills, mejorar las existentes y medir su rendimiento con evaluaciones y benchmarks.",
+        "source": "anthropics/skills",
+        "url": "https://github.com/anthropics/skills/tree/main/skills/skill-creator"
+    },
+    {
+        "type": "skill",
+        "name": "mcp-builder",
+        "description": "Guía para construir servidores MCP de calidad que conecten modelos de IA con APIs y servicios externos.",
+        "source": "anthropics/skills",
+        "url": "https://github.com/anthropics/skills/tree/main/skills/mcp-builder"
+    },
+    {
+        "type": "skill",
+        "name": "frontend-design",
+        "description": "Orienta el diseño visual de interfaces: dirección estética, tipografía y decisiones que no parezcan plantillas genéricas.",
+        "source": "anthropics/skills",
+        "url": "https://github.com/anthropics/skills/tree/main/skills/frontend-design"
+    },
+    {
+        "type": "skill",
+        "name": "webapp-testing",
+        "description": "Prueba aplicaciones web locales con Playwright: verificar funcionalidad, depurar la interfaz, capturas y logs del navegador.",
+        "source": "anthropics/skills",
+        "url": "https://github.com/anthropics/skills/tree/main/skills/webapp-testing"
+    },
+    {
+        "type": "skill",
+        "name": "canvas-design",
+        "description": "Crea piezas visuales originales en PNG y PDF, como pósters o ilustraciones, a partir de una filosofía de diseño.",
+        "source": "anthropics/skills",
+        "url": "https://github.com/anthropics/skills/tree/main/skills/canvas-design"
+    },
+    {
+        "type": "skill",
+        "name": "web-artifacts-builder",
+        "description": "Construye artefactos HTML complejos con React, Tailwind CSS y shadcn/ui, con estado y varias vistas.",
+        "source": "anthropics/skills",
+        "url": "https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder"
+    },
+    {
+        "type": "mcp",
+        "name": "Filesystem MCP",
+        "description": "Servidor MCP para leer, escribir y gestionar archivos y carpetas locales con control de acceso configurable.",
+        "source": "modelcontextprotocol/servers",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem"
+    },
+    {
+        "type": "mcp",
+        "name": "Git MCP",
+        "description": "Herramientas para leer, buscar y manipular repositorios Git: estado, diffs, commits, ramas e historial.",
+        "source": "modelcontextprotocol/servers",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/git"
+    },
+    {
+        "type": "mcp",
+        "name": "Fetch MCP",
+        "description": "Descarga contenido web y lo convierte a Markdown para que el modelo pueda leerlo de forma eficiente.",
+        "source": "modelcontextprotocol/servers",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/fetch"
+    },
+    {
+        "type": "mcp",
+        "name": "Memory MCP",
+        "description": "Memoria persistente basada en un grafo de conocimiento para recordar entidades y relaciones entre sesiones.",
+        "source": "modelcontextprotocol/servers",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/memory"
+    },
+    {
+        "type": "mcp",
+        "name": "Sequential Thinking MCP",
+        "description": "Permite razonar paso a paso de forma dinámica y reflexiva para resolver problemas complejos.",
+        "source": "modelcontextprotocol/servers",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking"
+    },
+    {
+        "type": "mcp",
+        "name": "Time MCP",
+        "description": "Consulta la hora actual y convierte fechas y horas entre zonas horarias.",
+        "source": "modelcontextprotocol/servers",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/time"
+    },
+    {
+        "type": "mcp",
+        "name": "GitHub MCP Server",
+        "description": "Servidor MCP oficial de GitHub: gestiona repositorios, issues, pull requests, acciones y búsquedas de código.",
+        "source": "github/github-mcp-server",
+        "url": "https://github.com/github/github-mcp-server"
+    },
+    {
+        "type": "mcp",
+        "name": "Playwright MCP",
+        "description": "Automatiza el navegador con Playwright usando el árbol de accesibilidad: navegar, hacer clic, rellenar y capturar páginas.",
+        "source": "microsoft/playwright-mcp",
+        "url": "https://github.com/microsoft/playwright-mcp"
+    },
+    {
+        "type": "mcp",
+        "name": "Context7",
+        "description": "Proporciona documentación actualizada y ejemplos de código de librerías directamente en el contexto del modelo.",
+        "source": "upstash/context7",
+        "url": "https://github.com/upstash/context7"
+    },
+    {
+        "type": "mcp",
+        "name": "Brave Search MCP",
+        "description": "Búsquedas web, de noticias, imágenes y locales a través de la API de Brave Search.",
+        "source": "brave/brave-search-mcp-server",
+        "url": "https://github.com/brave/brave-search-mcp-server"
+    },
+    {
+        "type": "command",
+        "name": "/smart-debug",
+        "description": "Depura problemas complejos coordinando agentes especializados de depuración y rendimiento.",
+        "source": "wshobson/commands",
+        "url": "https://github.com/wshobson/commands/blob/main/tools/smart-debug.md"
+    },
+    {
+        "type": "command",
+        "name": "/security-scan",
+        "description": "Auditoría de seguridad de la aplicación: detecta vulnerabilidades y propone prácticas de código seguro.",
+        "source": "wshobson/commands",
+        "url": "https://github.com/wshobson/commands/blob/main/tools/security-scan.md"
+    },
+    {
+        "type": "command",
+        "name": "/refactor-clean",
+        "description": "Refactoriza el código aplicando principios de clean code y SOLID para mejorar su calidad y mantenibilidad.",
+        "source": "wshobson/commands",
+        "url": "https://github.com/wshobson/commands/blob/main/tools/refactor-clean.md"
+    },
+    {
+        "type": "command",
+        "name": "/doc-generate",
+        "description": "Genera documentación a partir del código: referencia de API, diagramas de arquitectura y guías de uso.",
+        "source": "wshobson/commands",
+        "url": "https://github.com/wshobson/commands/blob/main/tools/doc-generate.md"
+    },
+    {
+        "type": "command",
+        "name": "/pr-enhance",
+        "description": "Mejora pull requests con descripciones completas y ayudas para que la revisión de código sea más eficiente.",
+        "source": "wshobson/commands",
+        "url": "https://github.com/wshobson/commands/blob/main/tools/pr-enhance.md"
+    },
+    {
+        "type": "command",
+        "name": "/deps-audit",
+        "description": "Audita las dependencias del proyecto: vulnerabilidades conocidas, licencias y seguridad de la cadena de suministro.",
+        "source": "wshobson/commands",
+        "url": "https://github.com/wshobson/commands/blob/main/tools/deps-audit.md"
+    },
+    {
+        "type": "command",
+        "name": "/tdd-cycle",
+        "description": "Ejecuta un flujo de desarrollo guiado por tests con disciplina estricta de rojo, verde y refactor.",
+        "source": "wshobson/commands",
+        "url": "https://github.com/wshobson/commands/blob/main/workflows/tdd-cycle.md"
+    },
+    {
+        "type": "command",
+        "name": "/git-workflow",
+        "description": "Flujo Git completo con agentes: revisa los cambios, comprueba los tests y prepara un commit convencional.",
+        "source": "wshobson/commands",
+        "url": "https://github.com/wshobson/commands/blob/main/workflows/git-workflow.md"
+    },
+    {
+        "type": "command",
+        "name": "/ultra-think",
+        "description": "Modo de análisis profundo para resolver problemas difíciles con razonamiento sistemático y varias perspectivas.",
+        "source": "qdhenry/Claude-Command-Suite",
+        "url": "https://github.com/qdhenry/Claude-Command-Suite/blob/main/.claude/commands/dev/ultra-think.md"
+    },
+    {
+        "type": "command",
+        "name": "/write-tests",
+        "description": "Escribe tests unitarios y de integración detectando automáticamente el framework de testing del proyecto.",
+        "source": "qdhenry/Claude-Command-Suite",
+        "url": "https://github.com/qdhenry/Claude-Command-Suite/blob/main/.claude/commands/test/write-tests.md"
+    }
+]
