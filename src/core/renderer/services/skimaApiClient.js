@@ -31,6 +31,50 @@ export class SkimaApiClient {
     return this.unwrap(this.bridge.relocateProject(projectId, projectPath))
   }
 
+  ensureProjectDataFolder(projectId) {
+    return this.unwrap(this.bridge.ensureProjectDataFolder(projectId))
+  }
+
+  getProjectConfig(projectId) {
+    return this.unwrap(this.bridge.getProjectConfig(projectId))
+  }
+
+  setProjectModelRestriction(projectId, restriction) {
+    return this.unwrap(this.bridge.setProjectModelRestriction(projectId, restriction))
+  }
+
+  planAgentFileInstall(request) {
+    return this.unwrap(this.bridge.planAgentFileInstall(request))
+  }
+
+  executeAgentFileInstall(planId, decisions) {
+    return this.unwrap(this.bridge.executeAgentFileInstall(planId, decisions))
+  }
+
+  discardAgentFileInstall(planId) {
+    return this.unwrap(this.bridge.discardAgentFileInstall(planId))
+  }
+
+  listInstalledAgentFiles(request) {
+    return this.unwrap(this.bridge.listInstalledAgentFiles(request))
+  }
+
+  findAgentFileInstallations(criteria) {
+    return this.unwrap(this.bridge.findAgentFileInstallations(criteria))
+  }
+
+  readProjectEnv(projectId) {
+    return this.unwrap(this.bridge.readProjectEnv(projectId))
+  }
+
+  saveProjectEnv(projectId, request) {
+    return this.unwrap(this.bridge.saveProjectEnv(projectId, request))
+  }
+
+  addEnvToGitignore(projectId) {
+    return this.unwrap(this.bridge.addEnvToGitignore(projectId))
+  }
+
   selectFolder(options) {
     return this.unwrap(this.bridge.selectFolder(options))
   }
@@ -83,17 +127,14 @@ export class SkimaApiClient {
     return this.unwrap(this.bridge.refreshCatalog(options))
   }
 
-  searchCatalogRemote(text) {
-    return this.unwrap(this.bridge.searchCatalogRemote(text))
+  loadSkimaCards(itemIds) {
+    return this.unwrap(this.bridge.loadSkimaCards(itemIds))
   }
 
   getCatalogDetails(itemId, options) {
     return this.unwrap(this.bridge.getCatalogDetails(itemId, options))
   }
 
-  onCatalogUpdated(callback) {
-    return this.bridge.onCatalogUpdated(callback)
-  }
 
   getInstallContext() {
     return this.unwrap(this.bridge.getInstallContext())
@@ -221,6 +262,202 @@ export class SkimaApiClient {
 
   onAiEvent(callback) {
     return this.bridge.onAiEvent(callback)
+  }
+
+  startImport(request) {
+    return this.unwrap(this.bridge.startImport(request))
+  }
+
+  cancelImport(requestId) {
+    return this.unwrap(this.bridge.cancelImport(requestId))
+  }
+
+  confirmImport(importId, selectedKeys) {
+    return this.unwrap(this.bridge.confirmImport(importId, selectedKeys))
+  }
+
+  discardImport(importId) {
+    return this.unwrap(this.bridge.discardImport(importId))
+  }
+
+  removeImportedItem(itemId, deleteClone) {
+    return this.unwrap(this.bridge.removeImportedItem(itemId, deleteClone))
+  }
+
+  removeImportedRepository(localFolder) {
+    return this.unwrap(this.bridge.removeImportedRepository(localFolder))
+  }
+
+  listImportedRepositories() {
+    return this.unwrap(this.bridge.listImportedRepositories())
+  }
+
+  onImportProgress(callback) {
+    return this.bridge.onImportProgress(callback)
+  }
+
+  getPublishOverview() {
+    return this.unwrap(this.bridge.getPublishOverview())
+  }
+
+  preparePublish(request) {
+    return this.unwrap(this.bridge.preparePublish(request))
+  }
+
+  runPublish(publishId) {
+    return this.unwrap(this.bridge.runPublish(publishId))
+  }
+
+  cancelPublish() {
+    return this.unwrap(this.bridge.cancelPublish())
+  }
+
+  checkPublishStatus(publicName) {
+    return this.unwrap(this.bridge.checkPublishStatus(publicName))
+  }
+
+  withdrawPublish(publicName) {
+    return this.unwrap(this.bridge.withdrawPublish(publicName))
+  }
+
+  openPublishedPullRequest(publicName) {
+    return this.unwrap(this.bridge.openPublishedPullRequest(publicName))
+  }
+
+  onPublishProgress(callback) {
+    return this.bridge.onPublishProgress(callback)
+  }
+
+  getAgentsMdState(projectId) {
+    return this.unwrap(this.bridge.getAgentsMdState(projectId))
+  }
+
+  previewAgentsMd(projectId, request) {
+    return this.unwrap(this.bridge.previewAgentsMd(projectId, request))
+  }
+
+  saveAgentsMdDraft(projectId, request) {
+    return this.unwrap(this.bridge.saveAgentsMdDraft(projectId, request))
+  }
+
+  createAgentsMd(projectId, request) {
+    return this.unwrap(this.bridge.createAgentsMd(projectId, request))
+  }
+
+  saveAgentsMdEdits(projectId, request) {
+    return this.unwrap(this.bridge.saveAgentsMdEdits(projectId, request))
+  }
+
+  optimizeAgentsMd(projectId, request) {
+    return this.unwrap(this.bridge.optimizeAgentsMd(projectId, request))
+  }
+
+  getAgentsMdAiStatus(projectId) {
+    return this.unwrap(this.bridge.getAgentsMdAiStatus(projectId))
+  }
+
+  resolveLegacyContext(projectId, decision) {
+    return this.unwrap(this.bridge.resolveLegacyContext(projectId, decision))
+  }
+
+  createAgentsMdBridge(projectId, bridgeId) {
+    return this.unwrap(this.bridge.createAgentsMdBridge(projectId, bridgeId))
+  }
+
+  getGraphifyState(projectId) {
+    return this.unwrap(this.bridge.getGraphifyState(projectId))
+  }
+
+  generateGraph(projectId) {
+    return this.unwrap(this.bridge.generateGraph(projectId))
+  }
+
+  cancelGraph(projectId) {
+    return this.unwrap(this.bridge.cancelGraph(projectId))
+  }
+
+  openGraphOutput(projectId, kind) {
+    return this.unwrap(this.bridge.openGraphOutput(projectId, kind))
+  }
+
+  ignoreGraphOutput(projectId) {
+    return this.unwrap(this.bridge.ignoreGraphOutput(projectId))
+  }
+
+  describeGraphifyInstall() {
+    return this.unwrap(this.bridge.describeGraphifyInstall())
+  }
+
+  installGraphify(repair = false) {
+    return this.unwrap(this.bridge.installGraphify(Boolean(repair)))
+  }
+
+  cancelGraphifyInstall() {
+    return this.unwrap(this.bridge.cancelGraphifyInstall())
+  }
+
+  getGraphifyIntegration(projectId) {
+    return this.unwrap(this.bridge.getGraphifyIntegration(projectId))
+  }
+
+  previewGraphifyIntegration(projectId, variantId, action) {
+    return this.unwrap(this.bridge.previewGraphifyIntegration(projectId, variantId, action))
+  }
+
+  applyGraphifyIntegration(projectId, variantId, action, fingerprint) {
+    return this.unwrap(this.bridge.applyGraphifyIntegration(projectId, variantId, action, fingerprint))
+  }
+
+  declineGraphifyIntegration(projectId) {
+    return this.unwrap(this.bridge.declineGraphifyIntegration(projectId))
+  }
+
+  onGraphifyEvent(callback) {
+    return this.bridge.onGraphifyEvent(callback)
+  }
+
+  describeCliInstall(toolId) {
+    return this.unwrap(this.bridge.describeCliInstall(toolId))
+  }
+
+  installCli(toolId, methodId) {
+    return this.unwrap(this.bridge.installCli(toolId, methodId))
+  }
+
+  cancelCliInstall() {
+    return this.unwrap(this.bridge.cancelCliInstall())
+  }
+
+  getCliManual(toolId) {
+    return this.unwrap(this.bridge.getCliManual(toolId))
+  }
+
+  onCliInstallEvent(callback) {
+    return this.bridge.onCliInstallEvent(callback)
+  }
+
+  getProfileStatus(options) {
+    return this.unwrap(this.bridge.getProfileStatus(options))
+  }
+
+  logoutProfile() {
+    return this.unwrap(this.bridge.logoutProfile())
+  }
+
+  startGhLogin() {
+    return this.unwrap(this.bridge.startGhLogin())
+  }
+
+  cancelGhLogin() {
+    return this.unwrap(this.bridge.cancelGhLogin())
+  }
+
+  saveProfileToken(request) {
+    return this.unwrap(this.bridge.saveProfileToken(request))
+  }
+
+  onProfileLoginEvent(callback) {
+    return this.bridge.onProfileLoginEvent(callback)
   }
 
   openExternalLink(url) {

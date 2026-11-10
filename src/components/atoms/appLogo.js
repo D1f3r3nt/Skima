@@ -1,4 +1,4 @@
-const logoSource = '../assets/icons/skima.svg'
+const logoSource = '../assets/icons/skima.png'
 
 export function createAppLogo({ size = 18, className = '' } = {}) {
   const logoElement = document.createElement('img')

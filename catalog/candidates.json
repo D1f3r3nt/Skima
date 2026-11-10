@@ -1,0 +1,488 @@
+[
+  {
+    "type": "subagent",
+    "repository": "VoltAgent/awesome-claude-code-subagents",
+    "path": "categories/04-quality-security/code-reviewer.md",
+    "category": "development",
+    "tags": [
+      "code"
+    ]
+  },
+  {
+    "type": "subagent",
+    "repository": "VoltAgent/awesome-claude-code-subagents",
+    "path": "categories/04-quality-security/debugger.md",
+    "category": "development",
+    "tags": [
+      "debugger"
+    ]
+  },
+  {
+    "type": "subagent",
+    "repository": "VoltAgent/awesome-claude-code-subagents",
+    "path": "categories/04-quality-security/security-auditor.md",
+    "category": "security",
+    "tags": [
+      "security"
+    ]
+  },
+  {
+    "type": "subagent",
+    "repository": "VoltAgent/awesome-claude-code-subagents",
+    "path": "categories/04-quality-security/test-automator.md",
+    "category": "testing",
+    "tags": [
+      "test"
+    ]
+  },
+  {
+    "type": "subagent",
+    "repository": "VoltAgent/awesome-claude-code-subagents",
+    "path": "categories/01-core-development/frontend-developer.md",
+    "category": "development",
+    "tags": [
+      "frontend"
+    ]
+  },
+  {
+    "type": "subagent",
+    "repository": "VoltAgent/awesome-claude-code-subagents",
+    "path": "categories/01-core-development/backend-developer.md",
+    "category": "development",
+    "tags": [
+      "backend"
+    ]
+  },
+  {
+    "type": "subagent",
+    "repository": "VoltAgent/awesome-claude-code-subagents",
+    "path": "categories/01-core-development/electron-pro.md",
+    "category": "development",
+    "tags": [
+      "electron"
+    ]
+  },
+  {
+    "type": "subagent",
+    "repository": "VoltAgent/awesome-claude-code-subagents",
+    "path": "categories/02-language-specialists/typescript-pro.md",
+    "category": "development",
+    "tags": [
+      "typescript"
+    ]
+  },
+  {
+    "type": "subagent",
+    "repository": "VoltAgent/awesome-claude-code-subagents",
+    "path": "categories/02-language-specialists/python-pro.md",
+    "category": "development",
+    "tags": [
+      "python"
+    ]
+  },
+  {
+    "type": "subagent",
+    "repository": "VoltAgent/awesome-claude-code-subagents",
+    "path": "categories/03-infrastructure/devops-engineer.md",
+    "category": "devops",
+    "tags": [
+      "devops"
+    ]
+  },
+  {
+    "type": "skill",
+    "repository": "anthropics/skills",
+    "path": "skills/docx",
+    "category": "documentation",
+    "tags": [
+      "docx"
+    ],
+    "requirements": []
+  },
+  {
+    "type": "skill",
+    "repository": "anthropics/skills",
+    "path": "skills/pdf",
+    "category": "documentation",
+    "tags": [
+      "pdf"
+    ],
+    "requirements": []
+  },
+  {
+    "type": "skill",
+    "repository": "anthropics/skills",
+    "path": "skills/pptx",
+    "category": "documentation",
+    "tags": [
+      "pptx"
+    ],
+    "requirements": []
+  },
+  {
+    "type": "skill",
+    "repository": "anthropics/skills",
+    "path": "skills/xlsx",
+    "category": "data",
+    "tags": [
+      "xlsx"
+    ],
+    "requirements": []
+  },
+  {
+    "type": "skill",
+    "repository": "anthropics/skills",
+    "path": "skills/skill-creator",
+    "category": "ai-agents",
+    "tags": [
+      "skill"
+    ],
+    "requirements": []
+  },
+  {
+    "type": "skill",
+    "repository": "anthropics/skills",
+    "path": "skills/mcp-builder",
+    "category": "ai-agents",
+    "tags": [
+      "mcp"
+    ],
+    "requirements": []
+  },
+  {
+    "type": "skill",
+    "repository": "anthropics/skills",
+    "path": "skills/frontend-design",
+    "category": "design",
+    "tags": [
+      "frontend"
+    ],
+    "requirements": []
+  },
+  {
+    "type": "skill",
+    "repository": "anthropics/skills",
+    "path": "skills/webapp-testing",
+    "category": "testing",
+    "tags": [
+      "webapp"
+    ],
+    "requirements": []
+  },
+  {
+    "type": "skill",
+    "repository": "anthropics/skills",
+    "path": "skills/canvas-design",
+    "category": "design",
+    "tags": [
+      "canvas"
+    ],
+    "requirements": []
+  },
+  {
+    "type": "skill",
+    "repository": "anthropics/skills",
+    "path": "skills/web-artifacts-builder",
+    "category": "development",
+    "tags": [
+      "web"
+    ],
+    "requirements": []
+  },
+  {
+    "type": "command",
+    "repository": "wshobson/commands",
+    "path": "tools/smart-debug.md",
+    "category": "development",
+    "tags": [
+      "smart"
+    ]
+  },
+  {
+    "type": "command",
+    "repository": "wshobson/commands",
+    "path": "tools/security-scan.md",
+    "category": "security",
+    "tags": [
+      "security"
+    ]
+  },
+  {
+    "type": "command",
+    "repository": "wshobson/commands",
+    "path": "tools/refactor-clean.md",
+    "category": "development",
+    "tags": [
+      "refactor"
+    ]
+  },
+  {
+    "type": "command",
+    "repository": "wshobson/commands",
+    "path": "tools/doc-generate.md",
+    "category": "documentation",
+    "tags": [
+      "doc"
+    ]
+  },
+  {
+    "type": "command",
+    "repository": "wshobson/commands",
+    "path": "tools/pr-enhance.md",
+    "category": "development",
+    "tags": [
+      "pr"
+    ]
+  },
+  {
+    "type": "command",
+    "repository": "wshobson/commands",
+    "path": "tools/deps-audit.md",
+    "category": "security",
+    "tags": [
+      "deps"
+    ]
+  },
+  {
+    "type": "command",
+    "repository": "wshobson/commands",
+    "path": "workflows/tdd-cycle.md",
+    "category": "testing",
+    "tags": [
+      "tdd"
+    ]
+  },
+  {
+    "type": "command",
+    "repository": "wshobson/commands",
+    "path": "workflows/git-workflow.md",
+    "category": "productivity",
+    "tags": [
+      "git"
+    ]
+  },
+  {
+    "type": "command",
+    "repository": "qdhenry/Claude-Command-Suite",
+    "path": ".claude/commands/dev/ultra-think.md",
+    "category": "productivity",
+    "tags": [
+      "think"
+    ]
+  },
+  {
+    "type": "command",
+    "repository": "qdhenry/Claude-Command-Suite",
+    "path": ".claude/commands/test/write-tests.md",
+    "category": "testing",
+    "tags": [
+      "tests"
+    ]
+  },
+  {
+    "type": "mcp",
+    "repository": "modelcontextprotocol/servers",
+    "path": "src/memory",
+    "category": "ai-agents",
+    "tags": [
+      "memory"
+    ],
+    "requirements": [
+      "node"
+    ],
+    "mcp": {
+      "serverName": "memory",
+      "registry": "npm",
+      "package": "@modelcontextprotocol/server-memory",
+      "extraArgs": [],
+      "environment": [],
+      "requiresCredentials": false
+    },
+    "notice": null
+  },
+  {
+    "type": "mcp",
+    "repository": "modelcontextprotocol/servers",
+    "path": "src/sequential-thinking",
+    "category": "ai-agents",
+    "tags": [
+      "sequential"
+    ],
+    "requirements": [
+      "node"
+    ],
+    "mcp": {
+      "serverName": "sequential-thinking",
+      "registry": "npm",
+      "package": "@modelcontextprotocol/server-sequential-thinking",
+      "extraArgs": [],
+      "environment": [],
+      "requiresCredentials": false
+    },
+    "notice": null
+  },
+  {
+    "type": "mcp",
+    "repository": "modelcontextprotocol/servers",
+    "path": "src/filesystem",
+    "category": "development",
+    "tags": [
+      "filesystem"
+    ],
+    "requirements": [
+      "node"
+    ],
+    "mcp": {
+      "serverName": "filesystem",
+      "registry": "npm",
+      "package": "@modelcontextprotocol/server-filesystem",
+      "extraArgs": [
+        "."
+      ],
+      "environment": [],
+      "requiresCredentials": false
+    },
+    "notice": "Concede acceso a la carpeta indicada en los argumentos: cámbiala por la tuya."
+  },
+  {
+    "type": "mcp",
+    "repository": "modelcontextprotocol/servers",
+    "path": "src/fetch",
+    "category": "productivity",
+    "tags": [
+      "fetch"
+    ],
+    "requirements": [
+      "python",
+      "uv",
+      "network"
+    ],
+    "mcp": {
+      "serverName": "fetch",
+      "registry": "pypi",
+      "package": "mcp-server-fetch",
+      "extraArgs": [],
+      "environment": [],
+      "requiresCredentials": false
+    },
+    "notice": null
+  },
+  {
+    "type": "mcp",
+    "repository": "modelcontextprotocol/servers",
+    "path": "src/time",
+    "category": "productivity",
+    "tags": [
+      "time"
+    ],
+    "requirements": [
+      "python",
+      "uv"
+    ],
+    "mcp": {
+      "serverName": "time",
+      "registry": "pypi",
+      "package": "mcp-server-time",
+      "extraArgs": [],
+      "environment": [],
+      "requiresCredentials": false
+    },
+    "notice": null
+  },
+  {
+    "type": "mcp",
+    "repository": "modelcontextprotocol/servers",
+    "path": "src/git",
+    "category": "development",
+    "tags": [
+      "git"
+    ],
+    "requirements": [
+      "python",
+      "uv",
+      "git"
+    ],
+    "mcp": {
+      "serverName": "git",
+      "registry": "pypi",
+      "package": "mcp-server-git",
+      "extraArgs": [],
+      "environment": [],
+      "requiresCredentials": false
+    },
+    "notice": null
+  },
+  {
+    "type": "mcp",
+    "repository": "upstash/context7",
+    "path": "",
+    "category": "documentation",
+    "tags": [
+      "context7"
+    ],
+    "requirements": [
+      "node",
+      "network"
+    ],
+    "mcp": {
+      "serverName": "context7",
+      "registry": "npm",
+      "package": "@upstash/context7-mcp",
+      "extraArgs": [],
+      "environment": [],
+      "requiresCredentials": false
+    },
+    "notice": null
+  },
+  {
+    "type": "mcp",
+    "repository": "microsoft/playwright-mcp",
+    "path": "",
+    "category": "testing",
+    "tags": [
+      "playwright"
+    ],
+    "requirements": [
+      "node"
+    ],
+    "mcp": {
+      "serverName": "playwright",
+      "registry": "npm",
+      "package": "@playwright/mcp",
+      "extraArgs": [],
+      "environment": [],
+      "requiresCredentials": false
+    },
+    "notice": null
+  },
+  {
+    "type": "mcp",
+    "repository": "brave/brave-search-mcp-server",
+    "path": "",
+    "category": "productivity",
+    "tags": [
+      "brave"
+    ],
+    "requirements": [
+      "node",
+      "network",
+      "account"
+    ],
+    "mcp": {
+      "serverName": "brave-search",
+      "registry": "npm",
+      "package": "@brave/brave-search-mcp-server",
+      "extraArgs": [],
+      "environment": [
+        {
+          "name": "BRAVE_API_KEY",
+          "description": "API key de Brave Search.",
+          "required": true,
+          "secret": true
+        }
+      ],
+      "requiresCredentials": true
+    },
+    "notice": null
+  }
+]

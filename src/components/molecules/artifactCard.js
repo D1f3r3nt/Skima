@@ -18,6 +18,7 @@ export function createArtifactCard({ artifact, typeIcon, onOpen }) {
   cardElement.type = 'button'
   cardElement.className = `artifact-card artifact-type--${artifact.type}`
   cardElement.title = artifact.repository ?? artifact.url
+  cardElement.dataset.artifactId = artifact.id
 
   const headerElement = document.createElement('div')
   headerElement.className = 'artifact-card__header'
@@ -32,20 +33,24 @@ export function createArtifactCard({ artifact, typeIcon, onOpen }) {
 
   headerElement.append(iconElement, nameElement)
 
-  if (artifact.featured) {
+  if (artifact.origin === 'skima') {
+    headerElement.append(createBadge({ label: 'Verificado por Skima', variant: 'success' }))
+  } else if (artifact.origin === 'imported') {
+    headerElement.append(createBadge({ label: 'Importado', variant: 'warning' }))
+  } else if (artifact.featured) {
     headerElement.append(createBadge({ label: 'Destacado', variant: 'accent' }))
   }
 
   const descriptionElement = document.createElement('p')
   descriptionElement.className = 'artifact-card__description'
-  descriptionElement.textContent = artifact.description || 'Sin descripción.'
+  descriptionElement.textContent = artifact.description || (artifact.needsCard ? 'Cargando descripción…' : 'Sin descripción.')
 
   const footerElement = document.createElement('div')
   footerElement.className = 'artifact-card__footer'
 
   const sourceElement = document.createElement('span')
   sourceElement.className = 'artifact-card__source'
-  sourceElement.textContent = artifact.repository ?? ''
+  sourceElement.textContent = artifact.origin === 'skima' ? 'Skima' : (artifact.repository ?? '')
 
   footerElement.append(sourceElement)
 

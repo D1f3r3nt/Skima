@@ -14,7 +14,7 @@ export function createCatalogStatusBar({ onRefresh }) {
     icon: 'refresh',
     variant: 'ghost',
     size: 'small',
-    ariaLabel: 'Actualizar el catálogo desde GitHub',
+    ariaLabel: 'Volver a cargar el catálogo',
     className: 'catalog-status__refresh',
     onClick: onRefresh
   })

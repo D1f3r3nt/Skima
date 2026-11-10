@@ -3,10 +3,11 @@ const { limits } = require('../settings/settingsSchema')
 const { toCaseInsensitiveKey } = require('../platform/portableNames')
 
 class ProjectModel {
-  constructor({ settingsStore, platformPaths, fileSystemService, now = () => new Date(), createId = () => crypto.randomUUID() }) {
+  constructor({ settingsStore, platformPaths, fileSystemService, projectDataStore = null, now = () => new Date(), createId = () => crypto.randomUUID() }) {
     this.settingsStore = settingsStore
     this.platformPaths = platformPaths
     this.fileSystemService = fileSystemService
+    this.projectDataStore = projectDataStore
     this.now = now
     this.createId = createId
   }
@@ -101,7 +102,8 @@ class ProjectModel {
       settings.projects.push(createdProject)
     })
 
-    return this.withStatus(createdProject)
+    const dataFolder = this.projectDataStore ? await this.projectDataStore.ensure(createdProject.path) : null
+    return { ...(await this.withStatus(createdProject)), dataFolder }
   }
 
   async remove(projectId) {

@@ -27,7 +27,7 @@ const createFakeExecutable = (directory, kind) => {
   return executablePath
 }
 
-const createFakeAgentSetup = ({ kind = 'claude', scenario = 'ok', response, settings = {}, extraEnvironment = {} } = {}) => {
+const createFakeAgentSetup = ({ kind = 'claude', scenario = 'ok', response, settings = {}, extraEnvironment = {}, projectModelPolicy = null } = {}) => {
   const workDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'skima-test-'))
   const binDirectory = path.join(workDirectory, 'bin')
   const cwd = path.join(workDirectory, 'cwd')
@@ -60,6 +60,7 @@ const createFakeAgentSetup = ({ kind = 'claude', scenario = 'ok', response, sett
     agentDetector: detector,
     executableLocator: { buildEnvironmentPath: async () => environment.PATH ?? environment.Path ?? '' },
     settingsStore,
+    projectModelPolicy,
     environment
   })
 

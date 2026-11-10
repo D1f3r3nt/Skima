@@ -11,10 +11,9 @@ const maximumArchiveBytes = 200 * 1024 * 1024
 const userAgent = 'Skima-Desktop'
 
 class GitHubSkillSource {
-  constructor({ githubApiClient, fetchImplementation, getToken = () => null, platformPaths }) {
+  constructor({ githubApiClient, fetchImplementation, platformPaths }) {
     this.githubApiClient = githubApiClient
     this.fetchImplementation = fetchImplementation
-    this.getToken = getToken
     this.platformPaths = platformPaths
   }
 
@@ -33,12 +32,10 @@ class GitHubSkillSource {
   }
 
   async downloadArchive({ repository, ref, destinationFile, signal }) {
-    const token = this.getToken()
     const response = await this.fetchImplementation(`https://api.github.com/repos/${repository}/tarball/${encodeURIComponent(ref)}`, {
       headers: {
         Accept: 'application/vnd.github+json',
-        'User-Agent': userAgent,
-        ...(token ? { Authorization: `Bearer ${token}` } : {})
+        'User-Agent': userAgent
       },
       redirect: 'follow',
       signal

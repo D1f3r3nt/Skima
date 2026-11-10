@@ -81,6 +81,7 @@ class AgentSettingsService {
       sources: entry.sources,
       supportsMcp: Boolean(entry.mcp),
       hasCli: Boolean(entry.cli),
+      hasInstallRecipe: Boolean(entry.install),
       enabled: Boolean(agentSettings?.enabled),
       executablePathOverride: agentSettings?.executablePath ?? null,
       detection: detection ? { detected: detection.detected, reasons: detection.reasons.map((reason) => ({ ...reason, path: this.platformPaths.toDisplayPath(reason.path) })) } : { detected: false, reasons: [] },

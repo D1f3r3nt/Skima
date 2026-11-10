@@ -2,6 +2,7 @@ import { createInstalledSkillList } from '../../../components/organisms/installe
 import { filterInstalledSkills, listAgentFilterOptions } from '../services/installedFilter.js'
 import { buildDetailUrl, buildPageUrl, detailSources, navigateTo } from '../services/navigation.js'
 import { openSettings } from '../services/settingsModalService.js'
+import { settingsSectionIds } from '../config/settingsSectionIds.js'
 
 export class InstalledSkillsController {
   constructor({ apiClient, scope, projectId = null, from }) {
@@ -27,6 +28,10 @@ export class InstalledSkillsController {
     return this.load()
   }
 
+  stop() {
+    window.removeEventListener('focus', this.onFocus)
+  }
+
   setState(changes) {
     this.state = { ...this.state, ...changes }
     this.render()
@@ -40,7 +45,7 @@ export class InstalledSkillsController {
         description: 'Indica en Configuración qué agentes usas para que Skima sepa dónde buscar las skills.',
         actionLabel: 'Abrir Configuración',
         actionIcon: 'settings',
-        onAction: () => openSettings({ sectionId: 'agents' })
+        onAction: () => openSettings({ sectionId: settingsSectionIds.paths })
       }
     }
     return {

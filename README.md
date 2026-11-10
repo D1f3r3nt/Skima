@@ -4,13 +4,14 @@ Aplicación de escritorio (Electron) para descubrir, instalar y crear **skills**
 
 ## Funciones
 
-- **Biblioteca**: catálogo amplio de repositorios de GitHub (skills, MCP, subagentes y comandos), con búsqueda local y búsqueda en GitHub mientras escribes.
-- **Detalle de cada elemento**: puntuación con desglose, metadatos, README renderizado y botón **Instalar**. Es un único componente con tres variantes: catálogo, instalada y propia.
+- **Biblioteca**: catálogo curado de skills, servidores MCP, subagentes y comandos, más las skills verificadas del repositorio de Skima y los repositorios que importes. Búsqueda y filtros locales; la rejilla se pinta por tramos de 20 (5 filas de 4) a medida que haces scroll.
+- **Detalle de cada elemento**: puntuación con desglose, metadatos, README renderizado y botón **Instalar**. Es un único componente con variantes: catálogo, Skima, importado, instalada y propia.
 - **Instalación** de skills y servidores MCP en todos los agentes que tengas activados, de forma global o en un proyecto. Antes de escribir nada muestra un resumen agente por agente.
 - **Configuración** (ventana emergente):
-  - *Mis agentes y rutas*: qué agentes usas, sus carpetas y el estado de su programa de línea de comandos.
-  - *Lanzamiento de prompts*: agente, modelo, intensidad, permisos, modelo barato, límites, vista previa del comando y prueba.
-- **Global** y **Proyecto**: lo que ya está instalado en disco, con origen, buscador y filtro por agente. En cada proyecto: nombre editable, contexto y skills detectadas.
+  - *Mi perfil* (`profile`): la sesión de Git/GitHub del equipo, para clonar repositorios privados y publicar skills.
+  - *Rutas de configuración* (`paths`): qué agentes usas, sus carpetas y el estado de su programa de línea de comandos, en filas desplegables.
+  - *Proveedor de IA* (`ai-provider`): agente, modelo, intensidad, permisos, modelo barato, límites, vista previa del comando y prueba.
+- **Global** y **Proyecto**: lo que ya está instalado en disco, con origen, buscador y filtro por agente. Cada proyecto tiene una cabecera (nombre editable, ruta, Abrir carpeta, Quitar proyecto) y cuatro pestañas: Contexto, Skills, Variables de entorno y Configuración.
 - **Editor**: asistente de preguntas para crear una skill, con optimización opcional por IA.
 - **Mis skills**: tus skills, listas para instalar, editar, duplicar, exportar o eliminar.
 - **Puente con los agentes por línea de comandos** (`runAgent`, `askAI`): base de las funciones de IA.
@@ -30,13 +31,25 @@ npm run start
 npm test
 ```
 
-Para arrancar con una carpeta de datos temporal, sin tocar la tuya:
+Para arrancar con una carpeta de datos temporal, sin tocar la tuya, define `SKIMA_USER_DATA_DIR` con la sintaxis de tu sistema:
+
+macOS y Linux (bash, zsh):
 
 ```bash
 SKIMA_USER_DATA_DIR=/ruta/absoluta/temporal npm run start
 ```
 
-Para ampliar el margen de la API de GitHub, define `GITHUB_TOKEN` antes de arrancar.
+Windows (PowerShell):
+
+```powershell
+$env:SKIMA_USER_DATA_DIR = 'C:\ruta\absoluta\temporal'; npm run start
+```
+
+Windows (cmd):
+
+```bat
+set SKIMA_USER_DATA_DIR=C:\ruta\absoluta\temporal && npm run start
+```
 
 ## Arquitectura
 
@@ -76,7 +89,7 @@ Añadir un agente es añadir el archivo y una línea en el registro. Los tests d
 
 ## Dónde instala cada cosa
 
-Rutas por defecto (en Windows `~` es `%USERPROFILE%`). Se pueden cambiar a mano en *Mis agentes y rutas*.
+Rutas por defecto (en Windows `~` es `%USERPROFILE%`). Se pueden cambiar a mano en *Rutas de configuración*.
 
 | Agente | Skills globales | Skills de proyecto | MCP global | MCP de proyecto |
 |---|---|---|---|---|
@@ -97,12 +110,14 @@ Las secciones del modal están en `src/core/renderer/config/settingsSections.js`
 
 ```js
 export const settingsSections = Object.freeze([
-  { id: 'agents', label: 'Mis agentes y rutas', icon: 'subagent', create: createAgentsSettingsSection },
-  { id: 'promptLaunch', label: 'Lanzamiento de prompts', icon: 'command', create: createPromptLaunchSettingsSection }
+  { id: settingsSectionIds.paths, label: 'Rutas de configuración', icon: 'subagent', create: createAgentsSettingsSection },
+  { id: settingsSectionIds.aiProvider, label: 'Proveedor de IA', icon: 'command', create: createPromptLaunchSettingsSection }
 ])
 ```
 
-Una sección nueva es una entrada más. `create(context)` recibe `apiClient`, `reportSaving`, `reportSaved`, `reportError` y `openSection`, y devuelve `{ element, dispose }`. Para abrir el modal en una sección desde cualquier sitio, usa `openSettings({ sectionId })` o el parámetro `?settings=<id>` en la URL de cualquier página.
+Los ids son estables y viven en `src/core/renderer/config/settingsSectionIds.js` (`profile`, `paths`, `ai-provider`); todo el código abre las secciones por id, nunca por posición. La primera de la lista es la que se abre por defecto. Una sección nueva es una entrada más. `create(context)` recibe `apiClient`, `reportSaving`, `reportSaved`, `reportError`, `openSection` y `sessionState` (un `Map` que dura mientras el modal está abierto; la lista de agentes guarda ahí qué filas están desplegadas), y devuelve `{ element, dispose }`.
+
+En *Rutas de configuración* cada agente es una fila desplegable: la fila cerrada muestra el nombre, los distintivos (solo *Detectado*, *CLI no encontrado* y *Conectado*), un mensaje corto y el interruptor, que es un control aparte. Al desplegarla aparecen los bloques *Rutas* y *Programa de línea de comandos*. La ruta del ejecutable es un desplegable propio que solo aparece si el CLI no está conectado o si la fijaste a mano. Para abrir el modal en una sección desde cualquier sitio, usa `openSettings({ sectionId })` o el parámetro `?settings=<id>` en la URL de cualquier página.
 
 ## Ajustes y datos guardados
 
@@ -117,7 +132,132 @@ En la carpeta de datos de la app (`app.getPath('userData')`):
 | `my-skills-data/<nombre>.json` | Respuestas originales del asistente y datos de la optimización. Están aparte para que no se copien al instalar. |
 | `backups/mcp/` | Copias de los archivos MCP antes de modificarlos. |
 
-El nombre de un proyecto es solo de Skima: no se renombra la carpeta. El contexto se guarda en `settings.json` y nunca en el proyecto.
+El nombre de un proyecto es solo de Skima: no se renombra la carpeta. El contexto todavía se guarda en `settings.json`; pasará al `AGENTS.md` del proyecto (ver `docs/plan-pendiente.md`).
+
+Skima no usa ningún token para la API de GitHub. La versión 2 del esquema de ajustes borra el antiguo campo `github.token` de los archivos ya guardados. Si GitHub limita las consultas, la Biblioteca sigue con lo que hay en caché y lo dice con un aviso neutro.
+
+## Pantalla de Proyecto
+
+- **Cabecera**: nombre editable, ruta, **Abrir carpeta**, **Instalar Graphify** / **Generar grafo** / **Integrar con agentes** (arriba a la derecha) y **Quitar proyecto** en rojo. Quitar pide escribir `eliminar` (sin distinguir mayúsculas ni espacios), solo quita el proyecto de Skima y conserva su carpeta `.skima/`.
+- **Pestañas**: se definen en `src/core/renderer/config/projectTabs.js`. Una pestaña nueva es una entrada `{ id, label, icon, requiresDisk, create }`; `create({ apiClient, project, onProjectChange })` devuelve `{ element, dispose }`. Se recuerda la última pestaña de cada proyecto durante la sesión. Si la carpeta no existe, las pestañas que necesitan el disco aparecen deshabilitadas con su explicación.
+
+### Carpeta `.skima/` del proyecto
+
+Al añadir un proyecto (o al abrir por primera vez uno que ya estaba), Skima crea `<proyecto>/.skima/config.json` con `schemaVersion`, validación al leer, valores por defecto y migraciones (`src/core/main/projects/`). Es la única excepción a la regla de no escribir en los proyectos:
+
+- Si el proyecto es un repositorio git, Skima añade `.skima/` a su `.gitignore` (lo crea si no existe), sin duplicar la línea y conservando el resto del archivo y sus saltos de línea. La primera vez lo avisa en pantalla. Si no es un repositorio git, no toca nada.
+- Solo guarda parámetros de Skima para ese proyecto. Nunca secretos ni valores de variables de entorno: el esquema descarta todo lo que no conoce.
+- Los agentes no la leen. La lista de proyectos, su id, nombre y ruta siguen en `settings.json`.
+- Si la carpeta no es escribible, la app sigue funcionando y lo avisa.
+
+### Restricción de modelos (pestaña Configuración)
+
+Tres modos: todos los modelos (por defecto), solo los marcados (lista blanca) o todos menos los excluidos (lista negra). Los cambios se guardan solos en `.skima/config.json`. Un modelo guardado que ya no se detecta se muestra como «no disponible ahora» y no se borra.
+
+La restricción se aplica de verdad: `runAgent`, `askAi` y `pickCheapestModel`, cuando reciben `projectId`, comprueban el modelo resuelto. Si no está permitido, eligen uno permitido (primero del mismo agente) y lo anotan en los avisos; si no hay ninguno, devuelven el error `PROJECT_MODEL_RESTRICTED`. Sin `projectId` no cambia nada. Los bloques de la pestaña se definen en `projectSettingsBlocks` (`src/core/renderer/projectTabs/settingsTab.js`).
+
+### Variables de entorno (pestaña)
+
+Gestiona el `.env` de la raíz del proyecto. Cada variable es una fila con su nombre y el valor oculto como una contraseña, con un ojo para verlo; los valores se vuelven a ocultar al cambiar de pestaña o de proyecto. Si no hay `.env`, aparece una fila vacía y el archivo se crea al guardar la primera variable.
+
+- **Formato.** `src/core/main/projects/envDocument.js` localiza cada entrada con un escáner por caracteres (comentarios, líneas en blanco, `export`, comillas y valores multilínea) y usa `dotenv.parse` (versión fijada) para interpretar los valores. Al guardar solo se reescriben las líneas tocadas; el resto del archivo, el orden, los saltos de línea y los permisos se conservan. Cada valor nuevo se escribe con las comillas que garantizan que `dotenv` lo lee igual; si no es posible, no se guarda y se avisa.
+- **Validación.** Nombres con letras, números y guiones bajos, sin empezar por número y sin repetir. Si el archivo cambió en disco desde que se abrió, no se pisa: se avisa y se ofrece volver a cargarlo.
+- **Seguridad.** Los valores solo viven en el `.env` y en la pantalla mientras está abierta: nunca van a los ajustes, a `.skima/`, a la caché, a los registros ni a una IA, y los errores no los incluyen. Nada fuera de la carpeta del proyecto ni enlaces que salgan de ella.
+- **Git.** Si el proyecto es un repositorio y `.env` no está ignorado (se comprueba con `git check-ignore` si hay Git, o leyendo el `.gitignore`), aparece un aviso con un botón para añadirlo; solo se escribe si lo pulsas.
+- **Otros archivos.** Si existen `.env.local`, `.env.example`, `.env.yaml`, etc., se avisa de que Skima solo edita `.env`. Las claves de `.env.example` (nunca sus valores) se sugieren al añadir una variable.
+
+## Catálogo: esquema y validadores
+
+- `catalog/library.schema.json` (JSON Schema, validado con `ajv`) define el formato común del catálogo, de la lista personal de importados y de las skills del repositorio de Skima: cabecera `schemaVersion` y `generatedAt`, y las listas `skills`, `mcp`, `subagents` y `commands`. Cada elemento lleva id con prefijo de origen (`catalog:`, `imported:`, `skima:`), categoría cerrada (`src/core/main/catalog/catalogCategories.js`), origen con commit fijado, instantánea de datos, revisión y requisitos; los MCP llevan además su definición (solo nombres de variables, nunca valores).
+- `src/core/main/catalog/libraryDocumentValidator.js` añade las comprobaciones que el esquema no cubre: ids únicos, misma fuente repetida, origen esperado y datos de importación.
+- Validadores: `artifacts/skillFolderValidator.js` (carpeta con `SKILL.md`, nombre igual a la carpeta, sin enlaces simbólicos, límites de tamaño) y `artifacts/agentFileValidators.js` (subagentes y comandos en Markdown).
+- Registro de proveedores: los agentes que admiten subagentes o comandos llevan los bloques `subagents` y `commands` con rutas global y de proyecto, formato y confianza. Hoy son Claude Code (`~/.claude/agents`, `.claude/agents`, `~/.claude/commands`, `.claude/commands`) y OpenCode (`~/.config/opencode/agents|commands`, `.opencode/agents|commands`). `artifacts/agentFileAdapters.js` traduce el formato de Claude Code al de OpenCode; lo que no sabe traducir se marca como incompatible.
+- El catálogo `catalog/library.json` viaja con la app (`extraResources`) y todavía está vacío: se rellena en la fase de investigación (ver `docs/plan-pendiente.md`).
+
+## Biblioteca y catálogo
+
+La Biblioteca muestra un **catálogo curado y fijo** (`catalog/library.json`, de solo lectura y empaquetado con la app) con skills, servidores MCP, subagentes y comandos. La lista no llama a GitHub: solo la pantalla de detalle consulta la API (README, metadatos y puntuación), con caché local; si falla o hay límite, muestra la ficha básica del catálogo con un aviso neutro.
+
+- **Origen y filtros.** Selector de tipo, buscador y filtro por categoría locales, y un filtro de origen (Catálogo / Skima / Importados) que solo aparece cuando hay más de un origen. Las skills del repositorio de Skima salen primero.
+- **Carga progresiva.** 20 elementos por tramo (4 columnas × 5 filas, `src/core/renderer/config/libraryPagination.js`).
+- **Mensaje de estado.** «N elementos · catálogo actualizado el <fecha>» (con el total de la lista, no de lo pintado); en la vista de importados, el recuento de importados.
+- **Qué significa «instalable».** El catálogo se construye con `npm run catalog:verify`, que descarga el commit fijado en una carpeta temporal y comprueba: skill con `SKILL.md` válido y carpeta igual a `name`; subagente y comando con el formato Markdown que exige cada agente; MCP con el paquete existente en npm o PyPI y, si no pide credenciales, arrancándolo en una carpeta temporal para comprobar que responde a `tools/list`. Además pasa una **revisión automática con patrones** (instrucciones dirigidas a una IA, `curl | sh`, acceso a credenciales, ofuscación descartan; red, procesos, `eval` e instalación de dependencias quedan como aviso). No sustituye a una revisión manual.
+- **Criterios de selección.** Popularidad, actividad reciente, sin archivados ni forks, licencia clara (si falta, se anota en el aviso), utilidad y variedad. `catalog/candidates.json` lista los candidatos, `catalog/rejected.json` los descartados sin intentar, `catalog/discarded.json` los que fallaron la verificación y `catalog/verification-report.md` el informe.
+- **Añadir, quitar o revisar un elemento.** Edita `catalog/candidates.json` y ejecuta `npm run catalog:verify` (acepta un tipo: `node scripts/catalogTasks.js verify skill`). Se publica con una versión nueva de Skima.
+- **Scripts de mantenimiento** (ninguno se ejecuta desde la app): `catalog:validate` (esquema, ids únicos, misma fuente repetida, duplicados entre tipos y conteos; sin red, también en CI), `catalog:verify` (con red) y `catalog:refresh` (actualiza estrellas, forks, licencia y fecha, y avisa de lo archivado, desaparecido o con un commit nuevo). `node scripts/catalogTasks.js report` reconstruye el informe sin red.
+- **Estado actual.** El catálogo tiene hoy solo el lote piloto verificado (ver `catalog/verification-report.md`), lejos de las 100 por tipo previstas.
+- El módulo antiguo de rastreo de GitHub (`src/core/main/catalog/catalogService.js`, `catalogQueries.js`, `repositoryClassifier.js`) ya no se usa para construir la lista. Sigue en el repositorio, aparcado, a la espera de que decidas retirarlo.
+
+## Subagentes y comandos
+
+Son archivos sueltos que se copian a la carpeta de cada agente (global o de proyecto) con el mismo flujo que las skills: resumen previo por agente, detección de lo ya instalado, aviso en vez de pisar y resultado por agente. El registro de proveedores declara las carpetas y el formato en los bloques `subagents` y `commands` (hoy Claude Code y OpenCode); los agentes sin bloque no se ofrecen como destino y la interfaz lo explica. `src/core/main/artifacts/agentFileAdapters.js` traduce el formato de Claude Code al de OpenCode (quita los campos que no entiende y avisa). La pantalla de detalle muestra dónde está instalado cada elemento.
+
+## Importar un repositorio
+
+El botón **Importar** de la Biblioteca hace un `git clone` desde el proceso main (nunca descarga archivos comprimidos para esto):
+
+- **Requiere Git.** Si no está instalado (se busca con el módulo de plataforma, que encuentra el `PATH` real), muestra un mensaje claro con el enlace de descarga y no intenta nada más.
+- **Direcciones.** Acepta `https://servidor/propietario/repositorio` de **cualquier servidor** con Git y la forma `git@servidor:ruta`; normaliza `.git`, barra final y rutas `/tree/rama` (la rama se ignora: se clona la rama por defecto). Rechaza `file:`, `ext::`, `git:`, `http:`, direcciones que empiezan por `-`, con espacios o con usuario y contraseña incrustados.
+- **Clon seguro.** `spawn` con lista de argumentos y sin shell, `--` antes de la dirección y el destino, `--depth 1 --single-branch --no-tags --no-recurse-submodules`, plantilla y `core.hooksPath` vacíos (no corre ningún gancho), `core.symlinks=false`, `GIT_ALLOW_PROTOCOL` restringido, `GIT_TERMINAL_PROMPT=0` y `GIT_LFS_SKIP_SMUDGE=1`. No cambia la configuración global de Git. Con progreso, cancelación (mata el árbol de procesos), tiempo máximo y como mucho dos clones a la vez; si falla no queda nada a medias.
+- **Privados.** Si el repositorio es de GitHub y el primer intento falla por acceso, reintenta con el ayudante de credenciales de GitHub CLI solo para esa llamada (si hay sesión de `gh`). Si sigue sin acceso, el mensaje enlaza a Configuración › Mi perfil.
+- **Dónde se guarda.** Clones en `<userData>/imports/<nombre-seguro>/`; lista personal en `<userData>/personal/library.json` (mismo esquema que el catálogo, ids con prefijo `imported:`, copia del archivo dañado y lista vacía si se corrompe).
+- **Revisión.** Detecta skills (con el validador del asistente), subagentes y comandos (Markdown con el formato correcto) y MCP (solo si la definición se deduce con seguridad; si no, aparece como «sin verificar»). Muestra una revisión de seguridad ligera y deja claro que es contenido de terceros no revisado por Skima. Si no hay nada instalable, borra el clon.
+- **Gestionar.** «Gestionar importados» muestra el tamaño de cada clon y el total, y permite quitarlos. Quitar de la lista no desinstala lo ya instalado.
+- Actualizar un clon (`git pull`) queda como siguiente paso.
+
+## Mi perfil: sesión de Git
+
+La sección **Mi perfil** (la primera de Configuración) detecta la sesión de Git/GitHub del equipo, que usa `git clone` para repositorios privados y GitHub CLI para publicar skills:
+
+- Sesión de **GitHub CLI**: `gh auth status` y `gh api user`. Sesión del **gestor de credenciales de Git**: se comprueba con `git credential fill` en el proceso main y solo se conserva si existe y el usuario; la contraseña se descarta en el momento y nunca llega a la interfaz ni a los registros.
+- Iniciar sesión: con GitHub CLI (`gh auth login --web`, muestra el código de un solo uso con botón de copiar y abre `github.com/login/device`), o con un token de acceso personal que solo sirve para clonar (se valida con una petición, se entrega a `git credential approve` por la entrada estándar y se borra del formulario).
+- Cerrar sesión: `gh auth logout` o `git credential reject`, con confirmación.
+- **No se guarda nada**: ni en los ajustes, ni en la caché, ni en `.skima/`, ni en los registros; el token nunca va como argumento ni en variables de entorno. Estas credenciales no se usan para las peticiones a la API del catálogo.
+- Si falta GitHub CLI, el botón **Instalar GitHub CLI** usa el mismo mecanismo que Instalar CLI.
+
+## Instalar CLI
+
+En **Rutas de configuración**, la fila de un agente sin CLI instalado ofrece **Instalar CLI**. Las recetas están en el bloque `install` de cada agente (`src/core/main/providers/install/installRecipes.js`), por sistema operativo, y cada una cita un documento `install-*` de la Fuente de la Verdad. El renderer solo envía `toolId` y `methodId`; nunca un comando.
+
+- **Flujo.** Ventana de confirmación con el método elegido, los comandos exactos y los requisitos (si falta alguno no se instala: pasa a instrucciones manuales); ejecución con `spawn` sin shell, salida en vivo sin colores, cancelar y tiempo máximo; después se vuelve a detectar con el `PATH` actualizado (en Windows también el del registro).
+- **Seguridad.** Nunca se usa `sudo` ni se pide elevar permisos: si el método los necesita, la instalación se detiene y se muestran las instrucciones manuales. Se prefieren los gestores de paquetes a los scripts. Un script descargado se guarda en un archivo temporal, se muestra su origen y su SHA-256, y se ejecuta con el intérprete recibiendo el archivo como argumento (PowerShell con `-NoProfile`); el proyecto no publica una huella para comprobarla.
+- **Estado de las recetas.** Claude Code (npm, Homebrew, WinGet y script), Gemini CLI (npm y Homebrew), Codex (script en macOS y Linux) y GitHub CLI (WinGet y Homebrew) tienen método automático. **OpenCode** y Codex en Windows solo tienen instrucciones manuales porque la documentación consultada no permite confirmar los nombres de paquete con seguridad.
+- Para añadir o corregir un agente, edita su entrada en `installRecipes.js` y su documento de la Fuente de la Verdad.
+
+## Repositorio de Skima: publicar y mostrar skills
+
+- **Constantes.** `D1f3r3nt/skima-repository` y la carpeta `skills` viven en `src/core/main/skima/skimaRepositoryConfig.js`; no se pueden cambiar desde la interfaz (solo los tests pueden sustituirlas con `NODE_ENV=test` y `SKIMA_REPOSITORY_FOR_TESTS`).
+- **Lectura sin credenciales.** Dos peticiones de la API (`/commits/HEAD` y el árbol recursivo de ese commit); cada `SKILL.md` se lee de `raw.githubusercontent.com` solo para las tarjetas que se pintan; caché de una hora, refresco desde el botón de la barra de estado y última copia guardada si no hay red. Funciona con el repositorio vacío, sin la carpeta `skills/` o con ella vacía.
+- **Insignia «Verificado por Skima».** La decide el origen que asigna el código (repositorio, rama por defecto y carpeta), nunca el contenido del `SKILL.md`. Las skills con `SKILL.md` inválido se muestran con aviso y sin poder instalarse. Sin categoría (o con una que no sea de la lista cerrada) → «Sin categoría».
+- **Instalar** descarga la carpeta de la skill fijada al commit con el que se mostró la lista.
+- **Publicar** (Mis skills → Publicar): aparece solo con `git`, `gh`, una sesión de `gh` válida con permisos y la skill válida; si no, un texto discreto enlaza a Mi perfil. La ventana pide nombre público, título, descripción y aceptar la licencia del repositorio; muestra los archivos que se enviarán, el `SKILL.md` publicado y el cuerpo de la PR. Antes de escribir nada comprueba archivos (sin enlaces, carpetas ocultas, `.env`, claves ni binarios; con límites), escanea secretos (bloquea sin volcar el valor), revisa la seguridad (avisos que no bloquean) y que el nombre y las PR abiertas estén libres. Después hace fork, clon temporal, rama desde la rama por defecto del repositorio de Skima (no del fork), un único commit con tu identidad `noreply` solo para esa llamada, `git push` con el ayudante de `gh` solo para esa llamada y `gh pr create --body-file`. Los textos que escribes se limpian (caracteres de control, longitud, menciones `@` y referencias `#n` neutralizadas). La carpeta temporal se borra siempre; si la PR falla tras subir la rama, el reintento solo crea la PR.
+- **Estado.** `personal/published.json` guarda nombre, PR, rama y último estado; Mis skills muestra Pendiente de revisión, Aprobada o No aprobada, con «Comprobar estado» y «Retirar solicitud» (cierra tu PR; no borra la skill, el fork ni la rama).
+- Qué credenciales se usan: solo las de `gh` y solo en procesos lanzados desde el main. Skima no extrae ni guarda el token. Recomendaciones para el dueño del repositorio en `docs/skima-repository-setup.md`.
+
+## Contexto del proyecto: AGENTS.md
+
+La pestaña **Contexto** gestiona el `AGENTS.md` de la raíz del proyecto (estándar abierto de agents.md). Lo que hay en disco manda:
+
+- **Crear**: formulario guiado de 8 pasos (descripción, tecnologías, estructura, comandos, convenciones, pruebas, límites y flujo de trabajo) con progreso, explicación y ejemplo, y borrador guardado en `.skima/config.json`. La plantilla (`src/core/main/agentsMd/agentsMdTemplate.js`) omite las secciones vacías, escapa lo peligroso y coincide con el documento `agents-md-structure-template` de la Fuente de la Verdad. Antes de escribir hay vista previa con avisos (más de 200 líneas, más de 32 KiB, secciones importantes vacías o algo que parece un secreto). La escritura es segura y no pisa un archivo existente sin confirmar.
+- **Optimizar con IA** (opcional): prompt `agents-md-optimize`, solo texto de los huecos, JSON validado (mismos elementos, comandos idénticos, rutas e identificadores intactos), idioma original por defecto con opción de inglés, sin herramientas ni internet, modelo barato y carpeta temporal. Si algo falla se crea el archivo con tu texto. Se puede alternar entre «Mi texto» y «Optimizado».
+- **Ver**: se muestra renderizado; **Editar** convierte el texto en un editor en su sitio (avisa si el archivo cambió en disco) y **Regenerar** vuelve al formulario con las respuestas guardadas, guarda una copia en `.skima/backups/` y pide confirmación.
+- **Qué lee cada agente.** Claude Code (v2.1.277 o posterior) lee `AGENTS.md` solo si no hay `CLAUDE.md`; con ambos lee solo `CLAUDE.md`, que puede importarlo con `@AGENTS.md`. Gemini CLI lee `GEMINI.md`. La pestaña avisa y, solo si lo confirmas con vista previa, crea el archivo puente. Detalle y fuentes en `agents-md-per-agent-files`.
+- El texto de contexto antiguo guardado en los ajustes se ofrece una sola vez para rellenar el formulario y se borra al crear el `AGENTS.md`. `projectContext` de `askAi` se lee ahora de este archivo.
+
+## Graphify
+
+Graphify construye un grafo de conocimiento del código del proyecto (`graphify-out/graph.json`, `graph.html` y `GRAPH_REPORT.md`). Skima lo instala y lo ejecuta sin que tengas que tocar Python.
+
+- **Instalar o reparar Graphify** (cabecera del proyecto): un cuadro muestra los comandos exactos y pide confirmación. Skima trae el gestor `uv` (descargado al empaquetar con `npm run fetch:uv`, con huella SHA-256 fijada) y crea un entorno aislado en `<datos de Skima>/tools/graphify/venv` con Python 3.12 gestionado por `uv` y Graphify `0.9.105` desde `tools/graphify/requirements.lock` (solo ruedas, con huellas obligatorias). Necesita internet una sola vez, no usa `sudo`, no toca el `PATH` y se puede cancelar; si falla, borra el entorno a medias. **Reparar** borra solo esa carpeta `venv` y lo instala de nuevo.
+- **Generar grafo**: dos pasos con lista de argumentos y sin shell, `graphify extract . --code-only` y `graphify cluster-only . --no-label` (el segundo escribe el informe y el HTML sin llamar a ningún modelo). Una generación por proyecto, progreso, cancelar (mata el árbol), 15 minutos como máximo por paso y estado leído del disco. A Graphify no se le pasa ninguna clave ni token del entorno. **Abrir grafo** y **Abrir informe** usan `shell.openPath` solo dentro de `graphify-out/`, y hay un aviso opcional para ignorar la carpeta en git.
+- **Integrar con agentes**: para Claude Code, Codex, OpenCode y Cursor. Skima ejecuta la variante de Graphify en una copia temporal con un `HOME` falso y te enseña el cambio exacto en cada archivo (`CLAUDE.md`, `AGENTS.md`, `.claude/settings.json`, `.codex/hooks.json`, `.opencode/plugins/graphify.js`, `.cursor/rules/graphify.mdc`). Al aplicar, guarda copia en `.skima/backups/graphify-<fecha>/`, escribe solo si nada ha cambiado desde la vista previa y se puede deshacer con la misma pantalla. No se ofrece Gemini CLI porque su variante escribe una skill global. Los hooks contienen la ruta absoluta del Graphify de este equipo: no sirven en otro equipo. «No integrar» recuerda tu decisión en `.skima/config.json`.
+- Al regenerar el `AGENTS.md` desde la pestaña Contexto se conserva la sección `## graphify`.
+
+Detalles y lo que no se ha verificado (tráfico de red, macOS y Linux) en `graphify-usage-and-integration`.
+
+## Carpeta `.skima/` por proyecto (ampliada)
+
+Además de la restricción de modelos, `.skima/config.json` guarda ahora `agentsMd`: respuestas originales del formulario, borrador, idioma y el resultado optimizado con agente y modelo. Nunca guarda secretos ni valores de variables de entorno.
 
 ## Detección de skills instaladas
 

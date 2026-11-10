@@ -21,6 +21,9 @@ const validateSource = (source) => {
   if (source.type === 'installedCopy' && typeof source.path === 'string') {
     return { type: 'installedCopy', path: source.path }
   }
+  if (source.type === 'imported' && typeof source.itemId === 'string') {
+    return { type: 'imported', itemId: source.itemId }
+  }
   if (source.type === 'mySkill' && typeof source.name === 'string') {
     return { type: 'mySkill', name: source.name }
   }

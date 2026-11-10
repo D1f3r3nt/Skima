@@ -98,7 +98,7 @@ class McpInstaller {
     const settings = await this.settingsStore.get()
     const enabledEntries = this.registry.filter((entry) => settings.agents[entry.id]?.enabled)
     if (enabledEntries.length === 0) {
-      throw createInstallerError('NO_AGENTS', 'No hay ningún agente activado. Actívalos en Configuración, «Mis agentes y rutas».')
+      throw createInstallerError('NO_AGENTS', 'No hay ningún agente activado. Actívalos en Configuración, «Rutas de configuración».')
     }
     let project = null
     if (scope === 'project') {

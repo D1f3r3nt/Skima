@@ -25,7 +25,7 @@ test('crea los valores por defecto y los guarda con versión de esquema', async 
   assert.equal(settings.promptLaunch.defaultPermissionMode, 'readOnly')
   assert.equal(settings.promptLaunch.quickModel.mode, 'auto')
   assert.equal(settings.promptLaunch.includeFreeAndLocalModels, false)
-  assert.equal(settings.github.token, null)
+  assert.equal('github' in settings, false)
   assert.equal(storage.writes.length, 1)
 })
 
@@ -80,7 +80,7 @@ test('no sobrescribe un archivo de una versión más nueva', async () => {
   await store.get()
 
   assert.equal(storage.writes.length, 0)
-  await assert.rejects(() => store.update((settings) => { settings.github.token = 'x' }), /más nueva/)
+  await assert.rejects(() => store.update((settings) => { settings.projects = [] }), /más nueva/)
 })
 
 test('serializa las actualizaciones concurrentes sin perder cambios', async () => {
@@ -121,4 +121,14 @@ test('avisa a los suscriptores cuando cambian los ajustes', async () => {
   await store.update((settings) => { settings.promptLaunch.workingDirectoryMode = 'project' })
 
   assert.equal(snapshots.length, 1)
+})
+
+test('la migración borra el token de GitHub de los ajustes ya guardados', async () => {
+  const storage = new MemoryStorage({ schemaVersion: 1, github: { token: 'ghp_olvidado' }, projects: [] })
+  const settings = await createStore({ storage }).get()
+
+  assert.equal(settings.schemaVersion, currentSchemaVersion)
+  assert.equal('github' in settings, false)
+  assert.equal(storage.writes.length, 1)
+  assert.doesNotMatch(JSON.stringify(storage.writes.at(-1)), /ghp_olvidado|token/)
 })

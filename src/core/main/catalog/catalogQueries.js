@@ -20,19 +20,13 @@ const catalogQueries = Object.freeze([
   { id: 'topic-gemini-cli', kind: null, query: 'topic:gemini-cli fork:false' }
 ])
 
-const codeSearchQueries = Object.freeze([
-  { id: 'code-skill-md', kind: 'skill', query: 'filename:SKILL.md' }
-])
-
 const crawlLimits = Object.freeze({
   perPage: 100,
   maximumResultsPerQuery: 1000,
-  anonymousPagesPerQuery: 3,
-  authenticatedPagesPerQuery: 10,
-  codeSearchPages: 10,
+  pagesPerQuery: 3,
   snapshotTtlMs: 24 * 60 * 60 * 1000,
   remoteSearchTtlMs: 60 * 60 * 1000,
   remoteSearchPerPage: 50
 })
 
-module.exports = { catalogQueries, codeSearchQueries, crawlLimits }
+module.exports = { catalogQueries, crawlLimits }

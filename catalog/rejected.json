@@ -1,0 +1,10 @@
+[
+  {
+    "repository": "Graphify",
+    "reason": "Su repositorio no trae un SKILL.md instalable; se integra como dependencia de Skima y no como elemento de la Biblioteca."
+  },
+  {
+    "repository": "github/github-mcp-server",
+    "reason": "Solo se ejecuta con token de GitHub o Docker; no se puede verificar sin credenciales ni contenedor."
+  }
+]

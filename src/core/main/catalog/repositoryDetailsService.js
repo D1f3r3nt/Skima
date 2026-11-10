@@ -72,9 +72,68 @@ class RepositoryDetailsService {
     return { id, label, path: filePath, html: rendered.html, headings: rendered.headings, isTruncated: rendered.isTruncated }
   }
 
+  async loadBasicDetails(item, failure) {
+    const subPath = String(item.subPath ?? '').replace(/^\/+|\/+$/g, '')
+    const isFileItem = Boolean(subPath) && /\.[a-z0-9]+$/i.test(subPath)
+    const directory = isFileItem ? path.posix.dirname(subPath) : subPath
+    const ref = item.ref
+    const readRaw = (filePath) => this.githubApiClient.fetchRawFile({ repository: item.repository, ref, filePath }).catch(() => null)
+    const readmeCandidates = [directory && `${directory}/README.md`, 'README.md'].filter(Boolean)
+    const [fileContent, skillContent, ...readmes] = await Promise.all([
+      isFileItem ? readRaw(subPath) : null,
+      item.type === 'skill' && directory ? readRaw(`${directory}/${skillSpecConstants.manifestFileName}`) : null,
+      ...readmeCandidates.map(readRaw)
+    ])
+    const readmeIndex = readmes.findIndex(Boolean)
+    const readmeContent = readmeIndex === -1 ? null : readmes[readmeIndex]
+    const documents = [
+      fileContent ? this.renderDocument({ id: 'file', label: path.posix.basename(subPath), content: fileContent, repository: item.repository, ref, filePath: subPath, stripFrontmatter: true }) : null,
+      skillContent ? this.renderDocument({ id: 'skill', label: 'SKILL.md', content: skillContent, repository: item.repository, ref, filePath: `${directory}/${skillSpecConstants.manifestFileName}`, stripFrontmatter: true }) : null,
+      readmeContent ? this.renderDocument({ id: 'readme', label: 'README', content: readmeContent, repository: item.repository, ref, filePath: readmeCandidates[readmeIndex] }) : null
+    ].filter(Boolean)
+    const metrics = {
+      repository: item.repository,
+      name: item.repository.split('/')[1],
+      owner: item.owner,
+      description: item.description,
+      url: `https://github.com/${item.repository}`,
+      stars: item.stars ?? 0,
+      forks: item.forks ?? 0,
+      openIssues: 0,
+      license: item.license ?? null,
+      licenseName: item.license ?? null,
+      topics: item.tags ?? [],
+      pushedAt: item.lastCommitAt ?? null,
+      updatedAt: item.lastCommitAt ?? null,
+      createdAt: null,
+      archived: false,
+      defaultBranch: item.branch ?? 'main'
+    }
+    return {
+      item: { ...item, subPath },
+      metrics,
+      ref,
+      documents,
+      skillManifest: null,
+      skills: [],
+      score: null,
+      mcpCandidates: [],
+      isBasic: true,
+      warnings: [`No se han podido consultar los datos actualizados de GitHub (${failure}). Se muestra la información guardada en el catálogo.`]
+    }
+  }
+
   async loadDetails(item) {
     const warnings = []
-    const { data: repositoryData } = await this.githubApiClient.request(`/repos/${item.repository}`)
+    let repositoryData
+    try {
+      ;({ data: repositoryData } = await this.githubApiClient.request(`/repos/${item.repository}`))
+    } catch (error) {
+      if (item.origin === 'catalog') {
+        return this.loadBasicDetails(item, error.code === 'RATE_LIMITED' ? 'GitHub no admite más consultas por ahora' : 'sin conexión o GitHub no responde')
+      }
+      throw error
+    }
     const metrics = toCatalogRepository(repositoryData)
     const ref = item.ref ?? metrics.defaultBranch
     const subPath = String(item.subPath ?? '').replace(/^\/+|\/+$/g, '')
@@ -134,8 +193,8 @@ class RepositoryDetailsService {
       item: {
         ...item,
         ...metrics,
-        name: item.origin === 'curated' ? item.name : metrics.name,
-        description: item.origin === 'curated' ? item.description : metrics.description,
+        name: ['curated', 'catalog'].includes(item.origin) ? item.name : metrics.name,
+        description: ['curated', 'catalog'].includes(item.origin) ? item.description : metrics.description,
         ref,
         subPath
       },

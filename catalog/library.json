@@ -1,0 +1,1201 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-10",
+  "skills": [
+    {
+      "id": "catalog:anthropics/skills/skills/docx",
+      "type": "skill",
+      "origin": "catalog",
+      "name": "docx",
+      "author": "anthropics",
+      "description": "Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files) or Word templates (.dotx files). Triggers include: any mention of 'Word doc', 'word document', '.docx', '.dotx', or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. Also use when extracting or reorganizing content from…",
+      "category": "documentation",
+      "tags": [
+        "docx"
+      ],
+      "source": {
+        "repository": "anthropics/skills",
+        "path": "skills/docx",
+        "ref": "main",
+        "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579"
+      },
+      "snapshot": {
+        "stars": 191510,
+        "forks": 22479,
+        "license": null,
+        "lastCommitAt": "2026-11-06",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual. Lanza procesos. Instala dependencias."
+      },
+      "requirements": [],
+      "notice": "El repositorio no declara una licencia reconocible."
+    },
+    {
+      "id": "catalog:anthropics/skills/skills/pdf",
+      "type": "skill",
+      "origin": "catalog",
+      "name": "pdf",
+      "author": "anthropics",
+      "description": "Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file o…",
+      "category": "documentation",
+      "tags": [
+        "pdf"
+      ],
+      "source": {
+        "repository": "anthropics/skills",
+        "path": "skills/pdf",
+        "ref": "main",
+        "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579"
+      },
+      "snapshot": {
+        "stars": 191510,
+        "forks": 22479,
+        "license": null,
+        "lastCommitAt": "2026-11-06",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual. Instala dependencias."
+      },
+      "requirements": [],
+      "notice": "El repositorio no declara una licencia reconocible."
+    },
+    {
+      "id": "catalog:anthropics/skills/skills/pptx",
+      "type": "skill",
+      "origin": "catalog",
+      "name": "pptx",
+      "author": "anthropics",
+      "description": "Use this skill any time a .pptx or .potx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting text from any .pptx or .potx file (even if the extracted content will be used elsewhere, like in an email or summary); editing, modifying, or updating existing presentations; combining or splitting sli…",
+      "category": "documentation",
+      "tags": [
+        "pptx"
+      ],
+      "source": {
+        "repository": "anthropics/skills",
+        "path": "skills/pptx",
+        "ref": "main",
+        "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579"
+      },
+      "snapshot": {
+        "stars": 191510,
+        "forks": 22479,
+        "license": null,
+        "lastCommitAt": "2026-11-06",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual. Lanza procesos. Instala dependencias."
+      },
+      "requirements": [],
+      "notice": "El repositorio no declara una licencia reconocible."
+    },
+    {
+      "id": "catalog:anthropics/skills/skills/xlsx",
+      "type": "skill",
+      "origin": "catalog",
+      "name": "xlsx",
+      "author": "anthropics",
+      "description": "Use this skill any time a spreadsheet file is the primary input or output. This means any task where the user wants to: open, read, edit, or fix an existing .xlsx, .xlsm, .xltx, .csv, or .tsv file (e.g., adding columns, computing formulas, formatting, charting, cleaning messy data); create a new spreadsheet from scratch or from other data sources; or convert between tabular file formats. Trigger…",
+      "category": "data",
+      "tags": [
+        "xlsx"
+      ],
+      "source": {
+        "repository": "anthropics/skills",
+        "path": "skills/xlsx",
+        "ref": "main",
+        "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579"
+      },
+      "snapshot": {
+        "stars": 191510,
+        "forks": 22479,
+        "license": null,
+        "lastCommitAt": "2026-11-06",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual. Lanza procesos. Instala dependencias."
+      },
+      "requirements": [],
+      "notice": "El repositorio no declara una licencia reconocible."
+    },
+    {
+      "id": "catalog:anthropics/skills/skills/skill-creator",
+      "type": "skill",
+      "origin": "catalog",
+      "name": "skill-creator",
+      "author": "anthropics",
+      "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.",
+      "category": "ai-agents",
+      "tags": [
+        "skill"
+      ],
+      "source": {
+        "repository": "anthropics/skills",
+        "path": "skills/skill-creator",
+        "ref": "main",
+        "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579"
+      },
+      "snapshot": {
+        "stars": 191510,
+        "forks": 22479,
+        "license": null,
+        "lastCommitAt": "2026-11-06",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual. Lanza procesos. Hace llamadas de red."
+      },
+      "requirements": [],
+      "notice": "El repositorio no declara una licencia reconocible."
+    },
+    {
+      "id": "catalog:anthropics/skills/skills/mcp-builder",
+      "type": "skill",
+      "origin": "catalog",
+      "name": "mcp-builder",
+      "author": "anthropics",
+      "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).",
+      "category": "ai-agents",
+      "tags": [
+        "mcp"
+      ],
+      "source": {
+        "repository": "anthropics/skills",
+        "path": "skills/mcp-builder",
+        "ref": "main",
+        "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579"
+      },
+      "snapshot": {
+        "stars": 191510,
+        "forks": 22479,
+        "license": null,
+        "lastCommitAt": "2026-11-06",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual. Instala dependencias. Hace llamadas de red."
+      },
+      "requirements": [],
+      "notice": "El repositorio no declara una licencia reconocible."
+    },
+    {
+      "id": "catalog:anthropics/skills/skills/frontend-design",
+      "type": "skill",
+      "origin": "catalog",
+      "name": "frontend-design",
+      "author": "anthropics",
+      "description": "Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults.",
+      "category": "design",
+      "tags": [
+        "frontend"
+      ],
+      "source": {
+        "repository": "anthropics/skills",
+        "path": "skills/frontend-design",
+        "ref": "main",
+        "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579"
+      },
+      "snapshot": {
+        "stars": 191510,
+        "forks": 22479,
+        "license": null,
+        "lastCommitAt": "2026-11-06",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": "El repositorio no declara una licencia reconocible."
+    },
+    {
+      "id": "catalog:anthropics/skills/skills/webapp-testing",
+      "type": "skill",
+      "origin": "catalog",
+      "name": "webapp-testing",
+      "author": "anthropics",
+      "description": "Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.",
+      "category": "testing",
+      "tags": [
+        "webapp"
+      ],
+      "source": {
+        "repository": "anthropics/skills",
+        "path": "skills/webapp-testing",
+        "ref": "main",
+        "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579"
+      },
+      "snapshot": {
+        "stars": 191510,
+        "forks": 22479,
+        "license": null,
+        "lastCommitAt": "2026-11-06",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual. Lanza procesos."
+      },
+      "requirements": [],
+      "notice": "El repositorio no declara una licencia reconocible."
+    },
+    {
+      "id": "catalog:anthropics/skills/skills/canvas-design",
+      "type": "skill",
+      "origin": "catalog",
+      "name": "canvas-design",
+      "author": "anthropics",
+      "description": "Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists' work to avoid copyright violations.",
+      "category": "design",
+      "tags": [
+        "canvas"
+      ],
+      "source": {
+        "repository": "anthropics/skills",
+        "path": "skills/canvas-design",
+        "ref": "main",
+        "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579"
+      },
+      "snapshot": {
+        "stars": 191510,
+        "forks": 22479,
+        "license": null,
+        "lastCommitAt": "2026-11-06",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": "El repositorio no declara una licencia reconocible."
+    },
+    {
+      "id": "catalog:anthropics/skills/skills/web-artifacts-builder",
+      "type": "skill",
+      "origin": "catalog",
+      "name": "web-artifacts-builder",
+      "author": "anthropics",
+      "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.",
+      "category": "development",
+      "tags": [
+        "web"
+      ],
+      "source": {
+        "repository": "anthropics/skills",
+        "path": "skills/web-artifacts-builder",
+        "ref": "main",
+        "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579"
+      },
+      "snapshot": {
+        "stars": 191510,
+        "forks": 22479,
+        "license": null,
+        "lastCommitAt": "2026-11-06",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual. Instala dependencias."
+      },
+      "requirements": [],
+      "notice": "El repositorio no declara una licencia reconocible."
+    }
+  ],
+  "mcp": [
+    {
+      "id": "catalog:modelcontextprotocol/servers/src/memory",
+      "type": "mcp",
+      "origin": "catalog",
+      "name": "memory",
+      "author": "modelcontextprotocol",
+      "description": "MCP server for enabling memory for Claude through a knowledge graph",
+      "category": "ai-agents",
+      "tags": [
+        "memory"
+      ],
+      "source": {
+        "repository": "modelcontextprotocol/servers",
+        "path": "src/memory",
+        "ref": "main",
+        "commit": "36380287ed3b15d115b55f546617d723072b1296"
+      },
+      "snapshot": {
+        "stars": 91897,
+        "forks": 11930,
+        "license": null,
+        "lastCommitAt": "2026-11-10",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "started-and-listed-tools",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [
+        "node"
+      ],
+      "notice": "El repositorio no declara una licencia reconocible.",
+      "mcpDefinition": {
+        "name": "memory",
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-memory@2.1.0"
+        ],
+        "package": {
+          "registry": "npm",
+          "name": "@modelcontextprotocol/server-memory",
+          "version": "2.1.0"
+        },
+        "environment": []
+      }
+    },
+    {
+      "id": "catalog:modelcontextprotocol/servers/src/sequential-thinking",
+      "type": "mcp",
+      "origin": "catalog",
+      "name": "sequential-thinking",
+      "author": "modelcontextprotocol",
+      "description": "MCP server for sequential thinking and problem solving",
+      "category": "ai-agents",
+      "tags": [
+        "sequential"
+      ],
+      "source": {
+        "repository": "modelcontextprotocol/servers",
+        "path": "src/sequential-thinking",
+        "ref": "main",
+        "commit": "36380287ed3b15d115b55f546617d723072b1296"
+      },
+      "snapshot": {
+        "stars": 91897,
+        "forks": 11930,
+        "license": null,
+        "lastCommitAt": "2026-11-10",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "started-and-listed-tools",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [
+        "node"
+      ],
+      "notice": "El repositorio no declara una licencia reconocible.",
+      "mcpDefinition": {
+        "name": "sequential-thinking",
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-sequential-thinking@2.1.1"
+        ],
+        "package": {
+          "registry": "npm",
+          "name": "@modelcontextprotocol/server-sequential-thinking",
+          "version": "2.1.1"
+        },
+        "environment": []
+      }
+    },
+    {
+      "id": "catalog:modelcontextprotocol/servers/src/filesystem",
+      "type": "mcp",
+      "origin": "catalog",
+      "name": "filesystem",
+      "author": "modelcontextprotocol",
+      "description": "MCP server for filesystem access",
+      "category": "development",
+      "tags": [
+        "filesystem"
+      ],
+      "source": {
+        "repository": "modelcontextprotocol/servers",
+        "path": "src/filesystem",
+        "ref": "main",
+        "commit": "36380287ed3b15d115b55f546617d723072b1296"
+      },
+      "snapshot": {
+        "stars": 91897,
+        "forks": 11930,
+        "license": null,
+        "lastCommitAt": "2026-11-10",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "started-and-listed-tools",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [
+        "node"
+      ],
+      "notice": "El repositorio no declara una licencia reconocible.",
+      "mcpDefinition": {
+        "name": "filesystem",
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-filesystem@2.2.0",
+          "."
+        ],
+        "package": {
+          "registry": "npm",
+          "name": "@modelcontextprotocol/server-filesystem",
+          "version": "2.2.0"
+        },
+        "environment": []
+      }
+    },
+    {
+      "id": "catalog:modelcontextprotocol/servers/src/fetch",
+      "type": "mcp",
+      "origin": "catalog",
+      "name": "fetch",
+      "author": "modelcontextprotocol",
+      "description": "A Model Context Protocol server providing tools to fetch and convert web content for usage by LLMs",
+      "category": "productivity",
+      "tags": [
+        "fetch"
+      ],
+      "source": {
+        "repository": "modelcontextprotocol/servers",
+        "path": "src/fetch",
+        "ref": "main",
+        "commit": "36380287ed3b15d115b55f546617d723072b1296"
+      },
+      "snapshot": {
+        "stars": 91897,
+        "forks": 11930,
+        "license": null,
+        "lastCommitAt": "2026-11-10",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "started-and-listed-tools",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [
+        "python",
+        "uv",
+        "network"
+      ],
+      "notice": "El repositorio no declara una licencia reconocible.",
+      "mcpDefinition": {
+        "name": "fetch",
+        "transport": "stdio",
+        "command": "uvx",
+        "args": [
+          "mcp-server-fetch==2026.11.4"
+        ],
+        "package": {
+          "registry": "pypi",
+          "name": "mcp-server-fetch",
+          "version": "2026.11.4"
+        },
+        "environment": []
+      }
+    },
+    {
+      "id": "catalog:modelcontextprotocol/servers/src/time",
+      "type": "mcp",
+      "origin": "catalog",
+      "name": "time",
+      "author": "modelcontextprotocol",
+      "description": "A Model Context Protocol server providing tools for time queries and timezone conversions for LLMs",
+      "category": "productivity",
+      "tags": [
+        "time"
+      ],
+      "source": {
+        "repository": "modelcontextprotocol/servers",
+        "path": "src/time",
+        "ref": "main",
+        "commit": "36380287ed3b15d115b55f546617d723072b1296"
+      },
+      "snapshot": {
+        "stars": 91897,
+        "forks": 11930,
+        "license": null,
+        "lastCommitAt": "2026-11-10",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "started-and-listed-tools",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [
+        "python",
+        "uv"
+      ],
+      "notice": "El repositorio no declara una licencia reconocible.",
+      "mcpDefinition": {
+        "name": "time",
+        "transport": "stdio",
+        "command": "uvx",
+        "args": [
+          "mcp-server-time==2026.11.4"
+        ],
+        "package": {
+          "registry": "pypi",
+          "name": "mcp-server-time",
+          "version": "2026.11.4"
+        },
+        "environment": []
+      }
+    },
+    {
+      "id": "catalog:modelcontextprotocol/servers/src/git",
+      "type": "mcp",
+      "origin": "catalog",
+      "name": "git",
+      "author": "modelcontextprotocol",
+      "description": "A Model Context Protocol server providing tools to read, search, and manipulate Git repositories programmatically via LLMs",
+      "category": "development",
+      "tags": [
+        "git"
+      ],
+      "source": {
+        "repository": "modelcontextprotocol/servers",
+        "path": "src/git",
+        "ref": "main",
+        "commit": "36380287ed3b15d115b55f546617d723072b1296"
+      },
+      "snapshot": {
+        "stars": 91897,
+        "forks": 11930,
+        "license": null,
+        "lastCommitAt": "2026-11-10",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "started-and-listed-tools",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [
+        "python",
+        "uv",
+        "git"
+      ],
+      "notice": "El repositorio no declara una licencia reconocible.",
+      "mcpDefinition": {
+        "name": "git",
+        "transport": "stdio",
+        "command": "uvx",
+        "args": [
+          "mcp-server-git==2026.11.4"
+        ],
+        "package": {
+          "registry": "pypi",
+          "name": "mcp-server-git",
+          "version": "2026.11.4"
+        },
+        "environment": []
+      }
+    },
+    {
+      "id": "catalog:upstash/context7",
+      "type": "mcp",
+      "origin": "catalog",
+      "name": "context7",
+      "author": "upstash",
+      "description": "MCP server for Context7",
+      "category": "documentation",
+      "tags": [
+        "context7"
+      ],
+      "source": {
+        "repository": "upstash/context7",
+        "path": "",
+        "ref": "master",
+        "commit": "59b616afeb29069247d676df89ec9eb45da8e27e"
+      },
+      "snapshot": {
+        "stars": 64445,
+        "forks": 3229,
+        "license": "MIT",
+        "lastCommitAt": "2026-11-10",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "started-and-listed-tools",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [
+        "node",
+        "network"
+      ],
+      "notice": null,
+      "mcpDefinition": {
+        "name": "context7",
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@upstash/context7-mcp@4.6.0"
+        ],
+        "package": {
+          "registry": "npm",
+          "name": "@upstash/context7-mcp",
+          "version": "4.6.0"
+        },
+        "environment": []
+      }
+    },
+    {
+      "id": "catalog:microsoft/playwright-mcp",
+      "type": "mcp",
+      "origin": "catalog",
+      "name": "playwright",
+      "author": "microsoft",
+      "description": "Playwright Tools for MCP",
+      "category": "testing",
+      "tags": [
+        "playwright"
+      ],
+      "source": {
+        "repository": "microsoft/playwright-mcp",
+        "path": "",
+        "ref": "main",
+        "commit": "3afdae855f62998c87644144d4f7dc705ac24dcf"
+      },
+      "snapshot": {
+        "stars": 39397,
+        "forks": 3413,
+        "license": "Apache-2.0",
+        "lastCommitAt": "2026-11-10",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "started-and-listed-tools",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [
+        "node"
+      ],
+      "notice": null,
+      "mcpDefinition": {
+        "name": "playwright",
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@playwright/mcp@0.0.85"
+        ],
+        "package": {
+          "registry": "npm",
+          "name": "@playwright/mcp",
+          "version": "0.0.85"
+        },
+        "environment": []
+      }
+    },
+    {
+      "id": "catalog:brave/brave-search-mcp-server",
+      "type": "mcp",
+      "origin": "catalog",
+      "name": "brave-search",
+      "author": "brave",
+      "description": "Brave Search MCP Server: web results, images, videos, rich results, AI summaries, and more.",
+      "category": "productivity",
+      "tags": [
+        "brave"
+      ],
+      "source": {
+        "repository": "brave/brave-search-mcp-server",
+        "path": "",
+        "ref": "main",
+        "commit": "e7da0f1973051fe0fc4e351acf6a3e0a190fc2d2"
+      },
+      "snapshot": {
+        "stars": 1565,
+        "forks": 227,
+        "license": "MIT",
+        "lastCommitAt": "2026-11-09",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "verified-without-credentials",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [
+        "node",
+        "network",
+        "account"
+      ],
+      "notice": null,
+      "mcpDefinition": {
+        "name": "brave-search",
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@brave/brave-search-mcp-server@2.1.4"
+        ],
+        "package": {
+          "registry": "npm",
+          "name": "@brave/brave-search-mcp-server",
+          "version": "2.1.4"
+        },
+        "environment": [
+          {
+            "name": "BRAVE_API_KEY",
+            "description": "API key de Brave Search.",
+            "required": true,
+            "secret": true
+          }
+        ]
+      }
+    }
+  ],
+  "subagents": [
+    {
+      "id": "catalog:voltagent/awesome-claude-code-subagents/categories/04-quality-security/code-reviewer.md",
+      "type": "subagent",
+      "origin": "catalog",
+      "name": "code-reviewer",
+      "author": "VoltAgent",
+      "description": "Use this agent when you need to conduct comprehensive code reviews focusing on code quality, security vulnerabilities, and best practices.",
+      "category": "development",
+      "tags": [
+        "code"
+      ],
+      "source": {
+        "repository": "VoltAgent/awesome-claude-code-subagents",
+        "path": "categories/04-quality-security/code-reviewer.md",
+        "ref": "main",
+        "commit": "ed74d115b7fb7026a22a4f816a8e3250f425e3b4"
+      },
+      "snapshot": {
+        "stars": 26458,
+        "forks": 3028,
+        "license": "MIT",
+        "lastCommitAt": "2026-11-02",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": null
+    },
+    {
+      "id": "catalog:voltagent/awesome-claude-code-subagents/categories/04-quality-security/debugger.md",
+      "type": "subagent",
+      "origin": "catalog",
+      "name": "debugger",
+      "author": "VoltAgent",
+      "description": "Use this agent when you need to diagnose and fix bugs, identify root causes of failures, or analyze error logs and stack traces to resolve issues.",
+      "category": "development",
+      "tags": [
+        "debugger"
+      ],
+      "source": {
+        "repository": "VoltAgent/awesome-claude-code-subagents",
+        "path": "categories/04-quality-security/debugger.md",
+        "ref": "main",
+        "commit": "ed74d115b7fb7026a22a4f816a8e3250f425e3b4"
+      },
+      "snapshot": {
+        "stars": 26458,
+        "forks": 3028,
+        "license": "MIT",
+        "lastCommitAt": "2026-11-02",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": null
+    },
+    {
+      "id": "catalog:voltagent/awesome-claude-code-subagents/categories/04-quality-security/security-auditor.md",
+      "type": "subagent",
+      "origin": "catalog",
+      "name": "security-auditor",
+      "author": "VoltAgent",
+      "description": "Use this agent when conducting comprehensive security audits, compliance assessments, or risk evaluations across systems, infrastructure, and processes. Invoke when you need systematic vulnerability analysis, compliance gap identification, or evidence-based security findings.",
+      "category": "security",
+      "tags": [
+        "security"
+      ],
+      "source": {
+        "repository": "VoltAgent/awesome-claude-code-subagents",
+        "path": "categories/04-quality-security/security-auditor.md",
+        "ref": "main",
+        "commit": "ed74d115b7fb7026a22a4f816a8e3250f425e3b4"
+      },
+      "snapshot": {
+        "stars": 26458,
+        "forks": 3028,
+        "license": "MIT",
+        "lastCommitAt": "2026-11-02",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": null
+    },
+    {
+      "id": "catalog:voltagent/awesome-claude-code-subagents/categories/04-quality-security/test-automator.md",
+      "type": "subagent",
+      "origin": "catalog",
+      "name": "test-automator",
+      "author": "VoltAgent",
+      "description": "Use this agent when you need to build, implement, or enhance automated test frameworks, create test scripts, or integrate testing into CI/CD pipelines.",
+      "category": "testing",
+      "tags": [
+        "test"
+      ],
+      "source": {
+        "repository": "VoltAgent/awesome-claude-code-subagents",
+        "path": "categories/04-quality-security/test-automator.md",
+        "ref": "main",
+        "commit": "ed74d115b7fb7026a22a4f816a8e3250f425e3b4"
+      },
+      "snapshot": {
+        "stars": 26458,
+        "forks": 3028,
+        "license": "MIT",
+        "lastCommitAt": "2026-11-02",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": null
+    },
+    {
+      "id": "catalog:voltagent/awesome-claude-code-subagents/categories/01-core-development/frontend-developer.md",
+      "type": "subagent",
+      "origin": "catalog",
+      "name": "frontend-developer",
+      "author": "VoltAgent",
+      "description": "Use when building complete frontend applications across React, Vue, and Angular frameworks requiring multi-framework expertise and full-stack integration.",
+      "category": "development",
+      "tags": [
+        "frontend"
+      ],
+      "source": {
+        "repository": "VoltAgent/awesome-claude-code-subagents",
+        "path": "categories/01-core-development/frontend-developer.md",
+        "ref": "main",
+        "commit": "ed74d115b7fb7026a22a4f816a8e3250f425e3b4"
+      },
+      "snapshot": {
+        "stars": 26458,
+        "forks": 3028,
+        "license": "MIT",
+        "lastCommitAt": "2026-11-02",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": null
+    },
+    {
+      "id": "catalog:voltagent/awesome-claude-code-subagents/categories/01-core-development/backend-developer.md",
+      "type": "subagent",
+      "origin": "catalog",
+      "name": "backend-developer",
+      "author": "VoltAgent",
+      "description": "Use this agent when building server-side APIs, microservices, and backend systems that require robust architecture, scalability planning, and production-ready implementation.",
+      "category": "development",
+      "tags": [
+        "backend"
+      ],
+      "source": {
+        "repository": "VoltAgent/awesome-claude-code-subagents",
+        "path": "categories/01-core-development/backend-developer.md",
+        "ref": "main",
+        "commit": "ed74d115b7fb7026a22a4f816a8e3250f425e3b4"
+      },
+      "snapshot": {
+        "stars": 26458,
+        "forks": 3028,
+        "license": "MIT",
+        "lastCommitAt": "2026-11-02",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": null
+    },
+    {
+      "id": "catalog:voltagent/awesome-claude-code-subagents/categories/01-core-development/electron-pro.md",
+      "type": "subagent",
+      "origin": "catalog",
+      "name": "electron-pro",
+      "author": "VoltAgent",
+      "description": "Use this agent when building Electron desktop applications that require native OS integration, cross-platform distribution, security hardening, and performance optimization. Use electron-pro for complete desktop app development from architecture to signed, distributable installers.",
+      "category": "development",
+      "tags": [
+        "electron"
+      ],
+      "source": {
+        "repository": "VoltAgent/awesome-claude-code-subagents",
+        "path": "categories/01-core-development/electron-pro.md",
+        "ref": "main",
+        "commit": "ed74d115b7fb7026a22a4f816a8e3250f425e3b4"
+      },
+      "snapshot": {
+        "stars": 26458,
+        "forks": 3028,
+        "license": "MIT",
+        "lastCommitAt": "2026-11-02",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": null
+    },
+    {
+      "id": "catalog:voltagent/awesome-claude-code-subagents/categories/02-language-specialists/typescript-pro.md",
+      "type": "subagent",
+      "origin": "catalog",
+      "name": "typescript-pro",
+      "author": "VoltAgent",
+      "description": "Use when implementing TypeScript code requiring advanced type system patterns, complex generics, type-level programming, or end-to-end type safety across full-stack applications.",
+      "category": "development",
+      "tags": [
+        "typescript"
+      ],
+      "source": {
+        "repository": "VoltAgent/awesome-claude-code-subagents",
+        "path": "categories/02-language-specialists/typescript-pro.md",
+        "ref": "main",
+        "commit": "ed74d115b7fb7026a22a4f816a8e3250f425e3b4"
+      },
+      "snapshot": {
+        "stars": 26458,
+        "forks": 3028,
+        "license": "MIT",
+        "lastCommitAt": "2026-11-02",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": null
+    },
+    {
+      "id": "catalog:voltagent/awesome-claude-code-subagents/categories/02-language-specialists/python-pro.md",
+      "type": "subagent",
+      "origin": "catalog",
+      "name": "python-pro",
+      "author": "VoltAgent",
+      "description": "Use this agent when you need to build type-safe, production-ready Python code for web APIs, system utilities, or complex applications requiring modern async patterns and extensive type coverage.",
+      "category": "development",
+      "tags": [
+        "python"
+      ],
+      "source": {
+        "repository": "VoltAgent/awesome-claude-code-subagents",
+        "path": "categories/02-language-specialists/python-pro.md",
+        "ref": "main",
+        "commit": "ed74d115b7fb7026a22a4f816a8e3250f425e3b4"
+      },
+      "snapshot": {
+        "stars": 26458,
+        "forks": 3028,
+        "license": "MIT",
+        "lastCommitAt": "2026-11-02",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": null
+    },
+    {
+      "id": "catalog:voltagent/awesome-claude-code-subagents/categories/03-infrastructure/devops-engineer.md",
+      "type": "subagent",
+      "origin": "catalog",
+      "name": "devops-engineer",
+      "author": "VoltAgent",
+      "description": "Use this agent when building or optimizing infrastructure automation, CI/CD pipelines, containerization strategies, and deployment workflows to accelerate software delivery while maintaining reliability and security.",
+      "category": "devops",
+      "tags": [
+        "devops"
+      ],
+      "source": {
+        "repository": "VoltAgent/awesome-claude-code-subagents",
+        "path": "categories/03-infrastructure/devops-engineer.md",
+        "ref": "main",
+        "commit": "ed74d115b7fb7026a22a4f816a8e3250f425e3b4"
+      },
+      "snapshot": {
+        "stars": 26458,
+        "forks": 3028,
+        "license": "MIT",
+        "lastCommitAt": "2026-11-02",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": null
+    }
+  ],
+  "commands": [
+    {
+      "id": "catalog:qdhenry/claude-command-suite/.claude/commands/dev/ultra-think.md",
+      "type": "command",
+      "origin": "catalog",
+      "name": "ultra-think",
+      "author": "qdhenry",
+      "description": "Professional slash commands for Claude Code that provide structured workflows for software development tasks including code review, feature creation, security auditing, and architectural analysis.",
+      "category": "productivity",
+      "tags": [
+        "think"
+      ],
+      "source": {
+        "repository": "qdhenry/Claude-Command-Suite",
+        "path": ".claude/commands/dev/ultra-think.md",
+        "ref": "main",
+        "commit": "e89b2f0b54f536a695ed7ae2e6e75e760b7a849e"
+      },
+      "snapshot": {
+        "stars": 1352,
+        "forks": 160,
+        "license": null,
+        "lastCommitAt": "2026-03-01",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": "El repositorio no declara una licencia reconocible."
+    },
+    {
+      "id": "catalog:qdhenry/claude-command-suite/.claude/commands/test/write-tests.md",
+      "type": "command",
+      "origin": "catalog",
+      "name": "write-tests",
+      "author": "qdhenry",
+      "description": "Professional slash commands for Claude Code that provide structured workflows for software development tasks including code review, feature creation, security auditing, and architectural analysis.",
+      "category": "testing",
+      "tags": [
+        "tests"
+      ],
+      "source": {
+        "repository": "qdhenry/Claude-Command-Suite",
+        "path": ".claude/commands/test/write-tests.md",
+        "ref": "main",
+        "commit": "e89b2f0b54f536a695ed7ae2e6e75e760b7a849e"
+      },
+      "snapshot": {
+        "stars": 1352,
+        "forks": 160,
+        "license": null,
+        "lastCommitAt": "2026-03-01",
+        "verifiedAt": "2026-11-10"
+      },
+      "review": {
+        "date": "2026-11-10",
+        "result": "passed-with-notes",
+        "verification": "installed-from-archive",
+        "notes": "Revisión automática con patrones; no sustituye a una revisión manual."
+      },
+      "requirements": [],
+      "notice": "El repositorio no declara una licencia reconocible."
+    }
+  ]
+}

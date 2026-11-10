@@ -30,6 +30,9 @@ jobs:
       - name: Fuente de la Verdad
         run: npm run sot:check
 
+      - name: Catálogo
+        run: npm run catalog:validate
+
       - name: Empaquetar sin publicar
         run: npm run dist -- --publish never
         env:

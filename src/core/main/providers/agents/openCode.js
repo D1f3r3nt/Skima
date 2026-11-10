@@ -12,7 +12,9 @@ const openCode = {
     { title: 'OpenCode: Skills', url: 'https://opencode.ai/docs/skills/' },
     { title: 'OpenCode v1: MCP servers', url: 'https://docs.opencode.ai/docs/mcp-servers' },
     { title: 'OpenCode v2: MCP servers', url: 'https://opencode.ai/docs/mcp-servers/' },
-    { title: 'OpenCode v1: CLI', url: 'https://docs.opencode.ai/docs/cli' }
+    { title: 'OpenCode v1: CLI', url: 'https://docs.opencode.ai/docs/cli' },
+    { title: 'OpenCode: Agents', url: 'https://opencode.ai/docs/agents/' },
+    { title: 'OpenCode: Commands', url: 'https://opencode.ai/docs/commands/' }
   ],
   roots: {
     agentHome: { template: '{xdgConfigHome}/opencode', environmentOverride: 'OPENCODE_CONFIG_DIR' }
@@ -22,6 +24,21 @@ const openCode = {
     project: '.opencode/skills',
     alsoReadsGlobal: ['{home}/.claude/skills', '{home}/.agents/skills'],
     alsoReadsProject: ['.claude/skills', '.agents/skills']
+  },
+  subagents: {
+    global: '{agentHome}/agents',
+    project: '.opencode/agents',
+    format: 'openCodeMarkdown',
+    confidence: 'high',
+    verifiedAt: '2026-11-10'
+  },
+  commands: {
+    global: '{agentHome}/commands',
+    project: '.opencode/commands',
+    format: 'openCodeMarkdown',
+    confidence: 'high',
+    verifiedAt: '2026-11-10',
+    note: 'OpenCode también lee la carpeta antigua command/ (singular).'
   },
   mcp: {
     format: 'openCode',

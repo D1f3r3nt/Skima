@@ -37,12 +37,11 @@ const createFakeFetch = (handler) => {
   return { calls, fetchImplementation }
 }
 
-const createService = ({ handler, token = null, queries, codeQueries = [], limits = {} }) => {
+const createService = ({ handler, queries, limits = {} }) => {
   const fakeFetch = createFakeFetch(handler)
   const githubApiClient = new GitHubApiClient({
     fetchImplementation: fakeFetch.fetchImplementation,
     responseCache: new MemoryResponseCache(),
-    getToken: () => token,
     sleep: async () => {}
   })
   const service = new CatalogService({
@@ -52,13 +51,10 @@ const createService = ({ handler, token = null, queries, codeQueries = [], limit
       getAll: async () => [{ type: 'skill', name: 'pdf', description: 'PDF', source: 'anthropics/skills', url: 'https://github.com/anthropics/skills/tree/main/skills/pdf' }]
     },
     queries,
-    codeQueries,
     limits: {
       perPage: 2,
       maximumResultsPerQuery: 1000,
-      anonymousPagesPerQuery: 3,
-      authenticatedPagesPerQuery: 5,
-      codeSearchPages: 1,
+      pagesPerQuery: 3,
       snapshotTtlMs: 1000 * 60,
       remoteSearchTtlMs: 1000 * 60,
       remoteSearchPerPage: 50,
@@ -113,10 +109,10 @@ test('pagina, elimina duplicados entre consultas y respeta el final de resultado
   assert.ok(fakeFetch.calls.every((call) => call.url.searchParams.get('sort') === 'stars' && call.url.searchParams.get('per_page') === '2'))
 })
 
-test('limita el número de páginas sin token', async () => {
+test('limita el número de páginas por consulta', async () => {
   const { service, fakeFetch } = createService({
     queries: [{ id: 'skills', kind: 'skill', query: 'topic:claude-skills' }],
-    limits: { anonymousPagesPerQuery: 2 },
+    limits: { pagesPerQuery: 2 },
     handler: (url) => jsonResponse({
       total_count: 500,
       items: [createRepository(`o/r${url.searchParams.get('page')}a`), createRepository(`o/r${url.searchParams.get('page')}b`)]
@@ -144,35 +140,20 @@ test('pausa el rastreo al llegar al límite de la API y lo explica', async () =>
   const status = service.getStatus()
 
   assert.ok(status.pausedUntil > Date.now())
-  assert.match(status.lastError, /GITHUB_TOKEN/)
+  assert.match(status.lastError, /GitHub no admite más consultas/)
+  assert.doesNotMatch(status.lastError, /token/i)
   assert.equal(timers.length, 1)
 })
 
-test('envía el token solo si existe y usa la búsqueda de código solo con token', async () => {
-  const handler = (url) => {
-    if (url.pathname === '/search/code') {
-      return jsonResponse({ total_count: 1, items: [{ repository: { full_name: 'x/hidden-skills' } }] })
-    }
-    if (url.pathname === '/repos/x/hidden-skills') {
-      return jsonResponse(createRepository('x/hidden-skills', { description: 'My agent workflows' }))
-    }
-    return jsonResponse({ total_count: 0, items: [] })
-  }
+test('nunca envía cabecera de autorización ni usa la búsqueda de código', async () => {
+  const handler = () => jsonResponse({ total_count: 0, items: [] })
   const queries = [{ id: 'skills', kind: 'skill', query: 'topic:claude-skills' }]
-  const codeQueries = [{ id: 'code-skill-md', kind: 'skill', query: 'filename:SKILL.md' }]
-
-  const anonymous = createService({ handler, queries, codeQueries })
-  await anonymous.service.list()
-  await anonymous.service.crawlPromise
-  assert.ok(anonymous.fakeFetch.calls.every((call) => !call.headers.Authorization))
-  assert.ok(anonymous.fakeFetch.calls.every((call) => call.url.pathname !== '/search/code'))
-
-  const authenticated = createService({ handler, queries, codeQueries, token: 'secret-token' })
-  await authenticated.service.list()
-  await authenticated.service.crawlPromise
-  const { items } = await authenticated.service.list()
-  assert.ok(authenticated.fakeFetch.calls.every((call) => call.headers.Authorization === 'Bearer secret-token'))
-  assert.equal(items.find((item) => item.repository === 'x/hidden-skills').type, 'skill')
+  const { service, fakeFetch } = createService({ handler, queries })
+  await service.list()
+  await service.crawlPromise
+  assert.ok(fakeFetch.calls.length > 0)
+  assert.ok(fakeFetch.calls.every((call) => !call.headers.Authorization))
+  assert.ok(fakeFetch.calls.every((call) => call.url.pathname !== '/search/code'))
 })
 
 test('reutiliza la respuesta en caché cuando GitHub contesta 304', async () => {

@@ -6,6 +6,7 @@ import { createBadge } from '../../../components/atoms/badge.js'
 import { createRadioGroup } from '../../../components/molecules/radioGroup.js'
 import { createNoticeBanner } from '../../../components/molecules/noticeBanner.js'
 import { confirmDialog } from '../../../components/organisms/confirmDialog.js'
+import { settingsSectionIds } from '../config/settingsSectionIds.js'
 
 const customModelValue = '__custom__'
 const effortLabels = { low: 'Baja', medium: 'Media', high: 'Alta', max: 'Máxima' }
@@ -71,7 +72,7 @@ export function createPromptLaunchSettingsSection({ apiClient, reportSaving, rep
   headerElement.className = 'settings-section__header'
   const titleElement = document.createElement('h3')
   titleElement.className = 'settings-section__title'
-  titleElement.textContent = 'Lanzamiento de prompts'
+  titleElement.textContent = 'Proveedor de IA'
   const descriptionElement = document.createElement('p')
   descriptionElement.className = 'settings-section__description'
   descriptionElement.textContent = 'Cómo lanza Skima sus prompts predefinidos a tus agentes por línea de comandos. Las funciones de IA de Skima nunca buscan en internet.'
@@ -159,7 +160,7 @@ export function createPromptLaunchSettingsSection({ apiClient, reportSaving, rep
       value: defaultAgent ? defaultAgent.id : '',
       onChange: (agentId) => save({ defaultAgentId: agentId || null })
     })
-    const agentField = createLabeledControl('defaultAgent', 'Agente por defecto', agentSelect.element, 'Solo aparecen los agentes activados en «Mis agentes y rutas» con su programa instalado.')
+    const agentField = createLabeledControl('defaultAgent', 'Agente por defecto', agentSelect.element, 'Solo aparecen los agentes activados en «Rutas de configuración» con su programa instalado.')
     fieldSetters.defaultAgentId = agentField.setError
     groupElement.append(agentField.element)
 
@@ -265,7 +266,7 @@ export function createPromptLaunchSettingsSection({ apiClient, reportSaving, rep
           selectionElement.append(createNoticeBanner({ variant: 'warning', text: quickSelection.warning }))
         }
       } else {
-        selectionElement.append(createNoticeBanner({ variant: 'warning', text: quickSelection?.reason ?? 'No hay ningún agente conectado.', actionLabel: 'Revisar agentes', onAction: () => openSection('agents') }))
+        selectionElement.append(createNoticeBanner({ variant: 'warning', text: quickSelection?.reason ?? 'No hay ningún agente conectado.', actionLabel: 'Revisar agentes', onAction: () => openSection(settingsSectionIds.paths) }))
       }
       const refreshButton = createButton({ label: 'Recalcular', icon: 'refresh', variant: 'secondary', size: 'small', onClick: () => load({ refresh: true }) })
       selectionElement.append(refreshButton)
@@ -460,8 +461,8 @@ export function createPromptLaunchSettingsSection({ apiClient, reportSaving, rep
     const warningBanners = state.warnings.map((text) => createNoticeBanner({
       variant: 'warning',
       text,
-      actionLabel: 'Ir a Mis agentes',
-      onAction: () => openSection('agents')
+      actionLabel: 'Ir a Rutas de configuración',
+      onAction: () => openSection(settingsSectionIds.paths)
     }))
     contentElement.replaceChildren(...warningBanners, renderDefaults(), renderQuickModel(), renderExecution(), renderPreviewAndTest(), renderPromptOverrides())
   }

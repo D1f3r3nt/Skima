@@ -1,7 +1,8 @@
 import { createSearchResultItem } from '../molecules/searchResultItem.js'
 import { createIcon } from '../atoms/icon.js'
+import { createProgressiveList } from './progressiveList.js'
 
-export function createSearchResultList({ results, query, getType, onOpen }) {
+export function createSearchResultList({ results, query, getType, onOpen, pageSize, initialCount = pageSize, scrollRoot = null }) {
   const sectionElement = document.createElement('section')
   sectionElement.className = 'search-results'
 
@@ -18,23 +19,31 @@ export function createSearchResultList({ results, query, getType, onOpen }) {
     messageElement.textContent = 'No hay artefactos que se parezcan a tu búsqueda. Prueba con otras palabras.'
     emptyElement.append(createIcon('search', { size: 28 }), messageElement)
     sectionElement.append(summaryElement, emptyElement)
-    return sectionElement
+    return { element: sectionElement, getRenderedCount: () => 0, destroy: () => {} }
   }
 
   const listElement = document.createElement('ul')
   listElement.className = 'search-results__list'
-  listElement.append(...results.map(({ artifact }, index) => {
-    const artifactType = getType(artifact.type)
-    return createSearchResultItem({
-      artifact,
-      typeLabel: artifactType.singularLabel,
-      typeIcon: artifactType.icon,
-      isBestMatch: index === 0,
-      onOpen
-    })
-  }))
 
-  sectionElement.append(summaryElement, listElement)
+  const progressiveList = createProgressiveList({
+    listElement,
+    items: results,
+    pageSize,
+    initialCount,
+    scrollRoot,
+    renderItem: ({ artifact }, index) => {
+      const artifactType = getType(artifact.type)
+      return createSearchResultItem({
+        artifact,
+        typeLabel: artifactType.singularLabel,
+        typeIcon: artifactType.icon,
+        isBestMatch: index === 0,
+        onOpen
+      })
+    }
+  })
 
-  return sectionElement
+  sectionElement.append(summaryElement, progressiveList.element)
+
+  return { ...progressiveList, element: sectionElement }
 }

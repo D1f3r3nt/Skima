@@ -1,0 +1,66 @@
+[
+  {
+    "candidate": {
+      "type": "command",
+      "repository": "wshobson/commands",
+      "path": "tools/smart-debug.md"
+    },
+    "reason": "El repositorio está archivado."
+  },
+  {
+    "candidate": {
+      "type": "command",
+      "repository": "wshobson/commands",
+      "path": "tools/security-scan.md"
+    },
+    "reason": "El repositorio está archivado."
+  },
+  {
+    "candidate": {
+      "type": "command",
+      "repository": "wshobson/commands",
+      "path": "tools/refactor-clean.md"
+    },
+    "reason": "El repositorio está archivado."
+  },
+  {
+    "candidate": {
+      "type": "command",
+      "repository": "wshobson/commands",
+      "path": "tools/doc-generate.md"
+    },
+    "reason": "El repositorio está archivado."
+  },
+  {
+    "candidate": {
+      "type": "command",
+      "repository": "wshobson/commands",
+      "path": "tools/pr-enhance.md"
+    },
+    "reason": "El repositorio está archivado."
+  },
+  {
+    "candidate": {
+      "type": "command",
+      "repository": "wshobson/commands",
+      "path": "tools/deps-audit.md"
+    },
+    "reason": "El repositorio está archivado."
+  },
+  {
+    "candidate": {
+      "type": "command",
+      "repository": "wshobson/commands",
+      "path": "workflows/tdd-cycle.md"
+    },
+    "reason": "El repositorio está archivado."
+  },
+  {
+    "candidate": {
+      "type": "command",
+      "repository": "wshobson/commands",
+      "path": "workflows/git-workflow.md"
+    },
+    "reason": "El repositorio está archivado."
+  }
+]

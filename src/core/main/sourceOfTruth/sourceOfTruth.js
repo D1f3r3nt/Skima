@@ -71,6 +71,14 @@ class SourceOfTruth {
     return documentEntry
   }
 
+  async readDocument(id) {
+    const documentEntry = (await this.documents()).find((candidate) => candidate.meta.id === id)
+    if (!documentEntry) {
+      throw new SourceOfTruthError(`El documento "${id}" de la Fuente de la Verdad no existe.`, 'MISSING_DOCUMENT')
+    }
+    return { meta: documentEntry.meta, body: documentEntry.body, tokens: documentEntry.tokens }
+  }
+
   async get(id) {
     const documentEntry = await this.findForAi(id)
     return { meta: documentEntry.meta, body: documentEntry.body, tokens: documentEntry.tokens }

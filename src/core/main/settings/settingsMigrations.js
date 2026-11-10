@@ -32,6 +32,14 @@ const settingsMigrations = Object.freeze([
         ]
       }
     }
+  },
+  {
+    fromVersion: 1,
+    toVersion: 2,
+    migrate: (data) => {
+      const { github: removedGitHubSettings, ...rest } = data
+      return { ...rest, schemaVersion: 2 }
+    }
   }
 ])
 

@@ -1,16 +1,19 @@
 const { selectCheapestOpenCodeModel } = require('./openCodeModelCatalog')
+const { toModelName } = require('../projects/projectModelPolicy')
 
 const cacheTtlMs = 30 * 60 * 1000
 const formatPrice = (price) => `${price.toFixed(2)} USD por millón de tokens (entrada + salida)`
 
 class ModelSelector {
-  constructor({ registry, agentDetector, settingsStore, processRunner, executableLocator, platformPaths, environment = process.env, now = () => Date.now() }) {
+  constructor({ registry, agentDetector, settingsStore, processRunner, executableLocator, platformPaths, projectModelPolicy = null, listModels = null, environment = process.env, now = () => Date.now() }) {
     this.registry = registry
     this.agentDetector = agentDetector
     this.settingsStore = settingsStore
     this.processRunner = processRunner
     this.executableLocator = executableLocator
     this.platformPaths = platformPaths
+    this.projectModelPolicy = projectModelPolicy
+    this.listModels = listModels
     this.environment = environment
     this.now = now
     this.cache = null
@@ -100,16 +103,52 @@ class ModelSelector {
     }
   }
 
-  async pickCheapestModel({ refresh = false } = {}) {
+  async pickCheapestModel({ refresh = false, projectId = null } = {}) {
     const { settings, connected } = await this.getConnectedAgents({ refresh })
     const signature = this.connectionSignature(connected, settings)
+    let selection
     if (!refresh && this.cache && this.cache.signature === signature && this.now() - this.cache.computedAt < cacheTtlMs) {
-      return this.cache.selection
+      selection = this.cache.selection
+    } else {
+      selection = await this.computeSelection({ settings, connected })
+      this.cache = { signature, computedAt: this.now(), selection }
     }
+    if (!projectId || !this.projectModelPolicy || !selection.agentId) {
+      return selection
+    }
+    return this.restrictSelection(selection, projectId)
+  }
 
-    const selection = await this.computeSelection({ settings, connected })
-    this.cache = { signature, computedAt: this.now(), selection }
-    return selection
+  async listConnectedModels() {
+    if (!this.listModels) {
+      return []
+    }
+    const { connected } = await this.getConnectedAgents()
+    const lists = await Promise.all(connected.map(async ({ entry }) => {
+      const result = await this.listModels(entry.id).catch(() => ({ models: [] }))
+      return (result.models ?? []).map((model) => ({ agentId: entry.id, model: toModelName(model) }))
+    }))
+    return lists.flat()
+  }
+
+  async restrictSelection(selection, projectId) {
+    try {
+      const allowed = await this.projectModelPolicy.enforce({
+        projectId,
+        agentId: selection.agentId,
+        model: selection.model,
+        listAlternatives: async () => [
+          ...(selection.candidates ?? []).filter((candidate) => candidate.agentId && candidate.model).map((candidate) => ({ agentId: candidate.agentId, model: candidate.model })),
+          ...(await this.listConnectedModels())
+        ]
+      })
+      if (!allowed.changed) {
+        return selection
+      }
+      return { ...selection, agentId: allowed.agentId, model: allowed.model, reason: `${allowed.warnings.join(' ')} ${selection.reason}`.trim(), restrictedByProject: true }
+    } catch (error) {
+      return { agentId: null, model: null, reason: error.message, candidates: selection.candidates ?? [], restrictedByProject: true }
+    }
   }
 
   async computeSelection({ settings, connected }) {
@@ -121,7 +160,7 @@ class ModelSelector {
     if (quickModel.mode === 'manual' && quickModel.agentId) {
       const manualAgent = connected.find(({ entry }) => entry.id === quickModel.agentId)
       if (manualAgent) {
-        return this.describe(manualAgent.entry, { model: quickModel.model, price: null, note: 'Elegido a mano en Configuración.' }, 'Modelo fijado a mano en la sección «Lanzamiento de prompts».', { isManual: true, candidates: [] })
+        return this.describe(manualAgent.entry, { model: quickModel.model, price: null, note: 'Elegido a mano en Configuración.' }, 'Modelo fijado a mano en la sección «Proveedor de IA».', { isManual: true, candidates: [] })
       }
     }
 

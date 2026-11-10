@@ -6,6 +6,7 @@ import { createRadioGroup } from '../../../components/molecules/radioGroup.js'
 import { createNoticeBanner } from '../../../components/molecules/noticeBanner.js'
 import { showToast } from '../../../components/molecules/toast.js'
 import { openSettings } from '../services/settingsModalService.js'
+import { settingsSectionIds } from '../config/settingsSectionIds.js'
 
 const statusLabels = {
   new: { label: 'Nueva', variant: 'success' },
@@ -74,7 +75,7 @@ export class SkillInstallFlow {
     }
     if (context.enabledAgents.length === 0) {
       showToast({ message: 'No hay ningún agente activado. Indica en Configuración qué agentes usas.', variant: 'warning' })
-      openSettings({ sectionId: 'agents' })
+      openSettings({ sectionId: settingsSectionIds.paths })
       return
     }
     if (source.skills.length === 0) {
@@ -175,6 +176,9 @@ export class SkillInstallFlow {
     if (this.source.kind === 'mySkill') {
       return { type: 'mySkill', name: this.source.name }
     }
+    if (this.source.kind === 'imported') {
+      return { type: 'imported', itemId: this.source.itemId }
+    }
     if (this.source.kind === 'installedCopy') {
       return { type: 'installedCopy', path: this.source.path }
     }
@@ -201,7 +205,7 @@ export class SkillInstallFlow {
     if (!response.ok) {
       const actions = [createButton({ label: 'Atrás', variant: 'secondary', onClick: () => this.showChooseStep() })]
       if (response.error.code === 'NO_AGENTS') {
-        actions.push(createButton({ label: 'Abrir Configuración', onClick: () => { this.modal.close(); openSettings({ sectionId: 'agents' }) } }))
+        actions.push(createButton({ label: 'Abrir Configuración', onClick: () => { this.modal.close(); openSettings({ sectionId: settingsSectionIds.paths }) } }))
       }
       this.modal.setStep({ label: 'Paso 2 de 3', body: [createNoticeBanner({ variant: 'error', text: response.error.message })], actions })
       return

@@ -25,6 +25,7 @@ class AgentBridge {
     agentDetector,
     executableLocator,
     settingsStore,
+    projectModelPolicy = null,
     environment = process.env,
     logger = null,
     now = () => Date.now()
@@ -35,6 +36,7 @@ class AgentBridge {
     this.agentDetector = agentDetector
     this.executableLocator = executableLocator
     this.settingsStore = settingsStore
+    this.projectModelPolicy = projectModelPolicy
     this.environment = environment
     this.logger = logger
     this.now = now
@@ -177,13 +179,31 @@ class AgentBridge {
       const defaults = await this.resolveDefaults(options)
       const status = await this.agentDetector.getAgentStatus(entry.id)
       const warnings = []
+
+      if (options.projectId && this.projectModelPolicy) {
+        try {
+          const allowed = await this.projectModelPolicy.enforce({
+            projectId: options.projectId,
+            agentId: entry.id,
+            model: defaults.model,
+            listAlternatives: async () => (await this.listModels(entry.id)).models.map((model) => ({ agentId: entry.id, model }))
+          })
+          if (allowed.agentId !== entry.id) {
+            return { ...baseResult, ok: false, text: '', exitCode: null, durationMs: this.now() - startedAt, error: { code: 'PROJECT_MODEL_RESTRICTED', message: `Ningún modelo de ${entry.name} está permitido en este proyecto. Revisa la pestaña Configuración del proyecto.` } }
+          }
+          defaults.model = allowed.model
+          warnings.push(...allowed.warnings)
+        } catch (error) {
+          return { ...baseResult, ok: false, text: '', exitCode: null, durationMs: this.now() - startedAt, error: { code: error.code ?? 'PROJECT_MODEL_RESTRICTED', message: error.message } }
+        }
+      }
       const capabilities = entry.cli.capabilities
       const permissionMode = options.permissionMode ?? 'readOnly'
       const allowWeb = options.allowWeb === true
       const allowTools = options.allowTools !== false
 
       if (!status?.cli?.installed || !status.cli.executablePath) {
-        return { ...baseResult, ok: false, text: '', exitCode: null, durationMs: this.now() - startedAt, error: { code: 'NOT_INSTALLED', message: `No se encuentra el programa de ${entry.name}. Revisa la sección "Mis agentes y rutas" de Configuración.` } }
+        return { ...baseResult, ok: false, text: '', exitCode: null, durationMs: this.now() - startedAt, error: { code: 'NOT_INSTALLED', message: `No se encuentra el programa de ${entry.name}. Revisa la sección «Rutas de configuración» de Configuración.` } }
       }
 
       let effort = options.effort ?? null

@@ -52,7 +52,7 @@ class PromptLaunchSettingsService {
     if (defaultAgentId) {
       const defaultAgent = availableAgents.find((agent) => agent.id === defaultAgentId)
       if (!defaultAgent) {
-        warnings.push('El agente por defecto ya no está activado en «Mis agentes y rutas». No se lanzará nada hasta que elijas otro.')
+        warnings.push('El agente por defecto ya no está activado en «Rutas de configuración». No se lanzará nada hasta que elijas otro.')
       } else if (!defaultAgent.installed) {
         warnings.push(`No se encuentra el programa de ${defaultAgent.name}. No se lanzará nada hasta que vuelva a estar disponible o elijas otro agente.`)
       } else if (!defaultAgent.connected) {

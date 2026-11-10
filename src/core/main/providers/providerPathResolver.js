@@ -49,6 +49,17 @@ class ProviderPathResolver {
     }
   }
 
+  resolveArtifactDirectory(entry, registryKey, { scope, projectPath = null }) {
+    const specification = entry[registryKey]
+    if (!specification) {
+      return null
+    }
+    if (scope === 'global') {
+      return this.resolveGlobalTemplate(specification.global, this.resolveRoots(entry))
+    }
+    return this.resolveProjectPath(projectPath, specification.project)
+  }
+
   resolveSkillsDirectory(entry, { scope, agentSettings = null, projectPath = null }) {
     const resolved = this.resolve(entry, { agentSettings, projectPath })
     return scope === 'global' ? resolved.skillsGlobal : resolved.skillsProject

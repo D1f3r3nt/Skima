@@ -40,7 +40,7 @@ class SkillInstaller {
     const settings = await this.settingsStore.get()
     const enabledEntries = this.registry.filter((entry) => settings.agents[entry.id]?.enabled)
     if (enabledEntries.length === 0) {
-      throw Object.assign(new Error('No hay ningún agente activado. Actívalos en Configuración, «Mis agentes y rutas».'), { code: 'NO_AGENTS' })
+      throw Object.assign(new Error('No hay ningún agente activado. Actívalos en Configuración, «Rutas de configuración».'), { code: 'NO_AGENTS' })
     }
 
     let project = null

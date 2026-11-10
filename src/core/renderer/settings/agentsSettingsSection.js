@@ -1,21 +1,20 @@
 import { createToggleSwitch } from '../../../components/atoms/toggleSwitch.js'
 import { createBadge } from '../../../components/atoms/badge.js'
 import { createButton } from '../../../components/atoms/button.js'
+import { createIcon } from '../../../components/atoms/icon.js'
 import { createPathSettingField } from '../../../components/molecules/pathSettingField.js'
 import { createNoticeBanner } from '../../../components/molecules/noticeBanner.js'
+import { describeAgentRow } from '../services/agentRowPresenter.js'
+import { CliInstallFlow } from '../controllers/cliInstallFlow.js'
 
-const confidenceLabels = { high: 'Rutas verificadas', medium: 'Confianza media', low: 'Sin verificar' }
-const confidenceVariants = { high: 'success', medium: 'warning', low: 'danger' }
-const windowsPathLabels = { same: 'Mismas rutas en Windows', different: 'Rutas distintas en Windows', unknown: 'Rutas de Windows desconocidas' }
-
-const describeCli = (cli) => {
-  if (!cli.available) {
-    return { label: 'Sin línea de comandos', variant: 'neutral' }
+const getSessionSet = (sessionState, key) => {
+  if (!sessionState) {
+    return new Set()
   }
-  if (!cli.installed) {
-    return { label: 'CLI no encontrado', variant: 'danger' }
+  if (!sessionState.has(key)) {
+    sessionState.set(key, new Set())
   }
-  return cli.connected ? { label: 'Conectado', variant: 'success' } : { label: 'Sin sesión', variant: 'warning' }
+  return sessionState.get(key)
 }
 
 const createSectionHeader = () => {
@@ -23,15 +22,31 @@ const createSectionHeader = () => {
   headerElement.className = 'settings-section__header'
   const titleElement = document.createElement('h3')
   titleElement.className = 'settings-section__title'
-  titleElement.textContent = 'Mis agentes y rutas'
+  titleElement.textContent = 'Rutas de configuración'
   const descriptionElement = document.createElement('p')
   descriptionElement.className = 'settings-section__description'
-  descriptionElement.textContent = 'Activa los agentes de programación que usas. Skima instalará las skills y los servidores MCP en las carpetas de cada uno.'
+  descriptionElement.textContent = 'Activa los agentes de programación que usas. Skima instalará las skills y los servidores MCP en las carpetas de cada uno. Pulsa en un agente para ver sus rutas y su programa de línea de comandos.'
   headerElement.append(titleElement, descriptionElement)
   return headerElement
 }
 
-export function createAgentsSettingsSection({ apiClient, reportSaving, reportSaved, reportError, agentNames }) {
+const createBlockTitle = (text) => {
+  const titleElement = document.createElement('h4')
+  titleElement.className = 'agent-row__block-title'
+  titleElement.textContent = text
+  return titleElement
+}
+
+const createParagraph = (className, text) => {
+  const paragraphElement = document.createElement('p')
+  paragraphElement.className = className
+  paragraphElement.textContent = text
+  return paragraphElement
+}
+
+export function createAgentsSettingsSection({ apiClient, reportSaving, reportSaved, reportError, agentNames, sessionState }) {
+  const expandedAgentIds = getSessionSet(sessionState, 'agents.expandedRows')
+  const expandedExecutableIds = getSessionSet(sessionState, 'agents.expandedExecutables')
   const rootElement = document.createElement('div')
   rootElement.className = 'settings-section'
 
@@ -70,8 +85,9 @@ export function createAgentsSettingsSection({ apiClient, reportSaving, reportSav
   }
 
   const createPathsBlock = (agent) => {
-    const blockElement = document.createElement('div')
-    blockElement.className = 'agent-card__paths'
+    const blockElement = document.createElement('section')
+    blockElement.className = 'agent-row__block'
+    blockElement.append(createBlockTitle('Rutas'))
 
     if (agent.pathError) {
       blockElement.append(createNoticeBanner({ variant: 'error', text: `No se pudieron resolver las rutas: ${agent.pathError}` }))
@@ -103,16 +119,10 @@ export function createAgentsSettingsSection({ apiClient, reportSaving, reportSav
         onRestore: () => savePath(agent.id, 'mcpGlobalConfigPath', null)
       }).element)
     } else {
-      const mcpNoteElement = document.createElement('p')
-      mcpNoteElement.className = 'agent-card__note'
-      mcpNoteElement.textContent = 'Skima no instala servidores MCP en este agente (ruta global no verificada).'
-      blockElement.append(mcpNoteElement)
+      blockElement.append(createParagraph('agent-row__help', 'Skima no instala servidores MCP en este agente.'))
     }
 
-    const conventionElement = document.createElement('p')
-    conventionElement.className = 'agent-card__convention'
-    conventionElement.textContent = `Dentro de un proyecto: skills en ${agent.paths.projectSkillsConvention}${agent.paths.projectMcpConvention ? ` · MCP en ${agent.paths.projectMcpConvention}` : ''}`
-    blockElement.append(conventionElement)
+    blockElement.append(createParagraph('agent-row__help', `Dentro de un proyecto: skills en ${agent.paths.projectSkillsConvention}${agent.paths.projectMcpConvention ? ` · MCP en ${agent.paths.projectMcpConvention}` : ''}`))
 
     if (agent.sharedWith.length > 0) {
       blockElement.append(createNoticeBanner({
@@ -130,32 +140,26 @@ export function createAgentsSettingsSection({ apiClient, reportSaving, reportSav
     return blockElement
   }
 
-  const createCliBlock = (agent) => {
-    const blockElement = document.createElement('div')
-    blockElement.className = 'agent-card__cli'
+  const createExecutableDisclosure = (agent) => {
+    const wrapperElement = document.createElement('div')
+    wrapperElement.className = 'agent-row__disclosure'
+    const panelId = `executablePanel-${agent.id}`
+    const isOpen = expandedExecutableIds.has(agent.id)
 
-    const titleElement = document.createElement('h4')
-    titleElement.className = 'agent-card__subtitle'
-    titleElement.textContent = 'Programa de línea de comandos'
-    blockElement.append(titleElement)
+    const toggleButton = document.createElement('button')
+    toggleButton.type = 'button'
+    toggleButton.className = 'agent-row__disclosure-toggle'
+    toggleButton.setAttribute('aria-expanded', String(isOpen))
+    toggleButton.setAttribute('aria-controls', panelId)
+    toggleButton.append(createIcon(isOpen ? 'chevronDown' : 'chevronRight', { size: 14 }), document.createTextNode('Ruta del ejecutable (opcional)'))
 
-    const statusList = document.createElement('dl')
-    statusList.className = 'agent-card__status'
-    const addStatus = (term, value) => {
-      const termElement = document.createElement('dt')
-      termElement.textContent = term
-      const valueElement = document.createElement('dd')
-      valueElement.textContent = value
-      statusList.append(termElement, valueElement)
-    }
-    addStatus('Instalado', agent.cli.installed ? `Sí${agent.cli.version ? ` (versión ${agent.cli.version})` : ''}` : 'No')
-    addStatus('Conectado', agent.cli.installed ? `${agent.cli.connected ? 'Sí' : 'No'}${agent.cli.connectionDetail ? `. ${agent.cli.connectionDetail}` : ''}` : '—')
-    addStatus('Ejecutable', agent.cli.displayExecutablePath ?? agent.cli.error ?? 'No encontrado')
-    blockElement.append(statusList)
-
-    blockElement.append(createPathSettingField({
+    const panelElement = document.createElement('div')
+    panelElement.id = panelId
+    panelElement.className = 'agent-row__disclosure-panel'
+    panelElement.hidden = !isOpen
+    panelElement.append(createPathSettingField({
       id: `executable-${agent.id}`,
-      label: 'Ruta del ejecutable (opcional)',
+      label: 'Ruta del ejecutable',
       value: agent.executablePathOverride ?? '',
       defaultValue: 'Detección automática',
       isCustom: Boolean(agent.executablePathOverride),
@@ -167,38 +171,103 @@ export function createAgentsSettingsSection({ apiClient, reportSaving, reportSav
       onRestore: () => savePath(agent.id, 'executablePath', null)
     }).element)
 
+    toggleButton.addEventListener('click', () => {
+      const nextOpen = !expandedExecutableIds.has(agent.id)
+      if (nextOpen) {
+        expandedExecutableIds.add(agent.id)
+      } else {
+        expandedExecutableIds.delete(agent.id)
+      }
+      toggleButton.setAttribute('aria-expanded', String(nextOpen))
+      toggleButton.firstChild.replaceWith(createIcon(nextOpen ? 'chevronDown' : 'chevronRight', { size: 14 }))
+      panelElement.hidden = !nextOpen
+    })
+
+    wrapperElement.append(toggleButton, panelElement)
+    return wrapperElement
+  }
+
+  const createCliBlock = (agent, presentation) => {
+    const blockElement = document.createElement('section')
+    blockElement.className = 'agent-row__block'
+    blockElement.append(createBlockTitle('Programa de línea de comandos'))
+
+    if (!agent.hasCli) {
+      blockElement.append(createParagraph('agent-row__help', `${agent.name} no tiene un programa de línea de comandos propio, así que Skima no puede lanzar prompts con él ni instalarlo.`))
+      return blockElement
+    }
+
+    blockElement.append(createParagraph('agent-row__status', `${presentation.message}${agent.cli.installed && agent.cli.version ? ` · versión ${agent.cli.version}` : ''}`))
+
+    if (agent.cli.installed && !agent.cli.connected && agent.cli.connectionDetail) {
+      blockElement.append(createParagraph('agent-row__help', agent.cli.connectionDetail))
+    }
+    if (!agent.cli.installed && agent.cli.error) {
+      blockElement.append(createParagraph('agent-row__help', agent.cli.error))
+    }
+
+    const buttonsElement = document.createElement('div')
+    buttonsElement.className = 'agent-row__buttons'
+    buttonsElement.append(createButton({ label: 'Volver a detectar', icon: 'refresh', variant: 'secondary', size: 'small', className: 'agent-row__redetect', onClick: () => load({ refresh: true }) }))
+    if (!agent.cli.installed && agent.hasInstallRecipe) {
+      buttonsElement.append(createButton({ label: 'Instalar CLI', icon: 'download', size: 'small', onClick: () => new CliInstallFlow({ apiClient, onFinished: () => load({ refresh: true }) }).start({ toolId: agent.id }) }))
+    }
+    blockElement.append(buttonsElement)
+
+    if (presentation.showExecutableDisclosure) {
+      blockElement.append(createExecutableDisclosure(agent))
+    }
     return blockElement
   }
 
-  const createAgentCard = (agent) => {
-    const cardElement = document.createElement('article')
-    cardElement.className = `agent-card${agent.enabled ? ' agent-card--enabled' : ''}`
+  const createExpandedContent = (agent, presentation) => {
+    const contentElement = document.createElement('div')
+    contentElement.className = 'agent-row__content'
+    if (agent.detection.detected && !agent.enabled) {
+      contentElement.append(createParagraph('agent-row__suggestion', `Parece instalado (${agent.detection.reasons.map((reason) => reason.path).join(', ')}). Actívalo si lo usas.`))
+    }
+    if (agent.enabled) {
+      if (agent.notes) {
+        contentElement.append(createParagraph('agent-row__help', agent.notes))
+      }
+      contentElement.append(createPathsBlock(agent), createCliBlock(agent, presentation))
+    }
+    return contentElement
+  }
+
+  const createAgentRow = (agent) => {
+    const presentation = describeAgentRow(agent)
+    const rowElement = document.createElement('article')
+    rowElement.className = `agent-row${agent.enabled ? ' agent-row--enabled' : ''}`
+    const contentId = `agentContent-${agent.id}`
+    const isExpanded = presentation.hasExpandableContent && expandedAgentIds.has(agent.id)
 
     const headerElement = document.createElement('div')
-    headerElement.className = 'agent-card__header'
+    headerElement.className = 'agent-row__header'
 
-    const titleGroup = document.createElement('div')
-    titleGroup.className = 'agent-card__title-group'
-    const nameElement = document.createElement('h4')
-    nameElement.className = 'agent-card__name'
-    nameElement.id = `agentName-${agent.id}`
+    const summaryElement = document.createElement(presentation.hasExpandableContent ? 'button' : 'div')
+    summaryElement.className = 'agent-row__summary'
+    if (presentation.hasExpandableContent) {
+      summaryElement.type = 'button'
+      summaryElement.setAttribute('aria-expanded', String(isExpanded))
+      summaryElement.setAttribute('aria-controls', contentId)
+      summaryElement.append(createIcon(isExpanded ? 'chevronDown' : 'chevronRight', { size: 14, className: 'agent-row__chevron' }))
+    }
+
+    const nameElement = document.createElement('span')
+    nameElement.className = 'agent-row__name'
     nameElement.textContent = agent.name
-
-    const badgesElement = document.createElement('div')
-    badgesElement.className = 'agent-card__badges'
-    const cliStatus = describeCli(agent.cli)
-    badgesElement.append(
-      createBadge({ label: agent.kind === 'cli' ? 'Terminal' : 'Editor' }),
-      createBadge({ label: confidenceLabels[agent.confidence], variant: confidenceVariants[agent.confidence] }),
-      ...(agent.detection.detected ? [createBadge({ label: 'Detectado', variant: 'accent' })] : []),
-      ...(agent.hasCli ? [createBadge({ label: cliStatus.label, variant: cliStatus.variant })] : [])
-    )
-    badgesElement.title = windowsPathLabels[agent.windowsPaths]
-    titleGroup.append(nameElement, badgesElement)
+    const badgesElement = document.createElement('span')
+    badgesElement.className = 'agent-row__badges'
+    badgesElement.append(...presentation.badges.map((badge) => createBadge(badge)))
+    const messageElement = document.createElement('span')
+    messageElement.className = 'agent-row__message'
+    messageElement.textContent = presentation.message
+    summaryElement.append(nameElement, badgesElement, messageElement)
 
     const toggle = createToggleSwitch({
       checked: agent.enabled,
-      label: `Uso ${agent.name}`,
+      label: `Usar ${agent.name}`,
       onChange: async (enabled, { revert }) => {
         reportSaving()
         try {
@@ -210,27 +279,32 @@ export function createAgentsSettingsSection({ apiClient, reportSaving, reportSav
         }
       }
     })
-    headerElement.append(titleGroup, toggle.element)
-    cardElement.append(headerElement)
+    toggle.element.classList.add('agent-row__switch')
+    headerElement.append(summaryElement, toggle.element)
+    rowElement.append(headerElement)
 
-    if (agent.detection.detected && !agent.enabled) {
-      const suggestionElement = document.createElement('p')
-      suggestionElement.className = 'agent-card__suggestion'
-      suggestionElement.textContent = `Parece instalado (${agent.detection.reasons.map((reason) => reason.path).join(', ')}). Actívalo si lo usas.`
-      cardElement.append(suggestionElement)
+    if (presentation.hasExpandableContent) {
+      const contentElement = createExpandedContent(agent, presentation)
+      contentElement.id = contentId
+      contentElement.setAttribute('role', 'region')
+      contentElement.setAttribute('aria-label', `Detalles de ${agent.name}`)
+      contentElement.hidden = !isExpanded
+      rowElement.append(contentElement)
+
+      summaryElement.addEventListener('click', () => {
+        const nextExpanded = !expandedAgentIds.has(agent.id)
+        if (nextExpanded) {
+          expandedAgentIds.add(agent.id)
+        } else {
+          expandedAgentIds.delete(agent.id)
+        }
+        summaryElement.setAttribute('aria-expanded', String(nextExpanded))
+        summaryElement.firstChild.replaceWith(createIcon(nextExpanded ? 'chevronDown' : 'chevronRight', { size: 14, className: 'agent-row__chevron' }))
+        contentElement.hidden = !nextExpanded
+      })
     }
 
-    if (agent.enabled) {
-      const notesElement = document.createElement('p')
-      notesElement.className = 'agent-card__note'
-      notesElement.textContent = agent.notes
-      cardElement.append(notesElement, createPathsBlock(agent))
-      if (agent.hasCli) {
-        cardElement.append(createCliBlock(agent))
-      }
-    }
-
-    return cardElement
+    return rowElement
   }
 
   const render = ({ platform, agents: nextAgents }) => {
@@ -244,7 +318,7 @@ export function createAgentsSettingsSection({ apiClient, reportSaving, reportSav
       ? [createNoticeBanner({ variant: 'warning', text: 'No hay ningún agente activado. Activa al menos uno para poder instalar skills y servidores MCP.' })]
       : []
     const sortedAgents = [...agents].sort((first, second) => Number(second.enabled) - Number(first.enabled) || Number(second.detection.detected) - Number(first.detection.detected))
-    listElement.replaceChildren(...notices, ...sortedAgents.map(createAgentCard))
+    listElement.replaceChildren(...notices, ...sortedAgents.map(createAgentRow))
   }
 
   const load = async ({ refresh = false } = {}) => {

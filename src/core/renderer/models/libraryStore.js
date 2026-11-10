@@ -1,11 +1,10 @@
 import { createArtifactIndex, searchArtifacts } from '../services/artifactSearch.js'
 import { artifactTypes } from '../config/artifactTypes.js'
+import { libraryOrigins, libraryCategories, uncategorizedId } from '../config/libraryFilters.js'
 
-const pageSize = 60
 const maximumSearchResults = 150
-const remoteSearchDelayMs = 700
-const minimumRemoteQueryLength = 3
 const sessionStateKey = 'skima.library.state'
+const listPositionKey = 'skima.library.position'
 
 const readSessionState = () => {
   try {
@@ -15,19 +14,22 @@ const readSessionState = () => {
   }
 }
 
+const categoryOf = (artifact) => artifact.category || uncategorizedId
+
 export class LibraryStore {
   constructor(apiClient) {
     const sessionState = readSessionState()
     this.apiClient = apiClient
     this.artifacts = []
+    this.baseArtifacts = []
     this.artifactIndex = []
     this.activeTypeId = artifactTypes.some((type) => type.id === sessionState.activeTypeId) ? sessionState.activeTypeId : artifactTypes[0].id
     this.query = typeof sessionState.query === 'string' ? sessionState.query : ''
-    this.visibleLimit = pageSize
+    this.categoryId = typeof sessionState.categoryId === 'string' ? sessionState.categoryId : ''
+    this.originId = libraryOrigins.some((origin) => origin.id === sessionState.originId) ? sessionState.originId : 'all'
+    this.itemsVersion = 0
     this.isLoading = true
     this.catalogStatus = null
-    this.remoteSearch = { isSearching: false, error: null, lastQuery: '' }
-    this.remoteSearchTimer = null
     this.listeners = new Set()
   }
 
@@ -38,72 +40,138 @@ export class LibraryStore {
 
   getState() {
     const isSearching = this.query.trim().length > 0
-    const typeArtifacts = this.artifacts.filter((artifact) => artifact.type === this.activeTypeId)
+    const listArtifacts = this.getListArtifacts()
+    const searchResults = isSearching ? this.getSearchResults() : []
 
     return {
       isLoading: this.isLoading,
       isSearching,
       query: this.query,
       activeTypeId: this.activeTypeId,
+      categoryId: this.categoryId,
+      originId: this.originId,
       typeCounts: this.getTypeCounts(),
-      visibleArtifacts: typeArtifacts.slice(0, this.visibleLimit),
-      hasMoreArtifacts: typeArtifacts.length > this.visibleLimit,
-      totalForType: typeArtifacts.length,
-      searchResults: isSearching ? searchArtifacts(this.artifactIndex, this.query).slice(0, maximumSearchResults) : [],
-      catalogStatus: this.catalogStatus,
-      remoteSearch: { ...this.remoteSearch }
+      categoryOptions: this.getCategoryOptions(),
+      originOptions: this.getOriginOptions(),
+      listKey: JSON.stringify([this.activeTypeId, this.categoryId, this.originId, isSearching ? this.query.trim() : '']),
+      itemsVersion: this.itemsVersion,
+      listArtifacts,
+      searchResults,
+      totalCount: isSearching ? searchResults.length : listArtifacts.length,
+      catalogStatus: this.catalogStatus
     }
   }
 
+  getFilteredArtifacts() {
+    const cacheKey = `${this.itemsVersion}|${this.categoryId}|${this.originId}`
+    if (this.filterCache?.key !== cacheKey) {
+      this.baseArtifacts = this.artifacts.filter((artifact) =>
+        (this.originId === 'all' || artifact.origin === this.originId)
+        && (!this.categoryId || categoryOf(artifact) === this.categoryId))
+      this.artifactIndex = createArtifactIndex(this.baseArtifacts)
+      this.filterCache = { key: cacheKey }
+    }
+    return this.baseArtifacts
+  }
+
+  getListArtifacts() {
+    const cacheKey = `${this.itemsVersion}|${this.activeTypeId}|${this.categoryId}|${this.originId}`
+    if (this.listCache?.key !== cacheKey) {
+      this.listCache = { key: cacheKey, value: this.getFilteredArtifacts().filter((artifact) => artifact.type === this.activeTypeId) }
+    }
+    return this.listCache.value
+  }
+
+  getSearchResults() {
+    const cacheKey = `${this.itemsVersion}|${this.query}|${this.categoryId}|${this.originId}`
+    if (this.searchCache?.key !== cacheKey) {
+      this.getFilteredArtifacts()
+      this.searchCache = { key: cacheKey, value: searchArtifacts(this.artifactIndex, this.query).slice(0, maximumSearchResults) }
+    }
+    return this.searchCache.value
+  }
+
   getTypeCounts() {
-    return this.artifacts.reduce((counts, artifact) => ({
+    return this.getFilteredArtifacts().reduce((counts, artifact) => ({
       ...counts,
       [artifact.type]: (counts[artifact.type] ?? 0) + 1
     }), Object.fromEntries(artifactTypes.map((artifactType) => [artifactType.id, 0])))
   }
 
-  async load() {
-    this.apiClient.onCatalogUpdated((payload) => this.applyCatalog(payload))
+  getCategoryOptions() {
+    const ofType = this.artifacts.filter((artifact) => artifact.type === this.activeTypeId && (this.originId === 'all' || artifact.origin === this.originId))
+    const counts = ofType.reduce((map, artifact) => map.set(categoryOf(artifact), (map.get(categoryOf(artifact)) ?? 0) + 1), new Map())
+    return [
+      { value: '', label: `Todas las categorías (${ofType.length})` },
+      ...[...libraryCategories, { id: uncategorizedId, label: 'Sin categoría' }]
+        .filter((category) => counts.has(category.id) || category.id === this.categoryId)
+        .map((category) => ({ value: category.id, label: `${category.label} (${counts.get(category.id) ?? 0})` }))
+    ]
+  }
 
+  getOriginOptions() {
+    const present = new Set(this.artifacts.map((artifact) => artifact.origin))
+    return libraryOrigins
+      .filter((origin) => origin.id === 'all' || present.has(origin.id) || origin.id === this.originId)
+      .map((origin) => ({ value: origin.id, label: origin.label }))
+  }
+
+  async load() {
     try {
       this.applyCatalog(await this.apiClient.listCatalog(), { notify: false })
     } finally {
       this.isLoading = false
       this.notify()
     }
-
-    if (this.query.trim()) {
-      this.scheduleRemoteSearch()
-    }
   }
 
   applyCatalog({ items, status }, { notify = true } = {}) {
     this.artifacts = items.filter((item) => artifactTypes.some((artifactType) => artifactType.id === item.type))
-    this.artifactIndex = createArtifactIndex(this.artifacts)
+    this.itemsVersion += 1
     this.catalogStatus = status
     if (notify) {
       this.notify()
     }
   }
 
+  patchArtifacts(updatedItems) {
+    this.artifacts = this.artifacts.map((artifact) => updatedItems[artifact.id] ?? artifact)
+    this.filterCache = null
+    this.listCache = null
+    this.searchCache = null
+  }
+
   async refresh() {
-    this.catalogStatus = await this.apiClient.refreshCatalog({ force: true })
-    this.notify()
+    await this.apiClient.refreshCatalog()
+    this.applyCatalog(await this.apiClient.listCatalog())
   }
 
   setActiveType(typeId) {
     if (typeId === this.activeTypeId) {
       return
     }
-
     this.activeTypeId = typeId
-    this.visibleLimit = pageSize
+    this.categoryId = ''
     this.persistSessionState()
     this.notify()
   }
 
-  showMore() {
-    this.visibleLimit += pageSize
+  setCategory(categoryId) {
+    if (categoryId === this.categoryId) {
+      return
+    }
+    this.categoryId = categoryId
+    this.persistSessionState()
+    this.notify()
+  }
+
+  setOrigin(originId) {
+    if (originId === this.originId || !libraryOrigins.some((origin) => origin.id === originId)) {
+      return
+    }
+    this.originId = originId
+    this.categoryId = ''
+    this.persistSessionState()
     this.notify()
   }
 
@@ -111,46 +179,37 @@ export class LibraryStore {
     if (query === this.query) {
       return
     }
-
     this.query = query
     this.persistSessionState()
-    this.scheduleRemoteSearch()
-    this.notify()
-  }
-
-  scheduleRemoteSearch() {
-    clearTimeout(this.remoteSearchTimer)
-    const trimmedQuery = this.query.trim()
-
-    if (trimmedQuery.length < minimumRemoteQueryLength) {
-      this.remoteSearch = { isSearching: false, error: null, lastQuery: '' }
-      return
-    }
-
-    this.remoteSearchTimer = setTimeout(() => this.runRemoteSearch(trimmedQuery), remoteSearchDelayMs)
-  }
-
-  async runRemoteSearch(trimmedQuery) {
-    this.remoteSearch = { isSearching: true, error: null, lastQuery: trimmedQuery }
-    this.notify()
-
-    try {
-      await this.apiClient.searchCatalogRemote(trimmedQuery)
-      if (this.query.trim() === trimmedQuery) {
-        this.remoteSearch = { isSearching: false, error: null, lastQuery: trimmedQuery }
-      }
-    } catch (error) {
-      this.remoteSearch = { isSearching: false, error: error.message, lastQuery: trimmedQuery }
-    }
-
     this.notify()
   }
 
   persistSessionState() {
     try {
-      sessionStorage.setItem(sessionStateKey, JSON.stringify({ activeTypeId: this.activeTypeId, query: this.query }))
+      sessionStorage.setItem(sessionStateKey, JSON.stringify({ activeTypeId: this.activeTypeId, query: this.query, categoryId: this.categoryId, originId: this.originId }))
     } catch {
       return
+    }
+  }
+
+  saveListPosition({ listKey, renderedCount, scrollTop }) {
+    try {
+      sessionStorage.setItem(listPositionKey, JSON.stringify({ listKey, renderedCount, scrollTop }))
+    } catch {
+      return
+    }
+  }
+
+  consumeListPosition() {
+    try {
+      const position = JSON.parse(sessionStorage.getItem(listPositionKey) ?? 'null')
+      sessionStorage.removeItem(listPositionKey)
+      if (!position || typeof position.listKey !== 'string' || !Number.isInteger(position.renderedCount) || !Number.isFinite(position.scrollTop)) {
+        return null
+      }
+      return position
+    } catch {
+      return null
     }
   }
 

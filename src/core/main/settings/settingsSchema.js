@@ -1,4 +1,4 @@
-const currentSchemaVersion = 1
+const currentSchemaVersion = 2
 
 const effortLevels = Object.freeze(['low', 'medium', 'high', 'max'])
 const permissionModes = Object.freeze(['readOnly', 'edit', 'full'])
@@ -66,7 +66,6 @@ const createDefaultSettings = () => ({
   schemaVersion: currentSchemaVersion,
   agents: {},
   promptLaunch: createDefaultPromptLaunch(),
-  github: { token: null },
   projects: [],
   installedOrigins: []
 })
@@ -224,13 +223,11 @@ const sanitizeInstalledOrigin = (value) => {
 const sanitizeSettings = (value, { now = () => new Date() } = {}) => {
   const source = isPlainObject(value) ? value : {}
   const fallbackDate = now().toISOString()
-  const githubSource = isPlainObject(source.github) ? source.github : {}
 
   return {
     schemaVersion: currentSchemaVersion,
     agents: sanitizeAgents(source.agents),
     promptLaunch: sanitizePromptLaunch(source.promptLaunch),
-    github: { token: asTrimmedString(githubSource.token, { maxLength: 512 }) },
     projects: sanitizeProjects(source.projects, fallbackDate),
     installedOrigins: Array.isArray(source.installedOrigins)
       ? source.installedOrigins.map(sanitizeInstalledOrigin).filter(Boolean)

@@ -6,6 +6,9 @@ const { cursor } = require('./agents/cursor')
 const { githubCopilot } = require('./agents/githubCopilot')
 const { windsurf } = require('./agents/windsurf')
 const { amp, goose, rooCode, kiloCode } = require('./agents/lowConfidenceAgents')
+const { installRecipes } = require('./install/installRecipes')
+
+const withInstall = (entry) => (installRecipes[entry.id] ? Object.freeze({ ...entry, install: installRecipes[entry.id] }) : entry)
 
 const providerRegistry = Object.freeze([
   claudeCode,
@@ -19,7 +22,7 @@ const providerRegistry = Object.freeze([
   goose,
   rooCode,
   kiloCode
-])
+].map(withInstall))
 
 const findProvider = (agentId, registry = providerRegistry) => registry.find((entry) => entry.id === agentId) ?? null
 

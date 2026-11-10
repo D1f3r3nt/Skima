@@ -12,17 +12,23 @@
     "sot:index": "node scripts/sourceOfTruthTasks.js index",
     "sot:check": "node scripts/sourceOfTruthTasks.js check",
     "sot:stale": "node scripts/sourceOfTruthTasks.js stale",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "dist:win": "electron-builder --win",
-    "dist:mac": "electron-builder --mac",
-    "dist:linux": "electron-builder --linux"
+    "pack": "npm run fetch:uv && electron-builder --dir",
+    "dist": "npm run fetch:uv && electron-builder",
+    "dist:win": "npm run fetch:uv && electron-builder --win",
+    "dist:mac": "npm run fetch:uv && electron-builder --mac",
+    "dist:linux": "npm run fetch:uv && electron-builder --linux",
+    "catalog:validate": "node scripts/catalogTasks.js validate",
+    "catalog:verify": "node scripts/catalogTasks.js verify",
+    "catalog:refresh": "node scripts/catalogTasks.js refresh",
+    "fetch:uv": "node scripts/fetchUv.js"
   },
   "devDependencies": {
     "electron": "^45.0.0",
     "electron-builder": "26.18.0"
   },
   "dependencies": {
+    "ajv": "8.20.0",
+    "dotenv": "16.6.1",
     "fflate": "0.7.5",
     "highlight.js": "11.12.0",
     "jsonc-parser": "3.3.1",
@@ -52,6 +58,28 @@
         "to": "source-of-truth",
         "filter": [
           "**/*"
+        ]
+      },
+      {
+        "from": "catalog",
+        "to": "catalog",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "build/uv",
+        "to": "uv",
+        "filter": [
+          "uv",
+          "uv.exe"
+        ]
+      },
+      {
+        "from": "tools/graphify",
+        "to": "tools/graphify",
+        "filter": [
+          "requirements.lock"
         ]
       }
     ],

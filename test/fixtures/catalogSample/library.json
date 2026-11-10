@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-10T09:00:00Z",
+  "skills": [
+    {
+      "id": "catalog:example/skills/pdf",
+      "type": "skill",
+      "origin": "catalog",
+      "name": "pdf",
+      "author": "example",
+      "description": "Work with PDF files.",
+      "category": "documentation",
+      "tags": ["pdf", "documents"],
+      "source": { "repository": "example/skills", "path": "skills/pdf", "ref": "main", "commit": "0123456789abcdef0123456789abcdef01234567" },
+      "snapshot": { "stars": 10, "forks": 1, "license": "MIT", "lastCommitAt": "2026-10-01", "verifiedAt": "2026-11-10" },
+      "review": { "date": "2026-11-10", "result": "passed", "verification": "installed-from-archive" },
+      "requirements": [],
+      "notice": null
+    }
+  ],
+  "mcp": [
+    {
+      "id": "catalog:example/mcp-time",
+      "type": "mcp",
+      "origin": "catalog",
+      "name": "time",
+      "author": "example",
+      "description": "Time and timezone tools.",
+      "category": "productivity",
+      "tags": ["time"],
+      "source": { "repository": "example/mcp-time", "path": "", "commit": "89abcdef0123456789abcdef0123456789abcdef" },
+      "snapshot": { "stars": 5, "license": "Apache-2.0", "lastCommitAt": null, "verifiedAt": "2026-11-10" },
+      "review": { "date": "2026-11-10", "result": "passed", "verification": "started-and-listed-tools" },
+      "requirements": ["python", "uv"],
+      "mcpDefinition": {
+        "name": "time",
+        "transport": "stdio",
+        "command": "uvx",
+        "args": ["mcp-server-time==1.0.0"],
+        "package": { "registry": "pypi", "name": "mcp-server-time", "version": "1.0.0" },
+        "environment": []
+      }
+    }
+  ],
+  "subagents": [
+    {
+      "id": "catalog:example/agents/reviewer",
+      "type": "subagent",
+      "origin": "catalog",
+      "name": "reviewer",
+      "author": "example",
+      "description": "Reviews code.",
+      "category": "development",
+      "tags": [],
+      "source": { "repository": "example/agents", "path": "agents/reviewer.md", "commit": "fedcba9876543210fedcba9876543210fedcba98" },
+      "snapshot": { "stars": 3, "license": null, "lastCommitAt": "2026-09-01", "verifiedAt": "2026-11-10" },
+      "review": { "date": "2026-11-10", "result": "passed-with-notes", "notes": "Sin licencia." },
+      "requirements": [],
+      "notice": "El repositorio no declara licencia.",
+      "compatibleAgents": ["claude-code", "opencode"]
+    }
+  ],
+  "commands": []
+}

@@ -2,18 +2,16 @@ const apiBaseUrl = 'https://api.github.com'
 const apiVersion = '2022-11-28'
 const userAgent = 'Skima-Desktop'
 
-const resourceDefaults = Object.freeze({
-  core: { anonymousPerMinute: 60 / 60, authenticatedPerMinute: 5000 / 60 },
-  search: { anonymousPerMinute: 10, authenticatedPerMinute: 30 },
-  code_search: { anonymousPerMinute: 0, authenticatedPerMinute: 10 }
+const resourceRequestsPerMinute = Object.freeze({
+  core: 1,
+  search: 10
 })
 
 class GitHubRateLimitError extends Error {
-  constructor({ resource, resetAt, isAuthenticated }) {
+  constructor({ resource, resetAt }) {
     const resetDate = resetAt ? new Date(resetAt) : null
     super(
-      `Se ha alcanzado el límite de la API de GitHub (${resource})${resetDate ? `. Se reanudará a las ${resetDate.toLocaleTimeString()}` : ''}.` +
-      (isAuthenticated ? '' : ' Define la variable de entorno GITHUB_TOKEN para tener más margen.')
+      `GitHub no admite más consultas por ahora${resetDate ? `; se podrá volver a consultar a las ${resetDate.toLocaleTimeString()}` : ''}. Mientras tanto se muestran los datos guardados.`
     )
     this.name = 'GitHubRateLimitError'
     this.code = 'RATE_LIMITED'
@@ -31,9 +29,6 @@ class GitHubHttpError extends Error {
 }
 
 const getResourceForPath = (requestPath) => {
-  if (requestPath.startsWith('/search/code')) {
-    return 'code_search'
-  }
   if (requestPath.startsWith('/search/')) {
     return 'search'
   }
@@ -44,23 +39,17 @@ class GitHubApiClient {
   constructor({
     fetchImplementation,
     responseCache,
-    getToken = () => null,
     now = () => Date.now(),
     sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds)),
     maximumWaitMs = 65000
   }) {
     this.fetchImplementation = fetchImplementation
     this.responseCache = responseCache
-    this.getToken = getToken
     this.now = now
     this.sleep = sleep
     this.maximumWaitMs = maximumWaitMs
     this.resourceStates = new Map()
     this.queues = new Map()
-  }
-
-  get isAuthenticated() {
-    return Boolean(this.getToken())
   }
 
   getRateLimitSummary() {
@@ -79,12 +68,11 @@ class GitHubApiClient {
   }
 
   getMinimumIntervalMs(resource) {
-    const defaults = resourceDefaults[resource] ?? resourceDefaults.core
-    const perMinute = this.isAuthenticated ? defaults.authenticatedPerMinute : defaults.anonymousPerMinute
     if (resource === 'core') {
       return 0
     }
-    return perMinute > 0 ? Math.ceil(60000 / perMinute) : Infinity
+    const perMinute = resourceRequestsPerMinute[resource] ?? resourceRequestsPerMinute.core
+    return Math.ceil(60000 / perMinute)
   }
 
   enqueue(resource, task) {
@@ -98,16 +86,10 @@ class GitHubApiClient {
     const state = this.getResourceState(resource)
     const minimumInterval = this.getMinimumIntervalMs(resource)
 
-    if (minimumInterval === Infinity) {
-      const error = new Error('Esta búsqueda de GitHub necesita un token (variable de entorno GITHUB_TOKEN).')
-      error.code = 'TOKEN_REQUIRED'
-      throw error
-    }
-
     if (state.remaining === 0 && state.resetAt && state.resetAt > this.now()) {
       const waitMs = state.resetAt - this.now() + 500
       if (waitMs > this.maximumWaitMs) {
-        throw new GitHubRateLimitError({ resource, resetAt: state.resetAt, isAuthenticated: this.isAuthenticated })
+        throw new GitHubRateLimitError({ resource, resetAt: state.resetAt })
       }
       await this.sleep(waitMs)
     }
@@ -141,10 +123,6 @@ class GitHubApiClient {
       Accept: accept ?? 'application/vnd.github+json',
       'X-GitHub-Api-Version': apiVersion,
       'User-Agent': userAgent
-    }
-    const token = this.getToken()
-    if (token) {
-      headers.Authorization = `Bearer ${token}`
     }
     if (etag) {
       headers['If-None-Match'] = etag
@@ -200,7 +178,7 @@ class GitHubApiClient {
     }
 
     const url = this.buildUrl(requestPath, query)
-    const cacheKey = `${accept ?? 'json'} ${url.href} ${this.isAuthenticated ? 'auth' : 'anon'}`
+    const cacheKey = `${accept ?? 'json'} ${url.href}`
     const cachedEntry = useCache && this.responseCache ? await this.responseCache.get(cacheKey) : null
 
     await this.waitForBudget(resource)
@@ -224,7 +202,7 @@ class GitHubApiClient {
         state.resetAt = this.now() + retryAfterSeconds * 1000
       }
       if (state.remaining === 0 || Number.isFinite(retryAfterSeconds)) {
-        throw new GitHubRateLimitError({ resource, resetAt: state.resetAt, isAuthenticated: this.isAuthenticated })
+        throw new GitHubRateLimitError({ resource, resetAt: state.resetAt })
       }
     }
 

@@ -1,9 +1,8 @@
-const { catalogQueries, codeSearchQueries, crawlLimits } = require('./catalogQueries')
+const { catalogQueries, crawlLimits } = require('./catalogQueries')
 const { classifyRepository, isRelevantRepository } = require('./repositoryClassifier')
 
-const snapshotVersion = 1
+const snapshotVersion = 2
 const remoteQueryId = 'remote'
-const maximumCodeSearchRepositoryLookups = 300
 const maximumRemoteQueryLength = 120
 
 const toRepositoryKey = (fullName) => String(fullName).toLowerCase()
@@ -42,7 +41,6 @@ const createEmptySnapshot = () => ({
   crawlStartedAt: null,
   generatedAt: null,
   completedAt: null,
-  isAuthenticated: false,
   queryStates: {},
   repositories: {}
 })
@@ -53,7 +51,6 @@ class CatalogService {
     snapshotStorage,
     curatedCatalogModel,
     queries = catalogQueries,
-    codeQueries = codeSearchQueries,
     limits = crawlLimits,
     now = () => Date.now(),
     setTimer = (callback, milliseconds) => {
@@ -67,7 +64,6 @@ class CatalogService {
     this.snapshotStorage = snapshotStorage
     this.curatedCatalogModel = curatedCatalogModel
     this.queries = queries
-    this.codeQueries = codeQueries
     this.limits = limits
     this.now = now
     this.setTimer = setTimer
@@ -130,9 +126,6 @@ class CatalogService {
     if (!snapshot.generatedAt) {
       return true
     }
-    if (snapshot.isAuthenticated !== this.githubApiClient.isAuthenticated && this.githubApiClient.isAuthenticated) {
-      return true
-    }
     return this.now() - Date.parse(snapshot.generatedAt) > this.limits.snapshotTtlMs
   }
 
@@ -159,7 +152,6 @@ class CatalogService {
       isRefreshing: Boolean(this.crawlPromise),
       generatedAt: snapshot.generatedAt,
       completedAt: snapshot.completedAt,
-      isAuthenticated: this.githubApiClient.isAuthenticated,
       repositoryCount: Object.keys(snapshot.repositories).length,
       progress: { ...this.progress },
       pausedUntil: this.pausedUntil,
@@ -208,24 +200,16 @@ class CatalogService {
     this.abortController?.abort()
   }
 
-  getPagesPerQuery() {
-    return this.githubApiClient.isAuthenticated ? this.limits.authenticatedPagesPerQuery : this.limits.anonymousPagesPerQuery
-  }
-
   prepareCrawlState(snapshot) {
     const isResuming = snapshot.crawlStartedAt && !snapshot.completedAt && !this.isSnapshotStale({ ...snapshot, generatedAt: snapshot.crawlStartedAt })
 
     if (!isResuming) {
       snapshot.crawlStartedAt = new Date(this.now()).toISOString()
       snapshot.completedAt = null
-      snapshot.isAuthenticated = this.githubApiClient.isAuthenticated
       snapshot.queryStates = {}
     }
 
-    const activeQueries = [
-      ...this.queries.map((query) => ({ ...query, endpoint: '/search/repositories' })),
-      ...(this.githubApiClient.isAuthenticated ? this.codeQueries.map((query) => ({ ...query, endpoint: '/search/code' })) : [])
-    ]
+    const activeQueries = this.queries.map((query) => ({ ...query, endpoint: '/search/repositories' }))
 
     activeQueries.forEach((query) => {
       if (!snapshot.queryStates[query.id]) {
@@ -237,8 +221,7 @@ class CatalogService {
   }
 
   getMaximumPages(query) {
-    const pages = query.endpoint === '/search/code' ? this.limits.codeSearchPages : this.getPagesPerQuery()
-    return Math.min(pages, Math.ceil(this.limits.maximumResultsPerQuery / this.limits.perPage))
+    return Math.min(this.limits.pagesPerQuery, Math.ceil(this.limits.maximumResultsPerQuery / this.limits.perPage))
   }
 
   countProgress(snapshot, activeQueries) {
@@ -253,7 +236,6 @@ class CatalogService {
   async crawl(signal) {
     const snapshot = await this.loadSnapshot()
     const activeQueries = this.prepareCrawlState(snapshot)
-    const codeSearchRepositories = new Set()
     this.lastError = null
     this.pausedUntil = null
 
@@ -264,7 +246,7 @@ class CatalogService {
         if (signal.aborted) {
           return
         }
-        const shouldStop = await this.fetchQueryPage({ snapshot, query, signal, codeSearchRepositories })
+        const shouldStop = await this.fetchQueryPage({ snapshot, query, signal })
         this.countProgress(snapshot, activeQueries)
         await this.saveSnapshot()
         this.emitUpdate()
@@ -275,34 +257,25 @@ class CatalogService {
       pendingQueries = activeQueries.filter((query) => !snapshot.queryStates[query.id].done)
     }
 
-    await this.lookupCodeSearchRepositories({ snapshot, repositoryNames: codeSearchRepositories, signal })
     this.finishCrawl(snapshot)
     await this.saveSnapshot()
   }
 
-  async fetchQueryPage({ snapshot, query, signal, codeSearchRepositories }) {
+  async fetchQueryPage({ snapshot, query, signal }) {
     const state = snapshot.queryStates[query.id]
     const maximumPages = this.getMaximumPages(query)
 
     try {
       const { data } = await this.githubApiClient.request(query.endpoint, {
-        query: { q: query.query, sort: query.endpoint === '/search/code' ? undefined : 'stars', order: 'desc', per_page: this.limits.perPage, page: state.nextPage },
-        accept: query.endpoint === '/search/repositories' ? 'application/vnd.github+json' : undefined,
+        query: { q: query.query, sort: 'stars', order: 'desc', per_page: this.limits.perPage, page: state.nextPage },
+        accept: 'application/vnd.github+json',
         signal
       })
 
       const results = Array.isArray(data?.items) ? data.items : []
       state.totalCount = data?.total_count ?? state.totalCount
 
-      if (query.endpoint === '/search/code') {
-        results.forEach((result) => {
-          if (result.repository?.full_name) {
-            codeSearchRepositories.add(result.repository.full_name)
-          }
-        })
-      } else {
-        results.forEach((repository) => this.mergeRepository(snapshot, repository, query))
-      }
+      results.forEach((repository) => this.mergeRepository(snapshot, repository, query))
 
       state.nextPage += 1
       const reachedEnd = results.length < this.limits.perPage || (state.nextPage - 1) * this.limits.perPage >= (state.totalCount ?? Infinity)
@@ -323,29 +296,6 @@ class CatalogService {
       state.error = error.message
       this.lastError = error.message
       return false
-    }
-  }
-
-  async lookupCodeSearchRepositories({ snapshot, repositoryNames, signal }) {
-    const unknownNames = [...repositoryNames]
-      .filter((fullName) => !snapshot.repositories[toRepositoryKey(fullName)])
-      .slice(0, maximumCodeSearchRepositoryLookups)
-
-    for (const fullName of unknownNames) {
-      if (signal.aborted) {
-        return
-      }
-      try {
-        const { data } = await this.githubApiClient.request(`/repos/${fullName}`, { signal })
-        if (!data.fork) {
-          this.mergeRepository(snapshot, data, { id: 'code-skill-md', kind: 'skill' })
-        }
-      } catch (error) {
-        if (error.code === 'RATE_LIMITED') {
-          this.lastError = error.message
-          return
-        }
-      }
     }
   }
 

@@ -5,6 +5,7 @@ import { buildDetailUrl, buildPageUrl, detailSources, goBack, navigateTo } from 
 import { confirmDialog } from '../../../components/organisms/confirmDialog.js'
 import { SkillInstallFlow } from './skillInstallFlow.js'
 import { McpInstallFlow } from './mcpInstallFlow.js'
+import { AgentFileInstallFlow } from './agentFileInstallFlow.js'
 
 export class DetailController {
   constructor({ apiClient, view, params }) {
@@ -15,6 +16,7 @@ export class DetailController {
     this.installations = { isLoading: true, items: [] }
     this.skillInstallFlow = new SkillInstallFlow({ apiClient, onFinished: () => this.refreshAfterInstall() })
     this.mcpInstallFlow = new McpInstallFlow({ apiClient, onFinished: () => this.refreshAfterInstall() })
+    this.agentFileInstallFlow = new AgentFileInstallFlow({ apiClient, onFinished: () => this.refreshAfterInstall() })
   }
 
   get backLabel() {
@@ -96,6 +98,7 @@ export class DetailController {
     this.view.render(presentCatalogDetail(this.details, {
       ...handlers,
       onInstall: () => this.startInstall(),
+      onRemoveImported: () => this.removeImported(),
       installations: this.installations
     }))
   }
@@ -103,6 +106,10 @@ export class DetailController {
   async loadCatalogInstallations() {
     if (this.details.item.type === 'mcp') {
       await this.loadMcpInstallations()
+      return
+    }
+    if (['subagent', 'command'].includes(this.details.item.type)) {
+      await this.loadAgentFileInstallations()
       return
     }
     try {
@@ -113,6 +120,28 @@ export class DetailController {
         skillNames: item.subPath ? skills.filter((skill) => skill.folder === item.subPath).map((skill) => skill.name) : skills.map((skill) => skill.name)
       })
       this.installations = { isLoading: false, items: presentInstallations(locations, { onOpenFolder: (folderPath) => this.openFolder(folderPath) }) }
+    } catch {
+      this.installations = { isLoading: false, items: [] }
+    }
+    this.render()
+  }
+
+  async loadAgentFileInstallations() {
+    try {
+      const { item } = this.details
+      const fileName = `${(item.subPath ?? '').split('/').pop().replace(/\.md$/i, '')}.md`
+      const locations = await this.apiClient.findAgentFileInstallations({ type: item.type, fileName })
+      this.installations = {
+        isLoading: false,
+        emptyText: 'No está instalado en ningún agente activado.',
+        items: locations.map((location) => ({
+          scope: location.scope,
+          scopeLabel: location.scopeLabel,
+          agentLabels: location.agentNames,
+          displayPath: location.displayPath,
+          onOpenFolder: null
+        }))
+      }
     } catch {
       this.installations = { isLoading: false, items: [] }
     }
@@ -148,11 +177,71 @@ export class DetailController {
     return { kind: 'github', repository: item.repository, ref, skills, preselectedFolders }
   }
 
+  async removeImported() {
+    const { item } = this.details
+    const accepted = await confirmDialog({
+      title: `Quitar ${item.name} de importados`,
+      message: 'Se quitará de tu lista de importados. Lo que ya hayas instalado en agentes o proyectos no se desinstala.',
+      confirmLabel: 'Quitar',
+      isDestructive: true
+    })
+    if (!accepted) {
+      return
+    }
+    try {
+      const outcome = await this.apiClient.removeImportedItem(item.id, false)
+      if (outcome.remainingInRepository === 0) {
+        const deleteClone = await confirmDialog({
+          title: 'Borrar también el clon',
+          message: 'Era el último elemento de ese repositorio. ¿Quieres borrar también su copia descargada del disco?',
+          confirmLabel: 'Borrar el clon',
+          cancelLabel: 'Conservarlo',
+          isDestructive: true
+        })
+        if (deleteClone) {
+          await this.apiClient.removeImportedRepository(outcome.localFolder)
+        }
+      }
+      this.goBack()
+    } catch (error) {
+      this.view.showFailure({ message: error.message, onBack: () => this.goBack(), backLabel: this.backLabel, onRetry: () => this.load({ forceRefresh: true }) })
+    }
+  }
+
   async startInstall() {
     const { item } = this.details
+    if (item.origin === 'imported' && item.type === 'skill') {
+      await this.skillInstallFlow.start({
+        source: { kind: 'imported', itemId: item.id, skills: [{ folder: '', name: item.name }] },
+        title: item.name,
+        defaultScope: this.params.projectId ? 'project' : null,
+        defaultProjectId: this.params.projectId ?? null
+      })
+      return
+    }
+    if (item.origin === 'imported' && ['subagent', 'command'].includes(item.type)) {
+      await this.agentFileInstallFlow.start({
+        type: item.type,
+        source: { type: 'imported', itemId: item.id },
+        title: item.name,
+        defaultScope: this.params.projectId ? 'project' : null,
+        defaultProjectId: this.params.projectId ?? null
+      })
+      return
+    }
     if (item.type === 'skill') {
       await this.skillInstallFlow.start({
         source: this.buildCatalogSkillSource(),
+        title: item.name,
+        defaultScope: this.params.projectId ? 'project' : null,
+        defaultProjectId: this.params.projectId ?? null
+      })
+      return
+    }
+    if (['subagent', 'command'].includes(item.type)) {
+      await this.agentFileInstallFlow.start({
+        type: item.type,
+        source: { type: 'github', repository: item.repository, ref: this.details.ref, path: item.subPath },
         title: item.name,
         defaultScope: this.params.projectId ? 'project' : null,
         defaultProjectId: this.params.projectId ?? null

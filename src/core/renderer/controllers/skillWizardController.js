@@ -3,6 +3,7 @@ import { createAutosave } from '../services/autosave.js'
 import { registerPendingWork } from '../services/pendingWork.js'
 import { buildDetailUrl, detailSources, navigateTo } from '../services/navigation.js'
 import { openSettings } from '../services/settingsModalService.js'
+import { settingsSectionIds } from '../config/settingsSectionIds.js'
 
 const nameValidationDelayMs = 250
 
@@ -106,7 +107,7 @@ export class SkillWizardController {
         onNext: () => this.next(),
         onPickFiles: () => this.pickFiles(),
         onToggleOptimize: (value) => { this.state.optimizeEnabled = value },
-        onOpenSettings: () => openSettings({ sectionId: 'agents' })
+        onOpenSettings: () => openSettings({ sectionId: settingsSectionIds.paths })
       }
     })
     if (question.type === 'name' && this.state.answers.name) {

@@ -7,6 +7,7 @@ import { createRadioGroup } from '../../../components/molecules/radioGroup.js'
 import { createNoticeBanner } from '../../../components/molecules/noticeBanner.js'
 import { showToast } from '../../../components/molecules/toast.js'
 import { openSettings } from '../services/settingsModalService.js'
+import { settingsSectionIds } from '../config/settingsSectionIds.js'
 
 const resultVariants = { installed: 'success', skipped: 'neutral', error: 'danger' }
 const resultLabels = { installed: 'Correcto', skipped: 'Omitido', error: 'Error' }
@@ -62,7 +63,7 @@ export class McpInstallFlow {
     }
     if (context.enabledAgents.length === 0) {
       showToast({ message: 'No hay ningún agente activado. Indica en Configuración qué agentes usas.', variant: 'warning' })
-      openSettings({ sectionId: 'agents' })
+      openSettings({ sectionId: settingsSectionIds.paths })
       return
     }
     this.context = context
@@ -239,7 +240,7 @@ export class McpInstallFlow {
     if (!response.ok) {
       const actions = [createButton({ label: 'Atrás', variant: 'secondary', onClick: () => this.showDefinitionStep() })]
       if (response.error.code === 'NO_AGENTS') {
-        actions.push(createButton({ label: 'Abrir Configuración', onClick: () => { this.modal.close(); openSettings({ sectionId: 'agents' }) } }))
+        actions.push(createButton({ label: 'Abrir Configuración', onClick: () => { this.modal.close(); openSettings({ sectionId: settingsSectionIds.paths }) } }))
       }
       this.modal.setStep({ label: 'Paso 2 de 3', body: [createNoticeBanner({ variant: 'error', text: response.error.message })], actions })
       return

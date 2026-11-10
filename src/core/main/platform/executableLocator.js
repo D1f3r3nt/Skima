@@ -40,6 +40,40 @@ const windowsCommonDirectoryTemplates = Object.freeze([
   '{localAppData}/Programs/Microsoft VS Code/bin'
 ])
 
+const windowsRegistryPathKeys = Object.freeze([
+  { key: 'HKCU\\Environment', value: 'Path' },
+  { key: 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment', value: 'Path' }
+])
+
+const expandWindowsVariables = (text, environment) => String(text).replace(/%([^%]+)%/g, (match, name) => {
+  const entry = Object.entries(environment).find(([key]) => key.toLowerCase() === name.toLowerCase())
+  return entry ? entry[1] : match
+})
+
+const queryWindowsRegistryValue = ({ key, value }) => new Promise((resolve) => {
+  let output = ''
+  let child
+  try {
+    child = spawn('reg.exe', ['query', key, '/v', value], { windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'], shell: false })
+  } catch {
+    resolve('')
+    return
+  }
+  const timer = setTimeout(() => child.kill(), 4000)
+  child.stdout.on('data', (chunk) => { output += chunk.toString('utf-8') })
+  child.on('error', () => { clearTimeout(timer); resolve('') })
+  child.on('close', () => {
+    clearTimeout(timer)
+    const line = output.split(/\r?\n/).find((candidate) => new RegExp(`^\\s+${value}\\s+REG_(EXPAND_)?SZ\\s+`, 'i').test(candidate))
+    resolve(line ? line.replace(new RegExp(`^\\s+${value}\\s+REG_(EXPAND_)?SZ\\s+`, 'i'), '').trim() : '')
+  })
+})
+
+const readWindowsRegistryPathDefault = async ({ environment }) => {
+  const values = await Promise.all(windowsRegistryPathKeys.map(queryWindowsRegistryValue))
+  return values.filter(Boolean).map((value) => expandWindowsVariables(value, environment)).join(';')
+}
+
 const nodeVersionManagerRoots = Object.freeze(['{home}/.nvm/versions/node', '{home}/.local/share/fnm/node-versions'])
 
 const defaultFileSystem = {
@@ -95,12 +129,14 @@ class ExecutableLocator {
     platformPaths,
     environment = process.env,
     fileSystem = defaultFileSystem,
-    readLoginShellPath = runLoginShellForPath
+    readLoginShellPath = runLoginShellForPath,
+    readWindowsRegistryPath = (options) => (options.environment === process.env ? readWindowsRegistryPathDefault(options) : '')
   }) {
     this.platformPaths = platformPaths
     this.environment = environment
     this.fileSystem = fileSystem
     this.readLoginShellPath = readLoginShellPath
+    this.readWindowsRegistryPath = readWindowsRegistryPath
     this.searchDirectoriesPromise = null
   }
 
@@ -136,6 +172,7 @@ class ExecutableLocator {
 
   async computeSearchDirectories() {
     const environmentPath = this.splitPath(this.environment.PATH ?? this.environment.Path)
+    const registryPath = this.platformPaths.isWindows ? this.splitPath(await Promise.resolve(this.readWindowsRegistryPath({ environment: this.environment })).catch(() => '')) : []
     const loginShellPath = this.platformPaths.isWindows
       ? []
       : this.splitPath(await this.readLoginShellPath({
@@ -147,7 +184,7 @@ class ExecutableLocator {
     const nodeManagerDirectories = this.platformPaths.isWindows ? [] : await this.listNodeManagerDirectories()
 
     const seen = new Set()
-    return [...loginShellPath, ...environmentPath, ...commonDirectories, ...nodeManagerDirectories].filter((directory) => {
+    return [...loginShellPath, ...environmentPath, ...registryPath, ...commonDirectories, ...nodeManagerDirectories].filter((directory) => {
       const key = this.platformPaths.toComparablePath(directory)
       if (seen.has(key)) {
         return false

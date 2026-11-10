@@ -1,24 +1,42 @@
 import { createInlineEditableTitle } from '../../../components/molecules/inlineEditableTitle.js'
-import { createProjectContextEditor } from '../../../components/organisms/projectContextEditor.js'
 import { createNoticeBanner } from '../../../components/molecules/noticeBanner.js'
 import { createButton } from '../../../components/atoms/button.js'
+import { createTabs } from '../../../components/molecules/tabs.js'
 import { createEmptyState } from '../../../components/organisms/emptyState.js'
-import { confirmDialog } from '../../../components/organisms/confirmDialog.js'
+import { typedConfirmDialog } from '../../../components/organisms/typedConfirmDialog.js'
 import { showToast } from '../../../components/molecules/toast.js'
 import { createInlineEditState } from '../services/inlineEditState.js'
-import { createAutosave } from '../services/autosave.js'
-import { registerPendingWork } from '../services/pendingWork.js'
 import { buildPageUrl, navigateTo } from '../services/navigation.js'
-import { InstalledSkillsController } from './installedSkillsController.js'
+import { projectTabs, missingFolderTabReason } from '../config/projectTabs.js'
+import { createGraphifyActions } from './graphifyActions.js'
 
 const projectNameMaxLength = 80
-const projectContextMaxLength = 20000
+const removalConfirmationWord = 'eliminar'
+const tabIdPrefix = 'project'
+const lastTabKeyPrefix = 'skima.project.tab.'
+
+const readLastTab = (projectId) => {
+  try {
+    return sessionStorage.getItem(`${lastTabKeyPrefix}${projectId}`)
+  } catch {
+    return null
+  }
+}
+
+const writeLastTab = (projectId, tabId) => {
+  try {
+    sessionStorage.setItem(`${lastTabKeyPrefix}${projectId}`, tabId)
+  } catch {
+    return
+  }
+}
 
 export class ProjectController {
   constructor({ apiClient, contentElement, projectId }) {
     this.apiClient = apiClient
     this.contentElement = contentElement
     this.projectId = projectId
+    this.activePanel = null
     this.pageElement = document.createElement('div')
     this.pageElement.className = 'page project-page'
     this.contentElement.replaceChildren(this.pageElement)
@@ -38,7 +56,38 @@ export class ProjectController {
       }))
       return
     }
+    this.activeTabId = this.pickInitialTab()
     this.render()
+    this.ensureDataFolder()
+  }
+
+  async ensureDataFolder() {
+    if (!this.project.folderExists) {
+      return
+    }
+    try {
+      const result = await this.apiClient.ensureProjectDataFolder(this.project.id)
+      if (!result.writable && result.warning) {
+        this.noticesElement.append(createNoticeBanner({ variant: 'warning', text: result.warning }))
+      } else if (result.gitignoreUpdated) {
+        showToast({ message: 'Skima ha añadido .skima/ al .gitignore del proyecto para que sus datos no se suban al repositorio.', variant: 'info' })
+      }
+    } catch (error) {
+      this.noticesElement.append(createNoticeBanner({ variant: 'warning', text: error.message }))
+    }
+  }
+
+  getDisabledTabs() {
+    return Object.fromEntries(projectTabs
+      .map((tab) => [tab.id, !tab.create ? tab.unavailableReason : (tab.requiresDisk && !this.project.folderExists ? missingFolderTabReason : '')])
+      .filter(([, reason]) => reason))
+  }
+
+  pickInitialTab() {
+    const disabledTabs = this.getDisabledTabs()
+    const storedTabId = readLastTab(this.project.id)
+    const storedTab = projectTabs.find((tab) => tab.id === storedTabId && !disabledTabs[tab.id])
+    return storedTab?.id ?? projectTabs.find((tab) => !disabledTabs[tab.id])?.id ?? projectTabs[0].id
   }
 
   createTitle() {
@@ -76,8 +125,38 @@ export class ProjectController {
     if (this.project.folderExists) {
       lineElement.append(createButton({ label: 'Abrir carpeta', icon: 'folderOpen', variant: 'ghost', size: 'small', onClick: () => this.apiClient.openFolder(this.project.path).catch((error) => showToast({ message: error.message, variant: 'error' })) }))
     }
-    lineElement.append(createButton({ label: 'Quitar de Skima', icon: 'close', variant: 'ghost', size: 'small', onClick: () => this.removeProject() }))
+    lineElement.append(createButton({ label: 'Quitar proyecto', icon: 'trash', variant: 'danger', size: 'small', className: 'project-page__remove', onClick: () => this.removeProject() }))
     return lineElement
+  }
+
+  createGraphAction() {
+    this.graphifyActions?.dispose()
+    this.graphifyActions = null
+    this.graphifyNoticesElement = null
+    if (!this.project.folderExists) {
+      const actionsElement = document.createElement('div')
+      actionsElement.className = 'project-page__header-actions'
+      const graphButton = createButton({ label: 'Generar grafo', icon: 'fork', variant: 'secondary', size: 'small' })
+      graphButton.disabled = true
+      graphButton.title = 'La carpeta del proyecto no está disponible.'
+      graphButton.setAttribute('aria-description', graphButton.title)
+      actionsElement.append(graphButton)
+      return actionsElement
+    }
+    this.graphifyNoticesElement = document.createElement('div')
+    this.graphifyNoticesElement.className = 'project-page__notices'
+    this.graphifyActions = createGraphifyActions({ apiClient: this.apiClient, project: this.project, noticesElement: this.graphifyNoticesElement })
+    return this.graphifyActions.element
+  }
+
+  createHeader() {
+    const headerElement = document.createElement('header')
+    headerElement.className = 'project-page__header'
+    const headingElement = document.createElement('div')
+    headingElement.className = 'project-page__heading'
+    headingElement.append(this.createTitle(), this.createPathLine())
+    headerElement.append(headingElement, this.createGraphAction())
+    return headerElement
   }
 
   createMissingFolderNotice() {
@@ -89,55 +168,76 @@ export class ProjectController {
     })
   }
 
-  createContextEditor() {
-    const editor = createProjectContextEditor({
-      value: this.project.context,
-      maxLength: projectContextMaxLength,
-      onChange: (value) => this.autosave.change(value)
+  createTabsArea() {
+    this.tabs = createTabs({
+      tabs: projectTabs,
+      ariaLabel: 'Secciones del proyecto',
+      idPrefix: tabIdPrefix,
+      onChange: (tabId) => this.selectTab(tabId)
     })
-    this.autosave = createAutosave({
-      save: async (value) => {
-        this.project = await this.apiClient.updateProjectContext(this.project.id, value)
-      },
-      delayMs: 700,
-      onStatus: (status) => editor.setStatus(status)
-    })
-    this.unregisterPendingWork?.()
-    this.unregisterPendingWork = registerPendingWork({ hasPending: () => this.autosave.hasPending(), flush: () => this.autosave.flush() })
-    return editor.element
+    this.tabs.element.classList.add('project-page__tabs')
+    this.panelElement = document.createElement('div')
+    this.panelElement.className = 'project-page__panel'
+    this.panelElement.setAttribute('role', 'tabpanel')
+    this.panelElement.tabIndex = 0
+    return [this.tabs.element, this.panelElement]
   }
 
-  createSkillsSection() {
-    const sectionElement = document.createElement('section')
-    sectionElement.className = 'project-page__skills'
-    const titleElement = document.createElement('h2')
-    titleElement.className = 'project-page__section-title'
-    titleElement.textContent = 'Skills detectadas en el proyecto'
-    sectionElement.append(titleElement)
-    if (!this.project.folderExists) {
+  async selectTab(tabId) {
+    if (tabId === this.activeTabId && this.activePanel) {
+      return
+    }
+    this.activeTabId = tabId
+    writeLastTab(this.project.id, tabId)
+    await this.renderActivePanel()
+  }
+
+  async renderActivePanel() {
+    const previousPanel = this.activePanel
+    this.activePanel = null
+    await previousPanel?.dispose?.()
+
+    const disabledTabs = this.getDisabledTabs()
+    this.tabs.update({ activeTabId: this.activeTabId, disabledTabs })
+    this.panelElement.id = `${tabIdPrefix}-panel-${this.activeTabId}`
+    this.panelElement.setAttribute('aria-labelledby', `${tabIdPrefix}-tab-${this.activeTabId}`)
+
+    const tab = projectTabs.find((candidate) => candidate.id === this.activeTabId)
+    if (!tab || disabledTabs[tab.id]) {
       const noteElement = document.createElement('p')
       noteElement.className = 'settings-group__description'
-      noteElement.textContent = 'No se pueden buscar skills mientras la carpeta no esté localizada.'
-      sectionElement.append(noteElement)
-      return sectionElement
+      noteElement.textContent = disabledTabs[tab?.id] ?? missingFolderTabReason
+      this.panelElement.replaceChildren(noteElement)
+      return
     }
-    const installedController = new InstalledSkillsController({ apiClient: this.apiClient, scope: 'project', projectId: this.project.id, from: 'project' })
-    sectionElement.append(installedController.element)
-    installedController.start()
-    return sectionElement
+
+    this.activePanel = tab.create({
+      apiClient: this.apiClient,
+      project: this.project,
+      onProjectChange: (project) => {
+        this.project = project
+      }
+    })
+    this.panelElement.replaceChildren(this.activePanel.element)
   }
 
   render() {
     document.title = `Skima · ${this.project.name}`
     const backButton = createButton({ label: 'Proyectos', icon: 'arrowLeft', variant: 'ghost', size: 'small', className: 'item-detail__back', onClick: () => navigateTo(buildPageUrl('projects')) })
+    this.noticesElement = document.createElement('div')
+    this.noticesElement.className = 'project-page__notices'
+    if (!this.project.folderExists) {
+      this.noticesElement.append(this.createMissingFolderNotice())
+    }
+    const headerElement = this.createHeader()
     this.pageElement.replaceChildren(
       backButton,
-      this.createTitle(),
-      this.createPathLine(),
-      ...(this.project.folderExists ? [] : [this.createMissingFolderNotice()]),
-      this.createContextEditor(),
-      this.createSkillsSection()
+      headerElement,
+      this.noticesElement,
+      ...(this.graphifyNoticesElement ? [this.graphifyNoticesElement] : []),
+      ...this.createTabsArea()
     )
+    this.renderActivePanel()
   }
 
   async relocate() {
@@ -146,24 +246,36 @@ export class ProjectController {
       if (!folder) {
         return
       }
+      await this.activePanel?.dispose?.()
+      this.activePanel = null
       this.project = await this.apiClient.relocateProject(this.project.id, folder)
       showToast({ message: 'Carpeta localizada.', variant: 'success' })
+      this.activeTabId = this.pickInitialTab()
       this.render()
+      this.ensureDataFolder()
     } catch (error) {
       showToast({ message: error.message, variant: 'error' })
     }
   }
 
   async removeProject() {
-    const accepted = await confirmDialog({
+    const accepted = await typedConfirmDialog({
       title: 'Quitar el proyecto de Skima',
-      message: `«${this.project.name}» dejará de aparecer en Skima. No se borra ningún archivo de la carpeta del proyecto.`,
-      confirmLabel: 'Quitar de Skima'
+      paragraphs: [
+        `«${this.project.name}» dejará de aparecer en Skima.`,
+        'Solo se quita de Skima: no se borra ningún archivo de la carpeta del proyecto.'
+      ],
+      details: [
+        'Se conserva la carpeta .skima/ del proyecto: si vuelves a añadirlo, recuperará su configuración.',
+        'Las skills y servidores MCP instalados en el proyecto no se tocan.'
+      ],
+      confirmationWord: removalConfirmationWord,
+      confirmLabel: 'Quitar proyecto'
     })
     if (!accepted) {
       return
     }
-    await this.autosave?.flush()
+    await this.activePanel?.flush?.()
     await this.apiClient.removeProject(this.project.id)
     navigateTo(buildPageUrl('projects'))
   }

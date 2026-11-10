@@ -8,6 +8,12 @@ contextBridge.exposeInMainWorld('skimaApi', {
   renameProject: (projectId, name) => ipcRenderer.invoke('projects:rename', projectId, name),
   updateProjectContext: (projectId, context) => ipcRenderer.invoke('projects:update-context', projectId, context),
   relocateProject: (projectId, projectPath) => ipcRenderer.invoke('projects:relocate', projectId, projectPath),
+  ensureProjectDataFolder: (projectId) => ipcRenderer.invoke('projects:ensure-data-folder', projectId),
+  getProjectConfig: (projectId) => ipcRenderer.invoke('projects:get-config', projectId),
+  setProjectModelRestriction: (projectId, restriction) => ipcRenderer.invoke('projects:set-model-restriction', projectId, restriction),
+  readProjectEnv: (projectId) => ipcRenderer.invoke('env:read', projectId),
+  saveProjectEnv: (projectId, request) => ipcRenderer.invoke('env:save', projectId, request),
+  addEnvToGitignore: (projectId) => ipcRenderer.invoke('env:add-to-gitignore', projectId),
   selectFolder: (options) => ipcRenderer.invoke('dialog:select-folder', options),
   selectFile: (options) => ipcRenderer.invoke('dialog:select-file', options),
   listAgentSettings: (options) => ipcRenderer.invoke('settings:list-agents', options),
@@ -21,17 +27,17 @@ contextBridge.exposeInMainWorld('skimaApi', {
   listLibraryArtifacts: () => ipcRenderer.invoke('library:list'),
   listCatalog: () => ipcRenderer.invoke('catalog:list'),
   refreshCatalog: (options) => ipcRenderer.invoke('catalog:refresh', options),
-  searchCatalogRemote: (text) => ipcRenderer.invoke('catalog:search-remote', text),
+  loadSkimaCards: (itemIds) => ipcRenderer.invoke('catalog:load-skima-cards', itemIds),
   getCatalogDetails: (itemId, options) => ipcRenderer.invoke('catalog:get-details', itemId, options),
-  onCatalogUpdated: (callback) => {
-    const listener = (event, payload) => callback(payload)
-    ipcRenderer.on('catalog:updated', listener)
-    return () => ipcRenderer.removeListener('catalog:updated', listener)
-  },
   getInstallContext: () => ipcRenderer.invoke('installer:get-context'),
   planSkillInstall: (request) => ipcRenderer.invoke('installer:plan-skill', request),
   executeSkillInstall: (planId, decisions) => ipcRenderer.invoke('installer:execute-skill', planId, decisions),
   discardSkillInstall: (planId) => ipcRenderer.invoke('installer:discard-skill', planId),
+  planAgentFileInstall: (request) => ipcRenderer.invoke('installer:plan-agent-file', request),
+  executeAgentFileInstall: (planId, decisions) => ipcRenderer.invoke('installer:execute-agent-file', planId, decisions),
+  discardAgentFileInstall: (planId) => ipcRenderer.invoke('installer:discard-agent-file', planId),
+  findAgentFileInstallations: (criteria) => ipcRenderer.invoke('installer:find-agent-files', criteria),
+  listInstalledAgentFiles: (request) => ipcRenderer.invoke('installer:list-agent-files', request),
   scanInstalled: (request) => ipcRenderer.invoke('installed:scan', request),
   getInstalledDetails: (request) => ipcRenderer.invoke('installed:get-details', request),
   previewUninstall: (paths) => ipcRenderer.invoke('installed:preview-uninstall', paths),
@@ -63,6 +69,75 @@ contextBridge.exposeInMainWorld('skimaApi', {
     const listener = (event, payload) => callback(payload)
     ipcRenderer.on('ai:event', listener)
     return () => ipcRenderer.removeListener('ai:event', listener)
+  },
+  startImport: (request) => ipcRenderer.invoke('imports:start', request),
+  cancelImport: (requestId) => ipcRenderer.invoke('imports:cancel', requestId),
+  confirmImport: (importId, selectedKeys) => ipcRenderer.invoke('imports:confirm', importId, selectedKeys),
+  discardImport: (importId) => ipcRenderer.invoke('imports:discard', importId),
+  removeImportedItem: (itemId, deleteClone) => ipcRenderer.invoke('imports:remove-item', itemId, deleteClone),
+  removeImportedRepository: (localFolder) => ipcRenderer.invoke('imports:remove-repository', localFolder),
+  listImportedRepositories: () => ipcRenderer.invoke('imports:list-repositories'),
+  onImportProgress: (callback) => {
+    const listener = (event, payload) => callback(payload)
+    ipcRenderer.on('imports:progress', listener)
+    return () => ipcRenderer.removeListener('imports:progress', listener)
+  },
+  getPublishOverview: () => ipcRenderer.invoke('publish:overview'),
+  preparePublish: (request) => ipcRenderer.invoke('publish:prepare', request),
+  runPublish: (publishId) => ipcRenderer.invoke('publish:run', publishId),
+  cancelPublish: () => ipcRenderer.invoke('publish:cancel'),
+  checkPublishStatus: (publicName) => ipcRenderer.invoke('publish:check-status', publicName),
+  withdrawPublish: (publicName) => ipcRenderer.invoke('publish:withdraw', publicName),
+  openPublishedPullRequest: (publicName) => ipcRenderer.invoke('publish:open-pull-request', publicName),
+  onPublishProgress: (callback) => {
+    const listener = (event, payload) => callback(payload)
+    ipcRenderer.on('publish:progress', listener)
+    return () => ipcRenderer.removeListener('publish:progress', listener)
+  },
+  getAgentsMdState: (projectId) => ipcRenderer.invoke('agents-md:get-state', projectId),
+  previewAgentsMd: (projectId, request) => ipcRenderer.invoke('agents-md:preview', projectId, request),
+  saveAgentsMdDraft: (projectId, request) => ipcRenderer.invoke('agents-md:save-draft', projectId, request),
+  createAgentsMd: (projectId, request) => ipcRenderer.invoke('agents-md:create', projectId, request),
+  saveAgentsMdEdits: (projectId, request) => ipcRenderer.invoke('agents-md:save-edits', projectId, request),
+  optimizeAgentsMd: (projectId, request) => ipcRenderer.invoke('agents-md:optimize', projectId, request),
+  getAgentsMdAiStatus: (projectId) => ipcRenderer.invoke('agents-md:ai-status', projectId),
+  resolveLegacyContext: (projectId, decision) => ipcRenderer.invoke('agents-md:legacy-context', projectId, decision),
+  createAgentsMdBridge: (projectId, bridgeId) => ipcRenderer.invoke('agents-md:create-bridge', projectId, bridgeId),
+  getGraphifyState: (projectId) => ipcRenderer.invoke('graphify:get-state', projectId),
+  generateGraph: (projectId) => ipcRenderer.invoke('graphify:generate', projectId),
+  cancelGraph: (projectId) => ipcRenderer.invoke('graphify:cancel', projectId),
+  openGraphOutput: (projectId, kind) => ipcRenderer.invoke('graphify:open-output', projectId, kind),
+  ignoreGraphOutput: (projectId) => ipcRenderer.invoke('graphify:ignore-output', projectId),
+  describeGraphifyInstall: () => ipcRenderer.invoke('graphify:describe-install'),
+  installGraphify: (repair) => ipcRenderer.invoke('graphify:install', repair),
+  cancelGraphifyInstall: () => ipcRenderer.invoke('graphify:cancel-install'),
+  getGraphifyIntegration: (projectId) => ipcRenderer.invoke('graphify:integration-state', projectId),
+  previewGraphifyIntegration: (projectId, variantId, action) => ipcRenderer.invoke('graphify:integration-preview', projectId, variantId, action),
+  applyGraphifyIntegration: (projectId, variantId, action, fingerprint) => ipcRenderer.invoke('graphify:integration-apply', projectId, variantId, action, fingerprint),
+  declineGraphifyIntegration: (projectId) => ipcRenderer.invoke('graphify:integration-decline', projectId),
+  onGraphifyEvent: (callback) => {
+    const listener = (event, payload) => callback(payload)
+    ipcRenderer.on('graphify:event', listener)
+    return () => ipcRenderer.removeListener('graphify:event', listener)
+  },
+  describeCliInstall: (toolId) => ipcRenderer.invoke('cli-install:describe', toolId),
+  installCli: (toolId, methodId) => ipcRenderer.invoke('cli-install:install', toolId, methodId),
+  cancelCliInstall: () => ipcRenderer.invoke('cli-install:cancel'),
+  getCliManual: (toolId) => ipcRenderer.invoke('cli-install:manual', toolId),
+  onCliInstallEvent: (callback) => {
+    const listener = (event, payload) => callback(payload)
+    ipcRenderer.on('cli-install:event', listener)
+    return () => ipcRenderer.removeListener('cli-install:event', listener)
+  },
+  getProfileStatus: (options) => ipcRenderer.invoke('profile:get-status', options),
+  logoutProfile: () => ipcRenderer.invoke('profile:logout'),
+  startGhLogin: () => ipcRenderer.invoke('profile:start-gh-login'),
+  cancelGhLogin: () => ipcRenderer.invoke('profile:cancel-gh-login'),
+  saveProfileToken: (request) => ipcRenderer.invoke('profile:save-token', request),
+  onProfileLoginEvent: (callback) => {
+    const listener = (event, payload) => callback(payload)
+    ipcRenderer.on('profile:login-event', listener)
+    return () => ipcRenderer.removeListener('profile:login-event', listener)
   },
   openExternalLink: (url) => ipcRenderer.invoke('links:open-external', url),
   minimizeWindow: () => ipcRenderer.invoke('window:minimize'),

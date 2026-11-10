@@ -8,7 +8,7 @@ const referenceTags = ['reference_material', 'task']
 const createAskError = (code, message) => ({ ok: false, text: '', warnings: [], events: [], error: { code, message } })
 
 class AskAi {
-  constructor({ agentBridge, settingsStore, modelSelector, sourceOfTruth, projectModel, registry, platformPaths, promptRegistry = null }) {
+  constructor({ agentBridge, settingsStore, modelSelector, sourceOfTruth, projectModel, registry, platformPaths, promptRegistry = null, projectModelPolicy = null, projectContextReader = null }) {
     this.agentBridge = agentBridge
     this.settingsStore = settingsStore
     this.modelSelector = modelSelector
@@ -17,6 +17,8 @@ class AskAi {
     this.registry = registry
     this.platformPaths = platformPaths
     this.promptRegistry = promptRegistry
+    this.projectModelPolicy = projectModelPolicy
+    this.projectContextReader = projectContextReader
   }
 
   findDefinition(promptId) {
@@ -41,7 +43,7 @@ class AskAi {
       return { agentId: override.agentId, model: request.model ?? override.model ?? null, reason: 'Agente fijado para este prompt en Configuración.' }
     }
     if (modelTier === 'cheap') {
-      const selection = await this.modelSelector.pickCheapestModel()
+      const selection = await this.modelSelector.pickCheapestModel({ projectId: request.projectId ?? null })
       if (!selection.agentId) {
         return { agentId: null, model: null, reason: selection.reason }
       }
@@ -65,6 +67,16 @@ class AskAi {
       return { project, cwd: useProjectFolder ? project.path : null }
     }
     return { project: null, cwd: null }
+  }
+
+  async readProjectContext(project) {
+    if (this.projectContextReader) {
+      const text = await this.projectContextReader(project).catch(() => null)
+      if (typeof text === 'string' && text.trim()) {
+        return text
+      }
+    }
+    return project.context
   }
 
   async packReferenceMaterial(documentIds, maxTokens) {
@@ -104,10 +116,28 @@ class AskAi {
     const storedOverride = definition ? settings.promptLaunch.promptOverrides[definition.id] : null
     const override = storedOverride && !storedOverride.useDefaults ? storedOverride : null
     const recommended = definition?.recommended ?? {}
-    const resolution = await this.resolveAgentAndModel({ request, definition, settings, override })
+    let resolution = await this.resolveAgentAndModel({ request, definition, settings, override })
 
     if (!resolution.agentId) {
       return { ...createAskError('NO_AGENT', `No hay ningún agente disponible para lanzar el prompt. ${resolution.reason}`), resolution }
+    }
+
+    let restrictionWarnings = []
+    if (request.projectId && this.projectModelPolicy) {
+      try {
+        const allowed = await this.projectModelPolicy.enforce({
+          projectId: request.projectId,
+          agentId: resolution.agentId,
+          model: resolution.model,
+          listAlternatives: () => this.modelSelector.listConnectedModels()
+        })
+        if (allowed.changed) {
+          resolution = { ...resolution, agentId: allowed.agentId, model: allowed.model, reason: `${allowed.warnings.join(' ')} ${resolution.reason}`.trim() }
+          restrictionWarnings = allowed.warnings
+        }
+      } catch (error) {
+        return { ...createAskError(error.code ?? 'PROJECT_MODEL_RESTRICTED', error.message), resolution }
+      }
     }
 
     let workingDirectory
@@ -131,7 +161,7 @@ class AskAi {
         ? renderPromptTemplate(definition.template, {
           ...(request.variables ?? {}),
           sourceOfTruth: packed.text || '(none)',
-          projectContext: workingDirectory.project ? neutralizeDelimiters(workingDirectory.project.context || '(empty)', ['project_context', 'user_input']) : '(no project)'
+          projectContext: workingDirectory.project ? neutralizeDelimiters((await this.readProjectContext(workingDirectory.project)) || '(empty)', ['project_context', 'user_input']) : '(no project)'
         })
         : this.buildFreePrompt({ prompt: request.prompt, referenceText: packed.text })
     } catch (error) {
@@ -153,6 +183,7 @@ class AskAi {
       const result = await this.agentBridge.runAgent({
         runId: request.runId,
         agentId: resolution.agentId,
+        projectId: request.projectId ?? null,
         prompt: promptText,
         cwd,
         model: resolution.model,
@@ -172,7 +203,7 @@ class AskAi {
       const agentName = this.registry.find((entry) => entry.id === resolution.agentId)?.name ?? resolution.agentId
       return {
         ...result,
-        warnings: [...packed.warnings, ...(result.warnings ?? [])],
+        warnings: [...restrictionWarnings, ...packed.warnings, ...(result.warnings ?? [])],
         resolution: {
           agentId: resolution.agentId,
           agentName,

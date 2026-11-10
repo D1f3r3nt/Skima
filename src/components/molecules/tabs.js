@@ -1,6 +1,6 @@
 import { createIcon } from '../atoms/icon.js'
 
-export function createTabs({ tabs, ariaLabel, onChange }) {
+export function createTabs({ tabs, ariaLabel, onChange, idPrefix = '' }) {
   const tabListElement = document.createElement('div')
   tabListElement.className = 'tabs'
   tabListElement.setAttribute('role', 'tablist')
@@ -18,6 +18,10 @@ export function createTabs({ tabs, ariaLabel, onChange }) {
     tabButton.className = 'tabs__tab'
     tabButton.setAttribute('role', 'tab')
     tabButton.dataset.tabId = tab.id
+    if (idPrefix) {
+      tabButton.id = `${idPrefix}-tab-${tab.id}`
+      tabButton.setAttribute('aria-controls', `${idPrefix}-panel-${tab.id}`)
+    }
 
     const labelElement = document.createElement('span')
     labelElement.textContent = tab.label
@@ -26,7 +30,11 @@ export function createTabs({ tabs, ariaLabel, onChange }) {
     countElement.className = 'tabs__count'
 
     tabButton.append(createIcon(tab.icon, { size: 16 }), labelElement, countElement)
-    tabButton.addEventListener('click', () => onChange(tab.id))
+    tabButton.addEventListener('click', () => {
+      if (!tabButton.disabled) {
+        onChange(tab.id)
+      }
+    })
 
     tabButtons.set(tab.id, tabButton)
     countElements.set(tab.id, countElement)
@@ -45,14 +53,23 @@ export function createTabs({ tabs, ariaLabel, onChange }) {
   }
 
   tabListElement.addEventListener('keydown', (event) => {
-    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') {
+    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) {
       return
     }
 
-    const buttons = [...tabButtons.values()]
+    const buttons = [...tabButtons.values()].filter((button) => !button.disabled)
+    if (buttons.length === 0) {
+      return
+    }
+    event.preventDefault()
     const currentIndex = buttons.indexOf(document.activeElement)
-    const direction = event.key === 'ArrowRight' ? 1 : -1
-    const nextButton = buttons[(currentIndex + direction + buttons.length) % buttons.length]
+    const nextIndexes = {
+      ArrowRight: (currentIndex + 1) % buttons.length,
+      ArrowLeft: (currentIndex - 1 + buttons.length) % buttons.length,
+      Home: 0,
+      End: buttons.length - 1
+    }
+    const nextButton = buttons[nextIndexes[event.key]]
     nextButton.focus()
     nextButton.click()
   })
@@ -61,10 +78,14 @@ export function createTabs({ tabs, ariaLabel, onChange }) {
 
   new ResizeObserver(() => moveIndicator(tabButtons.get(activeTabId))).observe(tabListElement)
 
-  const update = ({ activeTabId: nextActiveTabId, counts = {} }) => {
+  const update = ({ activeTabId: nextActiveTabId, counts = {}, disabledTabs = {} }) => {
     activeTabId = nextActiveTabId
 
     tabButtons.forEach((tabButton, tabId) => {
+      const disabledReason = disabledTabs[tabId] ?? ''
+      tabButton.disabled = Boolean(disabledReason)
+      tabButton.title = disabledReason
+      tabButton.setAttribute('aria-disabled', String(Boolean(disabledReason)))
       const isActive = tabId === activeTabId
       tabButton.classList.toggle('tabs__tab--active', isActive)
       tabButton.setAttribute('aria-selected', String(isActive))

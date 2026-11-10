@@ -23,10 +23,11 @@ export const openSettings = ({ sectionId = settingsSections[0].id } = {}) => {
     return currentModal
   }
 
+  const sessionState = new Map()
   currentModal = createSettingsModal({
     sections: settingsSections,
     initialSectionId: sectionId,
-    createSectionContext: (handlers) => ({ apiClient: currentApiClient, ...handlers }),
+    createSectionContext: (handlers) => ({ apiClient: currentApiClient, sessionState, ...handlers }),
     onClose: () => {
       currentModal = null
       closeListeners.forEach((listener) => listener())

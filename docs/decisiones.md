@@ -11,8 +11,8 @@
 
 **Catálogo de GitHub**
 
-5. **Estrategia del catálogo.** Son 19 consultas por topic y palabras clave, ordenadas por estrellas, de 100 en 100. Sin token se piden 3 páginas por consulta y con token 10. El rastreo va en segundo plano y por turnos, con caché de 24 h, peticiones condicionales (ETag) y pausa automática al llegar al límite. La búsqueda de `filename:SKILL.md` solo se activa con `GITHUB_TOKEN`, porque GitHub exige autenticación para buscar en el código.
-6. **Token de GitHub.** Se lee de `GITHUB_TOKEN`. El almacén de ajustes ya tiene `github.token` preparado para una sección futura.
+5. **Estrategia del catálogo.** Son 19 consultas por topic y palabras clave, ordenadas por estrellas, de 100 en 100, con 3 páginas por consulta. El rastreo va en segundo plano y por turnos, con caché de 24 h, peticiones condicionales (ETag) y pausa automática al llegar al límite.
+6. **Sin autenticación ante la API de GitHub.** Skima no usa ningún token para la API. La versión 2 del esquema de ajustes borra el antiguo campo `github.token` de los archivos ya guardados. Si GitHub limita las consultas (403/429), se usa la caché local y se muestra un aviso neutro.
 
 **Puente con los agentes**
 
