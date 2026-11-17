@@ -47,6 +47,7 @@ const geminiCliAdapter = {
   effortMap: {},
   suggestedModels: ['auto', 'pro', 'flash', 'flash-lite'],
   cheapModel: 'flash-lite',
+  mediumModel: 'flash',
   defaultModelLabel: 'Modelo automático de Gemini CLI',
   loginCommand: 'gemini',
   versionArgs: ['--version'],

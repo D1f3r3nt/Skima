@@ -356,41 +356,25 @@ const result = await agentBridge.runAgent({
 
 5. Al renderer solo se exponen prompts predefinidos: `window.skimaApi.askAi({ promptId, variables })`, más `cancelAi(runId)` y `onAiEvent(callback)`.
 
-## Asistente de skills y optimización con IA
+## Editor de skills
 
-El asistente (`editor.html`) hace nueve preguntas, una por paso: nombre (validado mientras escribes), qué hace, cuándo usarla, cuándo no, entradas, pasos, resultado, reglas y archivos adicionales. Guarda un borrador automáticamente.
+El editor (`editor.html`) es un único formulario:
 
-`src/core/main/skills/skillGenerator.js` rellena la plantilla de `skillTemplate.js`:
+- **Cabecera**: `name` (máx. 64, minúsculas, números y guiones, validado mientras escribes) y `description` (máx. 1024). Son obligatorios.
+- **Opciones avanzadas** (desplegable): `license` (lista SPDX cerrada), `compatibility` (máx. 500), `metadata` (`author`, `version`, `category`) y `allowed-tools`. Los campos vacíos no se envían.
+- **Explica tu skill**: texto libre.
+- **Archivos**: tres secciones opcionales, `scripts`, `references` y `assets`.
 
-```markdown
----
-name: {{name}}
-description: {{description}}
----
+Al pulsar **Generar**, `src/core/main/skills/skillCreator.js` copia los archivos a una carpeta temporal dentro de Mis skills, construye el *Form Response* (`skillForm.js`) y lanza el prompt `skill-create`:
 
-# {{title}}
-
-{{overview}}
-
-## When to use
-## When not to use
-## Inputs
-## Instructions
-## Output format
-## Rules
-## References
+```
+Let's create a skill together using your skill-creator skill.
+[Form Response]
 ```
 
-Las secciones vacías se omiten. El YAML se escribe con la librería `yaml`, de modo que comillas, saltos de línea y símbolos siempre producen un archivo válido. Los límites vienen de `skillSpecConstants.js`, y un test comprueba que coinciden con `source-of-truth/skill-spec.md`. La estructura se basa en la especificación de agentskills.io y en la guía de buenas prácticas de Anthropic (documentos `skill-spec`, `skill-authoring-best-practices` y `skill-structure-template`).
+El prompt se ejecuta en esa carpeta, en solo lectura, sin web y con las skills del usuario cargadas (para que el agente encuentre `skill-creator`). Por defecto usa el agente por defecto con su modelo intermedio (`mediumModel` del adaptador: Sonnet en Claude Code); el agente, el modelo y la intensidad se cambian en **Configuración → Proveedor de IA → Ajustes por prompt**. La respuesta se valida como `SKILL.md` y se guarda en `<name>/SKILL.md` junto a `scripts/`, `references/` y `assets/` (solo las carpetas con archivos). La skill queda en Mis skills, sin instalar, con la etiqueta «Creada por ti».
 
-**Optimización**: si hay un agente conectado, el prompt `skill-optimize-en` envía las respuestas al modelo barato, en solo lectura, sin herramientas, sin web y sin skills ni MCP del usuario, junto con cuatro documentos de la Fuente de la Verdad. La IA solo devuelve el texto de cada hueco; el código monta el archivo. `skillOptimizationValidator.js` comprueba:
-
-- el esquema JSON;
-- el límite de la descripción y que no tenga etiquetas;
-- el mismo número de pasos y reglas;
-- que el código, los comandos, las rutas, las URLs y los identificadores sigan presentes.
-
-Si se pierde alguno, ese campo vuelve a tu texto original y se avisa. Hay un reintento. Ante cualquier otro fallo (tiempo agotado, cancelación, sesión caducada o sin proveedor), la skill se crea con tu texto tal cual.
+Si no hay ningún proveedor de IA conectado, el editor no se puede usar hasta configurarlo. **Editar** abre el `SKILL.md` en un editor de texto simple; se valida antes de guardar.
 
 ## Fuente de la Verdad
 

@@ -52,6 +52,7 @@ const codexCli = {
   effortMap: { low: 'low', medium: 'medium', high: 'high', max: 'xhigh' },
   suggestedModels: ['gpt-5.5', 'gpt-5-codex'],
   cheapModel: 'gpt-5.5-mini',
+  mediumModel: 'gpt-5.5',
   cheapModelVerified: false,
   defaultModelLabel: 'Modelo por defecto de Codex',
   loginCommand: 'codex login',

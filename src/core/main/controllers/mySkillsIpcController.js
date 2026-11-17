@@ -1,12 +1,10 @@
 const path = require('node:path')
 const { ipcChannels } = require('../ipcChannels')
 const { executeSafely } = require('./ipcResponse')
-const { generateSkill } = require('../skills/skillGenerator')
 const { splitFrontmatter, validateSkillName } = require('../skills/skillManifest')
 const { validatePortableName } = require('../platform/portableNames')
 const { skillSpecConstants } = require('../skills/skillSpecConstants')
-
-const scriptExtensions = new Set(['.sh', '.bash', '.zsh', '.ps1', '.bat', '.cmd', '.py', '.js', '.mjs', '.cjs', '.ts', '.rb', '.pl'])
+const { skillLicenses, skillFileFolders, metadataKeys, formLimits } = require('../skills/skillForm')
 
 const executeWithCode = (action) => executeSafely(async () => {
   try {
@@ -20,23 +18,18 @@ const executeWithCode = (action) => executeSafely(async () => {
 })
 
 class MySkillsIpcController {
-  constructor({ ipcMain, mySkillsStore, markdownRenderer, dialog, BrowserWindow, skillOptimizer = null, scanner = null }) {
+  constructor({ ipcMain, mySkillsStore, markdownRenderer, dialog, BrowserWindow, skillCreator = null, scanner = null }) {
     this.ipcMain = ipcMain
     this.mySkillsStore = mySkillsStore
     this.markdownRenderer = markdownRenderer
     this.dialog = dialog
     this.BrowserWindow = BrowserWindow
-    this.skillOptimizer = skillOptimizer
+    this.skillCreator = skillCreator
     this.scanner = scanner
   }
 
   renderPreview(markdown) {
     return this.markdownRenderer.render(splitFrontmatter(markdown).body, { context: null }).html
-  }
-
-  buildPreview(answers, slots) {
-    const generated = generateSkill({ answers, slots })
-    return { ...generated, html: this.renderPreview(generated.markdown) }
   }
 
   register() {
@@ -45,7 +38,12 @@ class MySkillsIpcController {
         nameMaxLength: skillSpecConstants.nameMaxLength,
         namePattern: skillSpecConstants.namePattern.source,
         descriptionMaxLength: skillSpecConstants.descriptionMaxLength,
-        reservedNameWords: skillSpecConstants.reservedNameWords
+        compatibilityMaxLength: skillSpecConstants.compatibilityMaxLength,
+        reservedNameWords: skillSpecConstants.reservedNameWords,
+        licenses: skillLicenses,
+        fileFolders: skillFileFolders,
+        metadataKeys,
+        formLimits
       }))
     )
     this.ipcMain.handle(ipcChannels.validateSkillName, (event, name, previousName) =>
@@ -64,9 +62,6 @@ class MySkillsIpcController {
         return issues.filter((issue, index) => issues.findIndex((other) => other.message === issue.message) === index)
       })
     )
-    this.ipcMain.handle(ipcChannels.previewMySkill, (event, answers, slots) =>
-      executeSafely(() => this.buildPreview(answers, slots ?? null))
-    )
     this.ipcMain.handle(ipcChannels.listMySkills, () =>
       executeSafely(() => this.mySkillsStore.list())
     )
@@ -76,16 +71,21 @@ class MySkillsIpcController {
         return { ...skill, path: undefined, html: this.renderPreview(skill.markdown) }
       })
     )
-    this.ipcMain.handle(ipcChannels.saveMySkill, (event, request) =>
+    this.ipcMain.handle(ipcChannels.createMySkill, (event, request) =>
       executeWithCode(async () => {
-        const saved = await this.mySkillsStore.save({
-          answers: request?.answers,
-          slots: request?.slots ?? null,
-          generation: request?.generation ?? null,
-          previousName: typeof request?.previousName === 'string' && request.previousName ? request.previousName : null
-        })
+        if (!this.skillCreator) {
+          throw Object.assign(new Error('El editor de skills no está disponible.'), { code: 'NO_AGENT' })
+        }
+        const created = await this.skillCreator.create({ form: request?.form ?? {}, runId: typeof request?.runId === 'string' ? request.runId : undefined })
         this.scanner?.invalidate()
-        return { ...saved, path: undefined }
+        return { ...created, path: undefined }
+      })
+    )
+    this.ipcMain.handle(ipcChannels.updateMySkillMarkdown, (event, name, markdown) =>
+      executeWithCode(async () => {
+        const updated = await this.mySkillsStore.updateMarkdown(String(name), String(markdown ?? ''))
+        this.scanner?.invalidate()
+        return { ...updated, path: undefined }
       })
     )
     this.ipcMain.handle(ipcChannels.duplicateMySkill, (event, name) =>
@@ -123,23 +123,11 @@ class MySkillsIpcController {
         if (canceled) {
           return []
         }
-        return filePaths.map((filePath) => ({
-          fileName: path.basename(filePath),
-          sourcePath: filePath,
-          kind: scriptExtensions.has(path.extname(filePath).toLowerCase()) ? 'script' : 'reference'
-        }))
+        return filePaths.map((filePath) => ({ fileName: path.basename(filePath), sourcePath: filePath }))
       })
     )
-    this.ipcMain.handle(ipcChannels.getOptimizationStatus, () =>
-      executeSafely(() => (this.skillOptimizer ? this.skillOptimizer.getStatus() : { available: false, reason: 'La optimización no está disponible.' }))
-    )
-    this.ipcMain.handle(ipcChannels.optimizeMySkill, (event, request) =>
-      executeSafely(() => {
-        if (!this.skillOptimizer) {
-          return { optimized: false, slots: null, fallbackReason: 'la optimización no está disponible', warnings: [] }
-        }
-        return this.skillOptimizer.optimize({ answers: request?.answers ?? {}, runId: typeof request?.runId === 'string' ? request.runId : undefined })
-      })
+    this.ipcMain.handle(ipcChannels.getSkillCreatorStatus, () =>
+      executeSafely(() => (this.skillCreator ? this.skillCreator.getStatus() : { available: false, reason: 'El editor de skills no está disponible.' }))
     )
     this.ipcMain.handle(ipcChannels.loadSkillDraft, () => executeSafely(() => this.mySkillsStore.loadDraft()))
     this.ipcMain.handle(ipcChannels.saveSkillDraft, (event, draft) => executeSafely(() => this.mySkillsStore.saveDraft(draft && typeof draft === 'object' ? draft : {})))

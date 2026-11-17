@@ -1,11 +1,18 @@
 import { bootstrapPage } from '../bootstrapPage.js'
-import { SkillWizardView } from '../views/skillWizardView.js'
-import { SkillWizardController } from '../controllers/skillWizardController.js'
+import { SkillFormView } from '../views/skillFormView.js'
+import { SkillFormController } from '../controllers/skillFormController.js'
+import { SkillTextEditorView } from '../views/skillTextEditorView.js'
+import { SkillTextEditorController } from '../controllers/skillTextEditorController.js'
 import { readPageParams } from '../services/navigation.js'
 
 bootstrapPage({
   activePageId: 'editor',
   createPage: ({ apiClient, contentElement }) => {
-    new SkillWizardController({ apiClient, view: new SkillWizardView(contentElement), editName: readPageParams().edit ?? null }).init()
+    const editName = readPageParams().edit
+    if (editName) {
+      new SkillTextEditorController({ apiClient, view: new SkillTextEditorView(contentElement), name: editName }).init()
+      return
+    }
+    new SkillFormController({ apiClient, view: new SkillFormView(contentElement) }).init()
   }
 })

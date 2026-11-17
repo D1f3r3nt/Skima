@@ -200,10 +200,6 @@ export class SkimaApiClient {
     return this.unwrap(this.bridge.validateSkillName(name, previousName))
   }
 
-  previewMySkill(answers, slots) {
-    return this.unwrap(this.bridge.previewMySkill(answers, slots))
-  }
-
   listMySkills() {
     return this.unwrap(this.bridge.listMySkills())
   }
@@ -212,8 +208,12 @@ export class SkimaApiClient {
     return this.unwrap(this.bridge.getMySkill(name))
   }
 
-  saveMySkill(request) {
-    return this.unwrap(this.bridge.saveMySkill(request))
+  createMySkill(request) {
+    return this.unwrap(this.bridge.createMySkill(request))
+  }
+
+  updateMySkillMarkdown(name, markdown) {
+    return this.unwrap(this.bridge.updateMySkillMarkdown(name, markdown))
   }
 
   duplicateMySkill(name) {
@@ -244,12 +244,8 @@ export class SkimaApiClient {
     return this.unwrap(this.bridge.clearSkillDraft())
   }
 
-  getOptimizationStatus() {
-    return this.unwrap(this.bridge.getOptimizationStatus())
-  }
-
-  optimizeMySkill(request) {
-    return this.unwrap(this.bridge.optimizeMySkill(request))
+  getSkillCreatorStatus() {
+    return this.unwrap(this.bridge.getSkillCreatorStatus())
   }
 
   askAi(request) {

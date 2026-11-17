@@ -32,15 +32,28 @@ class AskAi {
     return definition
   }
 
+  readOverride(settings, definition) {
+    const storedOverride = definition ? settings.promptLaunch.promptOverrides[definition.id] : null
+    return storedOverride && !storedOverride.useDefaults ? storedOverride : null
+  }
+
   async resolveAgentAndModel({ request, definition, settings, override }) {
     const recommended = definition?.recommended ?? {}
     const modelTier = request.modelTier ?? recommended.modelTier ?? null
+    const mediumModelFor = (agentId) => (modelTier === 'medium' ? this.registry.find((entry) => entry.id === agentId)?.cli?.mediumModel ?? null : null)
 
     if (request.agentId) {
       return { agentId: request.agentId, model: request.model ?? null, reason: 'Agente indicado por la función que lanza el prompt.' }
     }
     if (override?.agentId) {
-      return { agentId: override.agentId, model: request.model ?? override.model ?? null, reason: 'Agente fijado para este prompt en Configuración.' }
+      return { agentId: override.agentId, model: request.model ?? override.model ?? mediumModelFor(override.agentId), reason: 'Agente fijado para este prompt en Configuración.' }
+    }
+    if (modelTier === 'medium') {
+      const selection = await this.modelSelector.pickCheapestModel({ projectId: request.projectId ?? null })
+      if (!selection.agentId) {
+        return { agentId: null, model: null, reason: selection.reason }
+      }
+      return { agentId: selection.agentId, model: request.model ?? override?.model ?? mediumModelFor(selection.agentId), reason: 'Modelo intermedio del agente conectado.' }
     }
     if (modelTier === 'cheap') {
       const selection = await this.modelSelector.pickCheapestModel({ projectId: request.projectId ?? null })
@@ -101,6 +114,20 @@ class AskAi {
     ].join('\n')
   }
 
+  async describePromptTarget(promptId) {
+    const definition = this.findDefinition(promptId)
+    const settings = await this.settingsStore.get()
+    const resolution = await this.resolveAgentAndModel({ request: {}, definition, settings, override: this.readOverride(settings, definition) })
+    const entry = this.registry.find((item) => item.id === resolution.agentId)
+    return {
+      agentId: resolution.agentId ?? null,
+      agentName: entry?.name ?? null,
+      model: resolution.model ?? null,
+      modelLabel: resolution.model ?? entry?.cli?.defaultModelLabel ?? null,
+      reason: resolution.reason ?? ''
+    }
+  }
+
   async ask(request) {
     let definition
     try {
@@ -113,8 +140,7 @@ class AskAi {
     }
 
     const settings = await this.settingsStore.get()
-    const storedOverride = definition ? settings.promptLaunch.promptOverrides[definition.id] : null
-    const override = storedOverride && !storedOverride.useDefaults ? storedOverride : null
+    const override = this.readOverride(settings, definition)
     const recommended = definition?.recommended ?? {}
     let resolution = await this.resolveAgentAndModel({ request, definition, settings, override })
 
@@ -173,7 +199,7 @@ class AskAi {
     const effort = request.effort ?? override?.effort ?? recommended.effort ?? settings.promptLaunch.defaultEffort
 
     let temporaryDirectory = null
-    let cwd = workingDirectory.cwd
+    let cwd = workingDirectory.cwd ?? request.cwd ?? null
     if (!cwd) {
       temporaryDirectory = await fs.mkdtemp(this.platformPaths.path.join(this.platformPaths.temporaryDirectory, 'skima-ask-'))
       cwd = temporaryDirectory

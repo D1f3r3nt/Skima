@@ -416,7 +416,7 @@ export function createPromptLaunchSettingsSection({ apiClient, reportSaving, rep
       nameElement.textContent = prompt.name
       const descriptionText = document.createElement('p')
       descriptionText.className = 'settings-group__description'
-      descriptionText.textContent = `${prompt.description} Recomendado: ${prompt.recommended.modelTier === 'cheap' ? 'modelo barato' : 'modelo por defecto'}, intensidad ${effortLabels[prompt.recommended.effort] ?? '—'}, ${prompt.recommended.permissionMode === 'readOnly' ? 'solo lectura' : prompt.recommended.permissionMode}.`
+      descriptionText.textContent = `${prompt.description} Recomendado: ${{ cheap: 'modelo barato', medium: 'modelo intermedio' }[prompt.recommended.modelTier] ?? 'modelo por defecto'}, intensidad ${effortLabels[prompt.recommended.effort] ?? '—'}, ${prompt.recommended.permissionMode === 'readOnly' ? 'solo lectura' : prompt.recommended.permissionMode}.`
 
       const saveOverride = (changes) => save({ promptOverride: { promptId: prompt.id, override: { ...override, ...changes } } })
       const modeGroup = createRadioGroup({

@@ -1,169 +1,226 @@
-.wizard-page {
-    max-width: 860px;
+.skill-form-page {
+    max-width: 960px;
 }
 
-.wizard__step,
-.wizard__group,
-.wizard__preview {
+.skill-form {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 20px;
 }
 
-.wizard__progress {
+.skill-form__section {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 12px;
-    color: var(--color-text-muted);
+    flex-direction: column;
+    gap: 16px;
 }
 
-.wizard__progress progress {
-    flex: 1;
-    height: 6px;
-    accent-color: var(--color-accent);
-}
-
-.wizard__question {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--color-text-strong);
-}
-
-.wizard__help {
-    margin: 0;
-    font-size: 14px;
-    color: var(--color-text);
-}
-
-.wizard__example {
-    margin: 0;
-    padding: 8px 12px;
-    font-size: 12.5px;
-    white-space: pre-line;
-    color: var(--color-text-muted);
-    background: var(--color-surface);
-    border-left: 3px solid var(--color-border);
-    border-radius: var(--radius-small);
-}
-
-.wizard__textarea {
+.skill-form__textarea {
     font-family: var(--font-family);
     resize: vertical;
     user-select: text;
 }
 
-.wizard__code {
-    font-family: "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
-    font-size: 12.5px;
+.skill-form__explanation {
+    min-height: 260px;
 }
 
-.wizard__name-issues {
+.skill-form__field-footer {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin: 6px 0 0;
-    padding: 0;
-    list-style: none;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.skill-form__hint {
+    margin: 0;
     font-size: 12px;
+    color: var(--color-text-muted);
 }
 
-.wizard__name-issue--error {
-    color: var(--color-danger);
+.skill-form__counter {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-muted);
 }
 
-.wizard__name-issue--warning {
+.skill-form__warning {
+    margin: 0;
+    font-size: 12px;
     color: var(--color-skill);
 }
 
-.wizard__actions {
+.skill-form__advanced {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-large);
+}
+
+.skill-form__advanced-summary {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 8px;
-}
-
-.wizard__actions--start {
-    justify-content: flex-start;
     align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    font-weight: 600;
+    color: var(--color-text-strong);
+    cursor: pointer;
+    list-style: none;
 }
 
-.wizard__optimize {
+.skill-form__advanced-summary::-webkit-details-marker {
+    display: none;
+}
+
+.skill-form__advanced-summary .icon {
+    transition: transform var(--transition-fast);
+}
+
+.skill-form__advanced[open] .skill-form__advanced-summary .icon {
+    transform: rotate(90deg);
+}
+
+.skill-form__advanced-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 4px 16px 16px;
+}
+
+.skill-form__metadata {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.skill-form__metadata legend {
+    margin-bottom: 6px;
+    padding: 0;
+}
+
+.skill-form__metadata-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.skill-form__metadata-row .form-field__label {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.skill-form__files {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.skill-form__file-section {
+    width: 100%;
     padding: 14px 16px;
     background: var(--color-surface);
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-large);
 }
 
-.wizard__optimize-title {
-    margin: 0;
+.skill-form__file-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.skill-form__file-title {
+    margin: 0 0 2px;
+    font-family: "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 14px;
     font-weight: 600;
     color: var(--color-text-strong);
 }
 
-.wizard__preview {
-    padding: 18px 22px;
+.skill-form__file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.skill-form__file {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 30px;
+    padding: 0 4px 0 8px;
+    font-size: 13px;
+    background: var(--color-background);
+    border-radius: var(--radius-medium);
+}
+
+.skill-form__file--empty {
+    color: var(--color-text-muted);
+    background: transparent;
+    padding-left: 0;
+}
+
+.skill-form__file-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.skill-form__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 4px;
+    border-top: 1px solid var(--color-border-subtle);
+}
+
+.skill-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.skill-form__generating {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 22px;
     background: var(--color-surface);
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-large);
 }
 
-.wizard__source summary {
-    cursor: pointer;
-    color: var(--color-accent-hover);
-}
-
-.wizard__file-name {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.list-editor {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.list-editor__items {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+.skill-form__generating-title {
     margin: 0;
-    padding-left: 22px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text-strong);
 }
 
-ul.list-editor__items {
-    padding-left: 0;
-    list-style: none;
+.skill-form__progress {
+    width: 100%;
+    height: 6px;
+    accent-color: var(--color-accent);
 }
 
-.list-editor__item {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+textarea.skill-text-editor {
+    min-height: 60vh;
+    font-family: "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    resize: vertical;
+    user-select: text;
+    tab-size: 2;
 }
 
-.list-editor__item .text-input {
-    flex: 1;
-    min-width: 0;
-}
-
-.list-editor__up .icon {
-    transform: rotate(90deg);
-}
-
-.list-editor__down .icon {
-    transform: rotate(-90deg);
-}
-
-.list-editor__add {
-    display: flex;
-    gap: 6px;
-}
-
-.list-editor__add .text-input {
-    flex: 1;
+@media (max-width: 720px) {
+    .skill-form__metadata-row {
+        grid-template-columns: 1fr;
+    }
 }

@@ -11,8 +11,8 @@ export const presentMySkillDetail = (skill, { installations, handlers }) => {
     typeLabel: 'Skill propia',
     title: skill.name,
     author: 'Mis skills',
-    description: generation.slots?.description ?? '',
-    badges: [generation.optimized ? { label: 'Optimizada con IA', variant: 'success' } : { label: 'Tu texto' }],
+    description: skill.description ?? '',
+    badges: [{ label: 'Creada por ti', variant: 'accent' }],
     primaryAction: { label: 'Instalar', icon: 'download', onClick: handlers.onInstall },
     secondaryActions: [
       { label: 'Editar', icon: 'editor', onClick: handlers.onEdit },
@@ -42,7 +42,7 @@ export const presentMySkillDetail = (skill, { installations, handlers }) => {
       entries: [
         { icon: 'clock', label: 'Creada', value: skill.createdAt ? formatDate(skill.createdAt) : null },
         { icon: 'clock', label: 'Actualizada', value: skill.updatedAt ? formatDate(skill.updatedAt) : null },
-        { icon: 'info', label: 'Optimizada con', value: generation.optimized ? `${generation.model ?? 'modelo por defecto'} vía ${generation.agentName}` : null }
+        { icon: 'info', label: 'Generada con', value: generation.agentName ? `${generation.model ?? 'modelo por defecto'} vía ${generation.agentName}` : null }
       ],
       topics: [],
       links: []

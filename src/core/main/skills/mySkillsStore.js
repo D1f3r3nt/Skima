@@ -4,7 +4,8 @@ const { zipSync } = require('fflate')
 const { writeFileAtomic, readTextIfExists } = require('../platform/atomicFileSystem')
 const { toCaseInsensitiveKey } = require('../platform/portableNames')
 const { skillSpecConstants } = require('./skillSpecConstants')
-const { generateSkill, renderSkillMarkdown, answersToSlots, referencePathFor } = require('./skillGenerator')
+const { parseSkillManifest } = require('./skillManifest')
+const { skillFileFolders, withSkillName } = require('./skillForm')
 const { hashSkillFolder, listFiles } = require('./skillFolderHash')
 
 const draftFileName = '_draft.json'
@@ -62,13 +63,11 @@ class MySkillsStore {
   async summarize(name) {
     const [data, markdown] = await Promise.all([this.readData(name), readTextIfExists(this.platformPaths.path.join(this.skillPath(name), skillSpecConstants.manifestFileName))])
     const { hash } = await hashSkillFolder(this.skillPath(name)).catch(() => ({ hash: null }))
-    const description = /^description:\s*(.+)$/m.exec(markdown ?? '')
     return {
       name,
-      description: data?.generation?.slots?.description ?? (description ? description[1].replace(/^['"]|['"]$/g, '') : ''),
+      description: parseSkillManifest(markdown ?? '', { folderName: name }).description,
       createdAt: data?.createdAt ?? null,
       updatedAt: data?.updatedAt ?? null,
-      optimized: Boolean(data?.generation?.optimized),
       contentHash: hash
     }
   }
@@ -91,7 +90,8 @@ class MySkillsStore {
       name,
       path: skillPath,
       markdown,
-      answers: data?.answers ?? null,
+      description: parseSkillManifest(markdown, { folderName: name }).description,
+      form: data?.form ?? null,
       generation: data?.generation ?? null,
       createdAt: data?.createdAt ?? null,
       updatedAt: data?.updatedAt ?? null,
@@ -100,82 +100,81 @@ class MySkillsStore {
     }
   }
 
-  async copyAttachedFile(file, stagingDirectory, previousSkillPath) {
-    const destination = this.platformPaths.resolveInside(stagingDirectory, ...referencePathFor(file).split('/'))
-    await fs.mkdir(this.platformPaths.path.dirname(destination), { recursive: true })
-    const sourcePath = file.sourcePath
-      ? this.platformPaths.path.resolve(file.sourcePath)
-      : file.storedPath && previousSkillPath
-        ? this.platformPaths.resolveInside(previousSkillPath, ...file.storedPath.split('/'))
-        : null
-    if (!sourcePath) {
-      throw createStoreError('MISSING_FILE', `No se encuentra el archivo adicional ${file.fileName}.`)
+  async createStaging(name, files) {
+    await fs.mkdir(this.skillsDirectory, { recursive: true })
+    const stagingPath = this.platformPaths.path.join(this.skillsDirectory, `.${this.assertName(name)}.skima-${crypto.randomBytes(4).toString('hex')}`)
+    await fs.mkdir(stagingPath)
+    try {
+      for (const folder of skillFileFolders) {
+        for (const file of files?.[folder] ?? []) {
+          await this.copyAttachedFile(file, this.platformPaths.resolveInside(stagingPath, folder, file.fileName))
+        }
+      }
+    } catch (error) {
+      await this.discardStaging(stagingPath)
+      throw error
     }
-    const stats = await fs.lstat(sourcePath).catch(() => null)
+    return stagingPath
+  }
+
+  async copyAttachedFile(file, destination) {
+    const sourcePath = file.sourcePath ? this.platformPaths.path.resolve(file.sourcePath) : null
+    const stats = sourcePath ? await fs.lstat(sourcePath).catch(() => null) : null
     if (!stats?.isFile()) {
-      throw createStoreError('MISSING_FILE', `No se encuentra el archivo adicional ${file.fileName}.`)
+      throw createStoreError('MISSING_FILE', `No se encuentra el archivo ${file.fileName}.`)
     }
     if (stats.size > fileLimits.maximumFileBytes) {
       throw createStoreError('FILE_TOO_LARGE', `${file.fileName} supera ${fileLimits.maximumFileBytes / 1024 / 1024} MB.`)
     }
+    await fs.mkdir(this.platformPaths.path.dirname(destination), { recursive: true })
     await fs.copyFile(sourcePath, destination)
     if (!this.platformPaths.isWindows) {
       await fs.chmod(destination, stats.mode & 0o777)
     }
   }
 
-  async save({ answers, slots = null, generation = null, previousName = null }) {
-    const generated = generateSkill({ answers, slots })
-    if (!generated.isValid) {
-      throw createStoreError('INVALID_SKILL', generated.issues.filter((issue) => issue.severity === 'error').map((issue) => issue.message).join(' '))
+  async discardStaging(stagingPath) {
+    if (stagingPath && this.platformPaths.isPathInside(this.skillsDirectory, stagingPath)) {
+      await fs.rm(stagingPath, { recursive: true, force: true }).catch(() => {})
     }
-    if (generated.answers.files.length > fileLimits.maximumFiles) {
-      throw createStoreError('TOO_MANY_FILES', `Como máximo ${fileLimits.maximumFiles} archivos adicionales.`)
-    }
-    const name = generated.name
-    const collision = await this.findCollision(name, previousName)
+  }
+
+  async commitStaging({ stagingPath, name, markdown, data }) {
+    await writeFileAtomic(this.platformPaths.path.join(stagingPath, skillSpecConstants.manifestFileName), markdown)
+    const collision = await this.findCollision(name)
     if (collision) {
       throw createStoreError('NAME_TAKEN', `Ya tienes una skill llamada "${collision}" en Mis skills.`)
     }
-
-    const previousPath = previousName ? this.skillPath(previousName) : null
-    const previousData = previousName ? await this.readData(previousName) : null
-    await fs.mkdir(this.skillsDirectory, { recursive: true })
-    await fs.mkdir(this.dataDirectory, { recursive: true })
-    const suffix = crypto.randomBytes(4).toString('hex')
-    const stagingDirectory = this.platformPaths.path.join(this.skillsDirectory, `.${name}.skima-${suffix}`)
-    await fs.mkdir(stagingDirectory)
-
-    try {
-      await writeFileAtomic(this.platformPaths.path.join(stagingDirectory, skillSpecConstants.manifestFileName), generated.markdown)
-      for (const file of generated.answers.files) {
-        await this.copyAttachedFile(file, stagingDirectory, previousPath)
-      }
-      const targetPath = this.skillPath(name)
-      if (previousPath) {
-        await this.trashItem(previousPath).catch(() => fs.rm(previousPath, { recursive: true, force: true }))
-      }
-      await fs.rename(stagingDirectory, targetPath)
-    } catch (error) {
-      await fs.rm(stagingDirectory, { recursive: true, force: true }).catch(() => {})
-      throw error
-    }
-
+    await fs.rename(stagingPath, this.skillPath(name))
     const nowIso = this.now().toISOString()
-    const storedAnswers = {
-      ...generated.answers,
-      files: generated.answers.files.map((file) => ({ fileName: file.fileName, kind: file.kind, sourcePath: null, storedPath: referencePathFor(file) }))
+    await this.writeData(name, { ...data, name, createdAt: nowIso, updatedAt: nowIso })
+    return this.get(name)
+  }
+
+  async writeData(name, data) {
+    await fs.mkdir(this.dataDirectory, { recursive: true })
+    await writeFileAtomic(this.dataPath(name), `${JSON.stringify(data, null, 2)}\n`)
+  }
+
+  async updateMarkdown(name, markdown) {
+    const skillPath = this.skillPath(name)
+    const stats = await fs.stat(skillPath).catch(() => null)
+    if (!stats?.isDirectory()) {
+      throw createStoreError('NOT_FOUND', `La skill "${name}" no está en Mis skills.`)
     }
-    await writeFileAtomic(this.dataPath(name), `${JSON.stringify({
-      name,
-      answers: storedAnswers,
-      generation: { optimized: false, slots: generated.slots, ...(generation ?? {}) },
-      createdAt: previousData?.createdAt ?? nowIso,
-      updatedAt: nowIso
-    }, null, 2)}\n`)
-    if (previousName && previousName !== name) {
-      await fs.rm(this.dataPath(previousName), { force: true })
+    const text = `${String(markdown ?? '').replace(/\r\n?/g, '\n').trimEnd()}\n`
+    const manifest = parseSkillManifest(text, { folderName: name })
+    const errors = manifest.issues.filter((issue) => issue.severity === 'error').map((issue) => issue.message)
+    if (manifest.frontmatter.name !== name) {
+      errors.push(`"name" debe seguir siendo "${name}".`)
     }
+    if (errors.length > 0) {
+      throw createStoreError('INVALID_SKILL', errors.join(' '))
+    }
+    await writeFileAtomic(this.platformPaths.path.join(skillPath, skillSpecConstants.manifestFileName), text)
+    const data = await this.readData(name)
+    const nowIso = this.now().toISOString()
+    await this.writeData(name, { ...(data ?? {}), name, createdAt: data?.createdAt ?? nowIso, updatedAt: nowIso })
     return this.get(name)
   }
 
@@ -194,20 +193,11 @@ class MySkillsStore {
   async duplicate(name) {
     const original = await this.get(name)
     const copyName = await this.nextCopyName(name)
-    const sourcePath = this.skillPath(name)
     const targetPath = this.skillPath(copyName)
-    await fs.cp(sourcePath, targetPath, { recursive: true, errorOnExist: true, force: false })
-    const slots = original.generation?.slots ?? answersToSlots({ ...(original.answers ?? {}), name: copyName })
-    const files = (original.answers?.files ?? []).map((file) => ({ fileName: file.fileName, kind: file.kind }))
-    await writeFileAtomic(this.platformPaths.path.join(targetPath, skillSpecConstants.manifestFileName), renderSkillMarkdown({ name: copyName, slots, files }))
+    await fs.cp(this.skillPath(name), targetPath, { recursive: true, errorOnExist: true, force: false })
+    await writeFileAtomic(this.platformPaths.path.join(targetPath, skillSpecConstants.manifestFileName), withSkillName(original.markdown, copyName))
     const nowIso = this.now().toISOString()
-    await writeFileAtomic(this.dataPath(copyName), `${JSON.stringify({
-      name: copyName,
-      answers: { ...(original.answers ?? {}), name: copyName },
-      generation: original.generation,
-      createdAt: nowIso,
-      updatedAt: nowIso
-    }, null, 2)}\n`)
+    await this.writeData(copyName, { ...((await this.readData(name)) ?? {}), name: copyName, createdAt: nowIso, updatedAt: nowIso })
     return this.get(copyName)
   }
 

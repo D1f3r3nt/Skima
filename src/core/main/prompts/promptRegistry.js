@@ -1,8 +1,8 @@
-const { skillOptimizeEnPrompt } = require('./definitions/skillOptimizeEn')
+const { skillCreatePrompt } = require('./definitions/skillCreate')
 const { agentsMdOptimizePrompt } = require('./definitions/agentsMdOptimize')
 
 const promptRegistry = Object.freeze([
-  skillOptimizeEnPrompt,
+  skillCreatePrompt,
   agentsMdOptimizePrompt
 ])
 

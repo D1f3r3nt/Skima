@@ -2,7 +2,7 @@ const { parseJsonLines, parseJsonSafely, parseVersion, matchesAuthError } = requ
 
 const authErrorPatterns = [/not logged in/i, /please run \/login/i, /invalid api key/i, /authentication/i, /\b401\b/, /oauth token/i]
 const webTools = ['WebSearch', 'WebFetch']
-const readOnlyTools = 'Read,Grep,Glob'
+const readOnlyTools = 'Read,Grep,Glob,Skill'
 
 const permissionArguments = {
   readOnly: ['--permission-mode', 'dontAsk'],
@@ -69,6 +69,7 @@ const claudeCodeCli = {
   effortMap: { low: 'low', medium: 'medium', high: 'high', max: 'max' },
   suggestedModels: ['haiku', 'sonnet', 'opus', 'fable'],
   cheapModel: 'haiku',
+  mediumModel: 'sonnet',
   defaultModelLabel: 'Modelo por defecto de Claude Code',
   loginCommand: 'claude auth login',
   versionArgs: ['--version'],

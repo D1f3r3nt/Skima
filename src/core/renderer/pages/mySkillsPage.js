@@ -30,7 +30,7 @@ const createRow = (skill, publishContext) => {
   const nameElement = document.createElement('span')
   nameElement.className = 'installed-row__name'
   nameElement.textContent = skill.name
-  titleRow.append(nameElement, createBadge({ label: skill.optimized ? 'Optimizada con IA' : 'Tu texto', variant: skill.optimized ? 'success' : 'neutral' }))
+  titleRow.append(nameElement, createBadge({ label: 'Creada por ti', variant: 'accent' }))
   const descriptionElement = document.createElement('span')
   descriptionElement.className = 'installed-row__description'
   descriptionElement.textContent = skill.description || 'Sin descripción.'
@@ -58,7 +58,7 @@ bootstrapPage({
     const createButtonElement = createButton({ label: 'Crear skill', icon: 'plus', onClick: () => navigateTo(buildPageUrl('editor')) })
     const searchField = createSearchField({ placeholder: 'Buscar en Mis skills…', onInput: (query) => render(query) })
     pageElement.append(
-      createPageHeader({ title: 'Mis skills', description: 'Las skills que has creado con el asistente. Guardarlas no las instala: usa Instalar en cada una.', actions: [createButtonElement] }),
+      createPageHeader({ title: 'Mis skills', description: 'Las skills que has creado con el editor. Crearlas no las instala: entra en cada una y usa Instalar.', actions: [createButtonElement] }),
       searchField.element,
       listElement
     )
@@ -135,7 +135,7 @@ bootstrapPage({
     const render = (query = '') => {
       if (skills.length === 0) {
         searchField.element.hidden = true
-        listElement.replaceChildren(createEmptyState({ icon: 'skill', title: 'Todavía no has creado ninguna skill', description: 'Responde unas preguntas y Skima escribirá el SKILL.md por ti.', actionLabel: 'Crear skill', onAction: () => navigateTo(buildPageUrl('editor')) }))
+        listElement.replaceChildren(createEmptyState({ icon: 'skill', title: 'Todavía no has creado ninguna skill', description: 'Rellena el formulario y la IA escribirá el SKILL.md con su skill skill-creator.', actionLabel: 'Crear skill', onAction: () => navigateTo(buildPageUrl('editor')) }))
         return
       }
       searchField.element.hidden = false

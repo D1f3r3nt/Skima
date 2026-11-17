@@ -47,7 +47,7 @@ const { McpInstaller } = require('./mcp/mcpInstaller')
 const { McpIpcController } = require('./controllers/mcpIpcController')
 const { MySkillsStore, MySkillSource } = require('./skills/mySkillsStore')
 const { MySkillsIpcController } = require('./controllers/mySkillsIpcController')
-const { SkillOptimizer } = require('./skills/skillOptimizer')
+const { SkillCreator } = require('./skills/skillCreator')
 const { ProjectDataStore } = require('./projects/projectDataStore')
 const { ProjectModelPolicy } = require('./projects/projectModelPolicy')
 const { EnvFileService } = require('./projects/envFileService')
@@ -236,7 +236,7 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     agentDetector,
     backupDirectory: path.join(userDataDirectory, 'backups', 'mcp')
   })
-  const skillOptimizer = new SkillOptimizer({ askAi, modelSelector })
+  const skillCreator = new SkillCreator({ askAi, modelSelector, mySkillsStore })
   const skillPublisher = new SkillPublisher({
     toolchain: gitToolchain,
     sessionService: gitSessionService,
@@ -282,7 +282,7 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     new GraphifyIpcController({ ipcMain, graphifyService, graphifyInstaller, graphifyIntegrationService }).register()
     new CliInstallIpcController({ ipcMain, cliInstaller }).register()
     new PublishIpcController({ ipcMain, skillPublisher, externalLinkService: new ExternalLinkService({ shell }) }).register()
-    new MySkillsIpcController({ ipcMain, mySkillsStore, markdownRenderer, dialog, BrowserWindow, scanner, skillOptimizer }).register()
+    new MySkillsIpcController({ ipcMain, mySkillsStore, markdownRenderer, dialog, BrowserWindow, scanner, skillCreator }).register()
     new InstalledIpcController({ ipcMain, scanner, installedDetailsService, uninstaller, shell, platformPaths, projectModel, installationLocator }).register()
     new DialogIpcController({ ipcMain, folderDialogService: new FolderDialogService({ dialog, BrowserWindow }) }).register()
     new LinkIpcController({ ipcMain, externalLinkService: new ExternalLinkService({ shell }) }).register()
