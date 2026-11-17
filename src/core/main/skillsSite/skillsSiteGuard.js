@@ -91,8 +91,11 @@ class SkillsSiteGuard {
   }
 }
 
-const hardenSkillsSiteWebview = ({ hostContents, guestPreloadPath, blockedChannel }) => {
+const hardenSkillsSiteWebview = ({ hostContents, guestPreloadPath, blockedChannel, isHandledElsewhere = () => false, isGuestHandledElsewhere = () => false }) => {
   hostContents.on('will-attach-webview', (event, webPreferences, params) => {
+    if (isHandledElsewhere(params)) {
+      return
+    }
     if (params.partition !== skillsSitePartition || !evaluateSkillsSiteUrl(params.src).allowed) {
       event.preventDefault()
       return
@@ -112,6 +115,9 @@ const hardenSkillsSiteWebview = ({ hostContents, guestPreloadPath, blockedChanne
   })
 
   hostContents.on('did-attach-webview', (event, guestContents) => {
+    if (isGuestHandledElsewhere(guestContents)) {
+      return
+    }
     new SkillsSiteGuard({ guestContents, hostContents, blockedChannel }).attach()
   })
 }

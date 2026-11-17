@@ -143,7 +143,7 @@ class GraphifyIntegrationService {
       variants.push({ id: variant.id, label: variant.label, files: variant.files, installed: variant.isInstalled(texts, existing), notes: variant.notes })
     }
     return {
-      runtimeInstalled: runtimeStatus.state === 'installed',
+      runtimeInstalled: runtimeStatus.available,
       decision: config.graphify.integrationDecision,
       decidedAt: config.graphify.decidedAt,
       variants,
@@ -168,7 +168,7 @@ class GraphifyIntegrationService {
 
   async computeChanges(project, variant, action) {
     const runtimeStatus = await this.runtime.getStatus()
-    if (runtimeStatus.state !== 'installed') {
+    if (!runtimeStatus.available) {
       throw createIntegrationError('RUNTIME_UNAVAILABLE', runtimeStatus.message || 'Graphify no está disponible.')
     }
     const workDirectory = await fs.mkdtemp(path.join(this.platformPaths.temporaryDirectory, 'skima-graphify-int-'))
@@ -186,7 +186,7 @@ class GraphifyIntegrationService {
         }
       }
       const result = await this.processRunner.run({
-        command: this.runtime.getExecutablePath(),
+        command: runtimeStatus.executablePath,
         args: [variant.id, action],
         cwd: sandboxProject,
         environment: this.buildSandboxEnvironment(sandboxHome),

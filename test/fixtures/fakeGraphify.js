@@ -19,6 +19,17 @@ if (args[0] === '--version') {
   process.exit(0)
 }
 
+if (args[0] === 'god-nodes') {
+  if (!fs.existsSync(path.join(process.cwd(), 'graphify-out', 'graph.json'))) {
+    process.stderr.write('error: graph file not found\n')
+    process.exit(1)
+  }
+  if (scenario !== 'empty-god-nodes') {
+    process.stdout.write('God nodes (most connected):\n  1. main() - 12 edges\n  2. Parser - 7 edges\n')
+  }
+  process.exit(0)
+}
+
 const writeGraph = ({ corrupt = false, withGraph = true } = {}) => {
   const out = path.join(process.cwd(), 'graphify-out')
   fs.mkdirSync(out, { recursive: true })

@@ -41,6 +41,16 @@ license: Paraphrased summary. Graphify is Apache-2.0; the PyPI page is not redis
 - `graphifyIntegrationService`: preview runs the variant inside a temporary copy of only the files it can touch, with a fake home, and diffs the result. Apply recomputes it, requires the same fingerprint, backs up to `.skima/backups/graphify-<time>/`, then writes. It refuses symbolic links, files it did not copy that already exist, and any write outside the project. Undo is the same flow with `uninstall`. The decision is stored in `.skima/config.json`.
 - Regenerating `AGENTS.md` keeps the existing `## graphify` section.
 
+## Changes in the November 2026 update
+
+- Detection runs `graphify --version` on Skima's own copy first and then on the `graphify` found in the PATH. Any version that answers is usable; a version other than the pinned one only shows a note. The status is cached for one minute.
+- Skima no longer shows an install button: on start-up it prepares its own copy in the background only when no working `graphify` is found.
+- Generation sends `/graphify .` to the AI provider through the registered prompt `graphify-generate` (cheap model tier, for example Haiku in Claude Code; it can be changed per prompt in Settings > AI provider). It runs in the project folder with full permissions because the skill runs commands. With no connected agent it falls back to the two code-only commands above.
+- `graphify-out/` is committed by default. Settings > Graphify has a switch to ignore it; after each generation Skima adds or removes the `graphify-out/` line in `.gitignore` to match.
+- Health check: when a project page opens, and after each generation, Skima runs `graphify god-nodes --top 5` in the project; output with nodes shows a green check.
+- `graph.html` opens inside Skima in a sandboxed `<webview>` (partition `skima-graph-viewer`, no preload, no navigation, only the registered file and `https://unpkg.com/vis-network@` may load). `GRAPH_REPORT.md` is rendered read-only with the sanitising Markdown renderer.
+- Graphify Cloud is a hosted remote MCP server (`https://api.graphify.com/mcp`, browser sign-in on first connection, console at `https://app.graphify.com`). Settings > Graphify stores the URLs and reuses the MCP install flow to add it to the user's agents.
+
 ## Not verified
 
 - Whether code-only mode makes any network call (traffic was not captured).

@@ -8,6 +8,8 @@ const { GraphifyService } = require('../../src/core/main/graphify/graphifyServic
 const { createPlatformPaths } = require('../../src/core/main/platform/platformPaths')
 const { ProcessRunner } = require('../../src/core/main/platform/processRunner')
 
+const { GraphViewerRegistry } = require('../../src/core/main/graphify/graphViewerGuard')
+
 const fakeScript = path.join(__dirname, '..', 'fixtures', 'fakeGraphify.js')
 
 const createExecutable = (directory) => {
@@ -25,7 +27,7 @@ const createExecutable = (directory) => {
   return executablePath
 }
 
-const createFixture = ({ withExecutable = true, git = false, timeoutMs } = {}) => {
+const createFixture = ({ withExecutable = true, git = false, timeoutMs, askAi = null, settings = { ignoreOutput: false } } = {}) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'skima-graphify-'))
   const projectPath = path.join(root, 'proyecto')
   fs.mkdirSync(path.join(projectPath, 'src'), { recursive: true })
@@ -43,14 +45,17 @@ const createFixture = ({ withExecutable = true, git = false, timeoutMs } = {}) =
   const processRunner = new ProcessRunner({ platformPaths, findNode: async () => process.execPath })
   const runtime = new GraphifyRuntime({ platformPaths, toolsDirectory: path.join(root, 'tools'), processRunner, environment: { ...process.env, NODE_ENV: 'test', SKIMA_GRAPHIFY_FOR_TESTS: executablePath } })
   const events = []
-  const opened = []
+  const viewerRegistry = new GraphViewerRegistry({ isWindows: process.platform === 'win32' })
   const project = { id: 'p1', name: 'Demo', path: projectPath, folderExists: true }
   const service = new GraphifyService({
     runtime,
     processRunner,
     platformPaths,
     projectModel: { getById: async () => ({ ...project }) },
-    shell: { openPath: async (target) => { opened.push(target); return '' } },
+    settingsStore: { get: async () => ({ graphify: { ...settings, cloud: { enabled: false } } }) },
+    askAi,
+    markdownRenderer: { render: (text) => ({ html: '<pre>' + text + '</pre>', isTruncated: false }) },
+    graphViewerRegistry: viewerRegistry,
     broadcast: (event) => events.push(event),
     timeoutMs
   })
@@ -60,7 +65,7 @@ const createFixture = ({ withExecutable = true, git = false, timeoutMs } = {}) =
     runtime,
     service,
     events,
-    opened,
+    viewerRegistry,
     readCalls: () => (fs.existsSync(logPath) ? fs.readFileSync(logPath, 'utf-8').trim().split('\n').filter(Boolean).map((line) => JSON.parse(line)) : []),
     cleanup: () => {
       delete process.env.FAKE_GRAPHIFY_SCENARIO
@@ -75,14 +80,20 @@ test('estados del runtime: instalado, falta, roto y versión distinta, sin lanza
   const fixture = createFixture()
   const missing = createFixture({ withExecutable: false })
   try {
-    assert.equal((await fixture.runtime.getStatus()).state, 'installed')
+    const installed = await fixture.runtime.getStatus()
+    assert.equal(installed.state, 'installed')
+    assert.equal(installed.available, true)
     process.env.FAKE_GRAPHIFY_VERSION = '0.1.0'
-    const different = await fixture.runtime.getStatus()
+    assert.equal((await fixture.runtime.getStatus()).state, 'installed', 'el estado se guarda en caché un rato')
+    const different = await fixture.runtime.getStatus({ refresh: true })
     assert.equal(different.state, 'different-version')
+    assert.equal(different.available, true, 'otra versión sigue siendo usable')
     assert.equal(different.pinnedVersion, graphifyPackage.pinnedVersion)
     delete process.env.FAKE_GRAPHIFY_VERSION
     process.env.FAKE_GRAPHIFY_SCENARIO = 'broken'
-    assert.equal((await fixture.runtime.getStatus()).state, 'broken')
+    const broken = await fixture.runtime.getStatus({ refresh: true })
+    assert.equal(broken.state, 'broken')
+    assert.equal(broken.available, false)
     assert.equal((await missing.runtime.getStatus()).state, 'missing')
   } finally {
     fixture.cleanup()
@@ -191,32 +202,117 @@ test('avisa si Graphify toca archivos fuera de graphify-out', async () => {
   }
 })
 
-test('sin runtime no se genera y se explica; abrir archivos solo dentro de graphify-out', async () => {
+test('sin runtime no se genera y se explica; las salidas se leen solo dentro de graphify-out', async () => {
   const missing = createFixture({ withExecutable: false })
   const fixture = createFixture()
   try {
     await assert.rejects(() => missing.service.generate('p1'), (error) => error.code === 'RUNTIME_UNAVAILABLE' && /Graphify/.test(error.message))
-    await assert.rejects(() => fixture.service.openOutput('p1', 'graph'), (error) => error.code === 'MISSING_OUTPUT')
+    await assert.rejects(() => fixture.service.readOutput('p1', 'graph'), (error) => error.code === 'MISSING_OUTPUT')
     await fixture.service.generate('p1')
-    await fixture.service.openOutput('p1', 'report')
-    await fixture.service.openOutput('p1', 'graph')
-    assert.equal(fixture.opened.length, 2)
-    fixture.opened.forEach((target) => assert.ok(path.dirname(fs.realpathSync(target)).endsWith('graphify-out')))
+    const report = await fixture.service.readOutput('p1', 'report')
+    assert.equal(report.kind, 'report')
+    assert.match(report.html, /# Report/)
+    const graph = await fixture.service.readOutput('p1', 'graph')
+    assert.equal(graph.kind, 'graph')
+    assert.match(graph.url, /^file:.*graphify-out\/graph\.html$/)
+    assert.equal(fixture.viewerRegistry.has(graph.url), true)
+    assert.equal(fixture.viewerRegistry.isRequestAllowed(graph.url), true)
+    assert.equal(fixture.viewerRegistry.isRequestAllowed(graph.url.replace('graph.html', 'graph.json')), false)
+    assert.equal(fixture.viewerRegistry.isRequestAllowed('https://unpkg.com/vis-network@9.1.6/standalone/umd/vis-network.min.js'), true)
+    assert.equal(fixture.viewerRegistry.isRequestAllowed('https://example.com/robar'), false)
   } finally {
     missing.cleanup()
     fixture.cleanup()
   }
 })
 
-test('sugiere ignorar graphify-out solo en repositorios git y solo si el usuario lo pide', async () => {
-  const fixture = createFixture({ git: true })
+test('por defecto graphify-out se sube a git; con la opción activada se ignora', async () => {
+  const shared = createFixture({ git: true })
+  const ignored = createFixture({ git: true, settings: { ignoreOutput: true } })
   try {
+    fs.writeFileSync(path.join(shared.projectPath, '.gitignore'), 'node_modules/\ngraphify-out/\n')
+    const outcome = await shared.service.generate('p1')
+    assert.equal(outcome.status, 'succeeded')
+    assert.equal(fs.readFileSync(path.join(shared.projectPath, '.gitignore'), 'utf-8'), 'node_modules/\n')
+    assert.match(outcome.notes[0], /quitado/)
+    assert.equal(outcome.warnings, undefined)
+
+    await ignored.service.generate('p1')
+    assert.equal(fs.readFileSync(path.join(ignored.projectPath, '.gitignore'), 'utf-8'), 'graphify-out/\n')
+    assert.equal((await ignored.service.getState('p1')).ignoreOutput, true)
+  } finally {
+    shared.cleanup()
+    ignored.cleanup()
+  }
+})
+
+test('la comprobación de salud lanza god-nodes --top 5 y exige datos', async () => {
+  const fixture = createFixture()
+  try {
+    assert.equal((await fixture.service.checkHealth('p1')).status, 'no-graph')
     await fixture.service.generate('p1')
-    assert.equal((await fixture.service.getState('p1')).gitignore.show, true)
-    assert.equal(fs.existsSync(path.join(fixture.projectPath, '.gitignore')), false)
-    await fixture.service.addOutputToGitignore('p1')
-    assert.equal(fs.readFileSync(path.join(fixture.projectPath, '.gitignore'), 'utf-8'), 'graphify-out/\n')
-    assert.equal((await fixture.service.getState('p1')).gitignore.show, false)
+    const healthy = await fixture.service.checkHealth('p1')
+    assert.equal(healthy.healthy, true)
+    assert.deepEqual(healthy.nodes.map((node) => node.label), ['main()', 'Parser'])
+    assert.ok(fixture.readCalls().some((call) => call.args.join(' ') === 'god-nodes --top 5'))
+    process.env.FAKE_GRAPHIFY_SCENARIO = 'empty-god-nodes'
+    const failing = await fixture.service.checkHealth('p1')
+    assert.equal(failing.healthy, false)
+    assert.equal(failing.status, 'failing')
+  } finally {
+    fixture.cleanup()
+  }
+})
+
+test('con un agente conectado, genera lanzando /graphify . con el modelo barato', async () => {
+  const requests = []
+  const askAi = {
+    ask: async (request) => {
+      requests.push(request)
+      const out = path.join(request.cwd, 'graphify-out')
+      fs.mkdirSync(out, { recursive: true })
+      fs.writeFileSync(path.join(out, 'graph.json'), JSON.stringify({ nodes: [{ id: 1 }, { id: 2 }] }))
+      request.onEvent({ type: 'toolUse', name: 'Bash' })
+      return { ok: true, text: 'hecho', resolution: { agentName: 'Claude Code', model: 'haiku' } }
+    }
+  }
+  const fixture = createFixture({ askAi })
+  try {
+    const outcome = await fixture.service.generate('p1')
+    assert.equal(outcome.status, 'succeeded')
+    assert.equal(outcome.nodeCount, 2)
+    assert.match(outcome.message, /Claude Code · haiku/)
+    assert.equal(requests[0].promptId, 'graphify-generate')
+    assert.equal(fs.realpathSync(requests[0].cwd), fs.realpathSync(fixture.projectPath))
+    assert.ok(requests[0].signal)
+    assert.equal(fixture.readCalls().some((call) => call.args[0] === 'extract'), false)
+    assert.ok(fixture.events.some((event) => event.type === 'progress' && event.line === 'Herramienta: Bash'))
+  } finally {
+    fixture.cleanup()
+  }
+})
+
+test('sin agente conectado, genera solo con el análisis de código y lo avisa', async () => {
+  const askAi = { ask: async () => ({ ok: false, error: { code: 'NO_AGENT', message: 'sin agente' } }) }
+  const fixture = createFixture({ askAi })
+  try {
+    const outcome = await fixture.service.generate('p1')
+    assert.equal(outcome.status, 'succeeded')
+    assert.match(outcome.warnings[0], /sin IA/)
+    assert.ok(fixture.readCalls().some((call) => call.args[0] === 'extract'))
+  } finally {
+    fixture.cleanup()
+  }
+})
+
+test('si el agente termina sin dejar graph.json, falla y lo explica', async () => {
+  const askAi = { ask: async () => ({ ok: true, text: 'Unknown skill: graphify', resolution: { agentName: 'Claude Code', model: 'haiku' } }) }
+  const fixture = createFixture({ askAi })
+  try {
+    const outcome = await fixture.service.generate('p1')
+    assert.equal(outcome.status, 'failed')
+    assert.match(outcome.message, /skill de Graphify/)
+    assert.deepEqual(outcome.lastLines, ['Unknown skill: graphify'])
   } finally {
     fixture.cleanup()
   }

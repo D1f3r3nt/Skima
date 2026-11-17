@@ -40,13 +40,23 @@ class AskAi {
   async resolveAgentAndModel({ request, definition, settings, override }) {
     const recommended = definition?.recommended ?? {}
     const modelTier = request.modelTier ?? recommended.modelTier ?? null
-    const mediumModelFor = (agentId) => (modelTier === 'medium' ? this.registry.find((entry) => entry.id === agentId)?.cli?.mediumModel ?? null : null)
+    const tierModelFor = (agentId) => {
+      const cli = this.registry.find((entry) => entry.id === agentId)?.cli
+      if (modelTier === 'medium') {
+        return cli?.mediumModel ?? null
+      }
+      if (modelTier === 'cheap') {
+        return settings.agents[agentId]?.suggestedCheapModel ?? cli?.cheapModel ?? null
+      }
+      return null
+    }
+    const mediumModelFor = (agentId) => (modelTier === 'medium' ? tierModelFor(agentId) : null)
 
     if (request.agentId) {
       return { agentId: request.agentId, model: request.model ?? null, reason: 'Agente indicado por la función que lanza el prompt.' }
     }
     if (override?.agentId) {
-      return { agentId: override.agentId, model: request.model ?? override.model ?? mediumModelFor(override.agentId), reason: 'Agente fijado para este prompt en Configuración.' }
+      return { agentId: override.agentId, model: request.model ?? override.model ?? tierModelFor(override.agentId), reason: 'Agente fijado para este prompt en Configuración.' }
     }
     if (modelTier === 'medium') {
       const selection = await this.modelSelector.pickCheapestModel({ projectId: request.projectId ?? null })
@@ -222,6 +232,7 @@ class AskAi {
         outputFormat: request.outputFormat ?? recommended.outputFormat ?? 'json',
         schema: request.schema ?? definition?.schema ?? null,
         timeoutMs: request.timeoutMs ?? recommended.timeoutMs,
+        environment: request.environment ?? null,
         sessionId: request.sessionId,
         signal: request.signal,
         onEvent: request.onEvent

@@ -11,7 +11,8 @@ const graphifyPackage = Object.freeze({
 const graphifyCommands = Object.freeze({
   version: () => ['--version'],
   extractCodeOnly: () => ['extract', '.', '--code-only'],
-  clusterWithoutLabels: () => ['cluster-only', '.', '--no-label']
+  clusterWithoutLabels: () => ['cluster-only', '.', '--no-label'],
+  godNodes: (top) => ['god-nodes', '--top', String(top)]
 })
 
 const outputFolderName = 'graphify-out'
@@ -19,49 +20,93 @@ const outputFiles = Object.freeze({ graphHtml: 'graph.html', report: 'GRAPH_REPO
 
 const resolveExecutableRelativePath = (platform) => (platform === 'win32' ? ['venv', 'Scripts', 'graphify.exe'] : ['venv', 'bin', 'graphify'])
 
+const statusCacheMs = 60 * 1000
+
+const createStatus = (state, extra = {}) => ({ state, available: state === 'installed' || state === 'different-version', version: null, source: null, executablePath: null, message: '', ...extra })
+
 class GraphifyRuntime {
-  constructor({ platformPaths, toolsDirectory, processRunner, environment = process.env, pinnedVersion = graphifyPackage.pinnedVersion }) {
+  constructor({ platformPaths, toolsDirectory, processRunner, executableLocator = null, environment = process.env, pinnedVersion = graphifyPackage.pinnedVersion, now = () => Date.now() }) {
     this.platformPaths = platformPaths
     this.toolsDirectory = toolsDirectory
     this.processRunner = processRunner
+    this.executableLocator = executableLocator
     this.environment = environment
     this.pinnedVersion = pinnedVersion
+    this.now = now
+    this.cache = null
+  }
+
+  getTestOverride() {
+    const override = this.environment.NODE_ENV === 'test' ? this.environment.SKIMA_GRAPHIFY_FOR_TESTS : null
+    return override && this.platformPaths.path.isAbsolute(override) ? override : null
   }
 
   getExecutablePath() {
-    const override = this.environment.NODE_ENV === 'test' ? this.environment.SKIMA_GRAPHIFY_FOR_TESTS : null
-    if (override && this.platformPaths.path.isAbsolute(override)) {
-      return override
-    }
-    return this.platformPaths.path.join(this.toolsDirectory, 'graphify', ...resolveExecutableRelativePath(this.platformPaths.platform))
+    return this.getTestOverride() ?? this.platformPaths.path.join(this.toolsDirectory, 'graphify', ...resolveExecutableRelativePath(this.platformPaths.platform))
   }
 
-  async getStatus() {
-    const executablePath = this.getExecutablePath()
-    const stats = await fs.stat(executablePath).catch(() => null)
-    if (!stats?.isFile()) {
-      return { state: 'missing', version: null, pinnedVersion: this.pinnedVersion, message: 'Graphify todavía no está instalado en Skima.' }
+  async listCandidates() {
+    const candidates = []
+    const bundledPath = this.getExecutablePath()
+    if ((await fs.stat(bundledPath).catch(() => null))?.isFile()) {
+      candidates.push({ path: bundledPath, source: this.getTestOverride() ? 'test' : 'skima' })
     }
+    if (!this.getTestOverride() && this.executableLocator) {
+      const found = await this.executableLocator.find(['graphify'], { refresh: true }).catch(() => null)
+      if (found?.path && !candidates.some((candidate) => candidate.path === found.path)) {
+        candidates.push({ path: found.path, source: 'system' })
+      }
+    }
+    return candidates
+  }
+
+  async probe(candidate) {
     try {
       const result = await this.processRunner.run({
-        command: executablePath,
+        command: candidate.path,
         args: graphifyCommands.version(),
-        cwd: this.platformPaths.path.dirname(executablePath),
+        cwd: this.platformPaths.path.dirname(candidate.path),
         environment: buildGraphifyEnvironment({ ...this.environment, ...process.env }),
         timeoutMs: 20000,
         maxOutputBytes: 64 * 1024
       })
       const version = /(\d+\.\d+\.\d+)/.exec(`${result.stdout}\n${result.stderr}`)?.[1] ?? null
-      if (result.exitCode !== 0 || !version) {
-        return { state: 'broken', version: null, pinnedVersion: this.pinnedVersion, message: 'Graphify está instalado pero no responde. Repara la instalación.' }
-      }
-      if (version !== this.pinnedVersion) {
-        return { state: 'different-version', version, pinnedVersion: this.pinnedVersion, message: `Graphify ${version} está instalado y esta versión de Skima espera la ${this.pinnedVersion}.` }
-      }
-      return { state: 'installed', version, pinnedVersion: this.pinnedVersion, message: '' }
+      return result.exitCode === 0 && version ? version : null
     } catch {
-      return { state: 'broken', version: null, pinnedVersion: this.pinnedVersion, message: 'Graphify está instalado pero no responde. Repara la instalación.' }
+      return null
     }
+  }
+
+  invalidate() {
+    this.cache = null
+  }
+
+  async getStatus({ refresh = false } = {}) {
+    if (!refresh && this.cache && this.now() - this.cache.at < statusCacheMs) {
+      return { ...this.cache.status }
+    }
+    const status = { ...(await this.computeStatus()), pinnedVersion: this.pinnedVersion }
+    this.cache = { at: this.now(), status }
+    return { ...status }
+  }
+
+  async computeStatus() {
+    const candidates = await this.listCandidates()
+    if (candidates.length === 0) {
+      return createStatus('missing', { message: 'No se encuentra Graphify: «graphify --version» no responde.' })
+    }
+    for (const candidate of candidates) {
+      const version = await this.probe(candidate)
+      if (!version) {
+        continue
+      }
+      const base = { version, source: candidate.source, executablePath: candidate.path }
+      if (version !== this.pinnedVersion) {
+        return createStatus('different-version', { ...base, message: `Graphify ${version} detectado; esta versión de Skima está probada con la ${this.pinnedVersion}.` })
+      }
+      return createStatus('installed', base)
+    }
+    return createStatus('broken', { message: 'Graphify está instalado pero «graphify --version» no responde.' })
   }
 }
 

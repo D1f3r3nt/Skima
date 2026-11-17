@@ -135,11 +135,11 @@ class GraphifyInstaller {
       if (repair) {
         await this.removeEnvironment()
       } else {
-        const current = await this.runtime.getStatus()
-        if (current.state === 'installed') {
+        const current = await this.runtime.getStatus({ refresh: true })
+        if (current.available) {
           return { status: 'installed', message: `Graphify ${current.version} ya está instalado.`, version: current.version }
         }
-        if (current.state !== 'missing') {
+        if (current.state !== 'missing' && current.source !== 'system') {
           await this.removeEnvironment()
         }
       }
@@ -172,9 +172,9 @@ class GraphifyInstaller {
           return { status: 'failed', message: offline ? 'No se ha podido descargar Graphify. Comprueba la conexión a internet.' : 'La instalación de Graphify ha terminado con un error.', lastLines: tail.slice(-keptLines) }
         }
       }
-      const status = await this.runtime.getStatus()
+      const status = await this.runtime.getStatus({ refresh: true })
       await fs.rm(this.cacheDirectory, { recursive: true, force: true }).catch(() => {})
-      if (status.state !== 'installed') {
+      if (!status.available) {
         await this.removeEnvironment()
         return { status: 'failed', message: status.message || 'Graphify no responde tras instalarlo.', lastLines: tail.slice(-keptLines) }
       }
@@ -183,6 +183,18 @@ class GraphifyInstaller {
       this.controller = null
       this.broadcast({ type: 'install-finished' })
     }
+  }
+
+  get isRunning() {
+    return Boolean(this.controller)
+  }
+
+  async ensureInstalled() {
+    const status = await this.runtime.getStatus({ refresh: true })
+    if (status.available || this.controller) {
+      return { status: status.available ? 'installed' : 'running', message: '' }
+    }
+    return this.start()
   }
 
   cancel() {

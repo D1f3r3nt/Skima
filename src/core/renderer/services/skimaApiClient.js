@@ -372,12 +372,20 @@ export class SkimaApiClient {
     return this.unwrap(this.bridge.cancelGraph(projectId))
   }
 
-  openGraphOutput(projectId, kind) {
-    return this.unwrap(this.bridge.openGraphOutput(projectId, kind))
+  readGraphOutput(projectId, kind) {
+    return this.unwrapCoded(this.bridge.readGraphOutput(projectId, kind))
   }
 
-  ignoreGraphOutput(projectId) {
-    return this.unwrap(this.bridge.ignoreGraphOutput(projectId))
+  checkGraphHealth(projectId) {
+    return this.unwrapCoded(this.bridge.checkGraphHealth(projectId))
+  }
+
+  getGraphifySettings(options = {}) {
+    return this.unwrapCoded(this.bridge.getGraphifySettings(options))
+  }
+
+  updateGraphifySettings(patch) {
+    return this.unwrapCoded(this.bridge.updateGraphifySettings(patch))
   }
 
   describeGraphifyInstall() {

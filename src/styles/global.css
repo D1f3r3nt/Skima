@@ -1688,3 +1688,9 @@ div.agent-row__summary {
     flex-direction: column;
     gap: 4px;
 }
+
+.settings-inline-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}

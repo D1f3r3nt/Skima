@@ -97,6 +97,14 @@ class AgentBridge {
     }
   }
 
+  async buildRunEnvironment(extra, invocationEnvironment = {}) {
+    const searchPath = await this.executableLocator.buildEnvironmentPath()
+    const { prependPath = [], ...variables } = extra && typeof extra === 'object' ? extra : {}
+    const delimiter = this.platformPaths.isWindows ? ';' : ':'
+    const fullPath = [...(Array.isArray(prependPath) ? prependPath : []), searchPath].filter(Boolean).join(delimiter)
+    return { ...this.environment, ...variables, PATH: fullPath, ...invocationEnvironment }
+  }
+
   async createRunDirectory() {
     return fs.mkdtemp(this.platformPaths.path.join(this.platformPaths.temporaryDirectory, 'skima-run-'))
   }
@@ -256,7 +264,7 @@ class AgentBridge {
         command: status.cli.executablePath,
         args: invocation.args,
         cwd: options.cwd,
-        environment: { ...this.environment, PATH: await this.executableLocator.buildEnvironmentPath(), ...invocation.environment },
+        environment: await this.buildRunEnvironment(options.environment, invocation.environment),
         input: invocation.stdin,
         timeoutMs: defaults.timeoutMs,
         signal: abortController.signal,

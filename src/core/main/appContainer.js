@@ -74,6 +74,8 @@ const { GraphifyService } = require('./graphify/graphifyService')
 const { GraphifyInstaller, resolveBundledPaths } = require('./graphify/graphifyInstaller')
 const { GraphifyIntegrationService } = require('./graphify/graphifyIntegrationService')
 const { GraphifyIpcController } = require('./controllers/graphifyIpcController')
+const { GraphifySettingsService } = require('./graphify/graphifySettingsService')
+const { graphViewerRegistry } = require('./graphify/graphViewerGuard')
 const { AgentsMdOptimizer } = require('./agentsMd/agentsMdOptimizer')
 const { AgentsMdIpcController } = require('./controllers/agentsMdIpcController')
 const { PublishedSkillsStore } = require('./publishing/publishedSkillsStore')
@@ -170,8 +172,7 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     markdownRenderer,
     broadcast: (payload) => broadcast(ipcChannels.cliInstallEvent, payload)
   })
-  const graphifyRuntime = new GraphifyRuntime({ platformPaths, toolsDirectory: path.join(userDataDirectory, 'tools'), processRunner })
-  const graphifyService = new GraphifyService({ runtime: graphifyRuntime, processRunner, platformPaths, projectModel, shell, broadcast: (payload) => broadcast(ipcChannels.graphifyEvent, payload) })
+  const graphifyRuntime = new GraphifyRuntime({ platformPaths, toolsDirectory: path.join(userDataDirectory, 'tools'), processRunner, executableLocator })
   const graphifyBundled = resolveBundledPaths({ isPackaged: app.isPackaged, appRootDirectory, resourcesPath: process.resourcesPath, platform: platformPaths.platform })
   const graphifyInstaller = new GraphifyInstaller({
     platformPaths,
@@ -183,6 +184,20 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     executableLocator,
     broadcast: (payload) => broadcast(ipcChannels.graphifyEvent, payload)
   })
+  const isGraphifyInstalling = () => graphifyInstaller.isRunning
+  const graphifyService = new GraphifyService({
+    runtime: graphifyRuntime,
+    processRunner,
+    platformPaths,
+    projectModel,
+    settingsStore,
+    askAi,
+    markdownRenderer,
+    graphViewerRegistry,
+    isInstalling: isGraphifyInstalling,
+    broadcast: (payload) => broadcast(ipcChannels.graphifyEvent, payload)
+  })
+  const graphifySettingsService = new GraphifySettingsService({ settingsStore, runtime: graphifyRuntime, askAi, isInstalling: isGraphifyInstalling })
   const graphifyIntegrationService = new GraphifyIntegrationService({ runtime: graphifyRuntime, processRunner, platformPaths, projectModel, projectDataStore })
   const agentsMdOptimizer = new AgentsMdOptimizer({ askAi, modelSelector })
   const agentsMdService = new AgentsMdService({ platformPaths, projectModel, projectDataStore, markdownRenderer, optimizer: agentsMdOptimizer, settingsStore })
@@ -291,7 +306,8 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     new AgentFileIpcController({ ipcMain, agentFileInstaller }).register()
     new ProfileIpcController({ ipcMain, gitSessionService }).register()
     new AgentsMdIpcController({ ipcMain, agentsMdService }).register()
-    new GraphifyIpcController({ ipcMain, graphifyService, graphifyInstaller, graphifyIntegrationService }).register()
+    new GraphifyIpcController({ ipcMain, graphifyService, graphifyInstaller, graphifyIntegrationService, graphifySettingsService }).register()
+    graphifyInstaller.ensureInstalled().catch(() => {})
     new CliInstallIpcController({ ipcMain, cliInstaller }).register()
     new SkillsSiteIpcController({ ipcMain, skillsShInstaller }).register()
     new PublishIpcController({ ipcMain, skillPublisher, externalLinkService: new ExternalLinkService({ shell }) }).register()
@@ -336,6 +352,7 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     graphifyService,
     graphifyInstaller,
     graphifyIntegrationService,
+    graphifySettingsService,
     cliInstaller,
     skillsShInstaller,
     repositoryImporter,

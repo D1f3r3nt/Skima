@@ -69,6 +69,21 @@ const ensureGitignoreEntry = async (projectPath, entry) => {
   return { changed: true, created: content === null }
 }
 
+const removeGitignoreEntry = async (projectPath, entry) => {
+  const filePath = path.join(projectPath, gitignoreFileName)
+  await assertRegularFileOrMissing(filePath)
+  const content = await readTextIfExists(filePath)
+  if (!containsPattern(content, entry)) {
+    return { changed: false }
+  }
+  const wanted = normalizePattern(entry)
+  const lineEnding = detectLineEnding(content)
+  const kept = content.split(/\r?\n/).filter((line) => line.trim().startsWith('#') || normalizePattern(line) !== wanted || !line.trim())
+  const mode = await readMode(filePath)
+  await writeFileAtomic(filePath, kept.join(lineEnding), { mode })
+  return { changed: true }
+}
+
 module.exports = {
   gitignoreFileName,
   findGitRoot,
@@ -76,5 +91,6 @@ module.exports = {
   containsPattern,
   appendPattern,
   isIgnoredInGitignore,
-  ensureGitignoreEntry
+  ensureGitignoreEntry,
+  removeGitignoreEntry
 }

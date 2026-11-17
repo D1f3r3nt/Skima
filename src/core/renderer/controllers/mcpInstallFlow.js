@@ -99,7 +99,7 @@ export class McpInstallFlow {
   showDefinitionStep() {
     const definition = this.definition
     const body = []
-    const sourceLabels = { 'server.json': 'server.json (registro MCP)', readme: 'README', 'package.json': 'package.json', 'pyproject.toml': 'pyproject.toml', '.mcp.json': '.mcp.json', 'mcp.json': 'mcp.json', manual: 'a mano' }
+    const sourceLabels = { 'server.json': 'server.json (registro MCP)', readme: 'README', 'package.json': 'package.json', 'pyproject.toml': 'pyproject.toml', '.mcp.json': '.mcp.json', 'mcp.json': 'mcp.json', 'graphify-cloud': 'la configuración oficial de Graphify Cloud', manual: 'a mano' }
 
     if (this.candidates.length > 1) {
       const candidateSelect = createSelectInput({

@@ -1,8 +1,9 @@
-const { BrowserWindow } = require('electron')
+const { BrowserWindow, session } = require('electron')
 const path = require('node:path')
 const { pathToFileURL } = require('node:url')
 const { ipcChannels } = require('../ipcChannels')
 const { hardenSkillsSiteWebview } = require('../skillsSite/skillsSiteGuard')
+const { hardenGraphViewerWebview, graphViewerPartition, isGraphViewerGuest } = require('../graphify/graphViewerGuard')
 
 const windowBackgroundColor = '#1e1f22'
 const sourceDirectory = path.join(__dirname, '..', '..', '..')
@@ -51,7 +52,14 @@ const createMainWindow = () => {
   })
 
   protectNavigation(mainWindow)
-  hardenSkillsSiteWebview({ hostContents: mainWindow.webContents, guestPreloadPath: skillsSitePreloadPath, blockedChannel: ipcChannels.skillsSiteBlocked })
+  hardenGraphViewerWebview({ hostContents: mainWindow.webContents, session })
+  hardenSkillsSiteWebview({
+    hostContents: mainWindow.webContents,
+    guestPreloadPath: skillsSitePreloadPath,
+    blockedChannel: ipcChannels.skillsSiteBlocked,
+    isHandledElsewhere: (params) => params.partition === graphViewerPartition,
+    isGuestHandledElsewhere: (guestContents) => isGraphViewerGuest(guestContents, session)
+  })
   notifyMaximizedChanges(mainWindow)
 
   mainWindow.once('ready-to-show', () => mainWindow.show())

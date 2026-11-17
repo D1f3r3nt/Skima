@@ -348,10 +348,10 @@
     "semantic_hash": "c45be586114917125b72f86cb32a2d85"
   },
   "src/core/main/agentBridge/agentBridge.js": {
-    "mtime": 1794298042.9127617,
-    "seen": 1794303652.1122725,
-    "ast_hash": "52b17bbd1b74bcabe8427bd5ee31f44a",
-    "semantic_hash": "52b17bbd1b74bcabe8427bd5ee31f44a"
+    "mtime": 1794940313.4688797,
+    "seen": 1794940799.408418,
+    "ast_hash": "d93d6e0393574318e8c0b43c63112a3a",
+    "semantic_hash": ""
   },
   "src/core/main/agentBridge/agentDetector.js": {
     "mtime": 1794245409.702952,
@@ -360,9 +360,9 @@
     "semantic_hash": "7be65c95690be37b573d1ec1bd0a255d"
   },
   "src/core/main/agentBridge/askAi.js": {
-    "mtime": 1794933925.222746,
-    "seen": 1794934073.4563813,
-    "ast_hash": "74b201812864a05b68948cbbe91b4fcf",
+    "mtime": 1794940313.4688797,
+    "seen": 1794940799.408418,
+    "ast_hash": "589ad34d2e9f88022851b22e2a0178eb",
     "semantic_hash": ""
   },
   "src/core/main/agentBridge/modelSelector.js": {
@@ -414,9 +414,9 @@
     "semantic_hash": "d46fb531fbb210761682a2f6a3988634"
   },
   "src/core/main/appContainer.js": {
-    "mtime": 1794938596.0688047,
-    "seen": 1794938884.7179728,
-    "ast_hash": "c1f39adc891c4057d79ddce9d6a15dd0",
+    "mtime": 1794940313.4703674,
+    "seen": 1794940799.408418,
+    "ast_hash": "171e82ee250e0f7ca1ec2f9e118d8568",
     "semantic_hash": ""
   },
   "src/core/main/artifacts/agentFileAdapters.js": {
@@ -558,9 +558,9 @@
     "semantic_hash": "3a1d663593b3ffcde1dfbc68d30e4673"
   },
   "src/core/main/controllers/graphifyIpcController.js": {
-    "mtime": 1794305192.6758792,
-    "seen": 1794305608.702539,
-    "ast_hash": "feab78ad54e4ac4d0bd80a947c20a9d2",
+    "mtime": 1794940313.4703674,
+    "seen": 1794940799.408418,
+    "ast_hash": "93bb923b0c16bfd86c6ba75fe4005101",
     "semantic_hash": ""
   },
   "src/core/main/controllers/importIpcController.js": {
@@ -666,15 +666,15 @@
     "semantic_hash": "bb1dc4c1f180cbb56642389026372993"
   },
   "src/core/main/graphify/graphifyRuntime.js": {
-    "mtime": 1794304918.6128187,
-    "seen": 1794305608.702539,
-    "ast_hash": "e3203a3426b0c39128cd6b16c419668c",
+    "mtime": 1794940403.908353,
+    "seen": 1794940799.408418,
+    "ast_hash": "bf46a5e3231c688171b5d274b7ade608",
     "semantic_hash": ""
   },
   "src/core/main/graphify/graphifyService.js": {
-    "mtime": 1794304918.6128187,
-    "seen": 1794305608.702539,
-    "ast_hash": "0175c0487d0c5cb72aa452553b5f80fa",
+    "mtime": 1794940313.472632,
+    "seen": 1794940799.408418,
+    "ast_hash": "fd53eed8bd004024fd9335fe0a0437ff",
     "semantic_hash": ""
   },
   "src/core/main/imports/importedDetailsService.js": {
@@ -714,9 +714,9 @@
     "semantic_hash": "581d08fd067b002547023bc90c76cd11"
   },
   "src/core/main/ipcChannels.js": {
-    "mtime": 1794938596.0878298,
-    "seen": 1794938884.7179728,
-    "ast_hash": "81a1a376aa19aade3750d383034daa0b",
+    "mtime": 1794940313.472632,
+    "seen": 1794940799.408418,
+    "ast_hash": "da2ce8bf4ca8ba7553842c62f88f9c46",
     "semantic_hash": ""
   },
   "src/core/main/markdown/markdownRenderer.js": {
@@ -816,10 +816,10 @@
     "semantic_hash": "ecfcca5678c0a316d492e26baf292057"
   },
   "src/core/main/projects/gitignoreEditor.js": {
-    "mtime": 1794268714.4705987,
-    "seen": 1794303652.1122725,
-    "ast_hash": "9558f961f0a692a910c44e620d82ecd7",
-    "semantic_hash": "9558f961f0a692a910c44e620d82ecd7"
+    "mtime": 1794940313.47388,
+    "seen": 1794940799.408418,
+    "ast_hash": "cf83548f71bf93548361f5fe1ffc16c2",
+    "semantic_hash": ""
   },
   "src/core/main/projects/modelRestriction.js": {
     "mtime": 1794268714.024149,
@@ -858,9 +858,9 @@
     "semantic_hash": "026687afea8a4620be653eae788c09a9"
   },
   "src/core/main/prompts/promptRegistry.js": {
-    "mtime": 1794933925.22502,
-    "seen": 1794934073.457382,
-    "ast_hash": "af7d8cafb80086b63aea0f843e979db4",
+    "mtime": 1794940313.47388,
+    "seen": 1794940799.408418,
+    "ast_hash": "81e21515c8478a6890046774e737234a",
     "semantic_hash": ""
   },
   "src/core/main/prompts/promptRegistryChecks.js": {
@@ -990,10 +990,10 @@
     "semantic_hash": "aa67f7ea032e8d3055f708eb17ad273f"
   },
   "src/core/main/settings/settingsSchema.js": {
-    "mtime": 1794268421.0907438,
-    "seen": 1794303652.1132734,
-    "ast_hash": "97c87e3b9840297c103b0a18de67a6fd",
-    "semantic_hash": "97c87e3b9840297c103b0a18de67a6fd"
+    "mtime": 1794940313.47388,
+    "seen": 1794940799.408418,
+    "ast_hash": "1940f488e7654d0a9818455cd726ed91",
+    "semantic_hash": ""
   },
   "src/core/main/settings/settingsStore.js": {
     "mtime": 1794243395.232333,
@@ -1110,15 +1110,15 @@
     "semantic_hash": "94ebe504befcaef8c50ff826caf70379"
   },
   "src/core/main/windows/mainWindow.js": {
-    "mtime": 1794938596.0878298,
-    "seen": 1794938884.7179728,
-    "ast_hash": "8178d3412e080f9b53a00b2090e2e2ac",
+    "mtime": 1794940313.4753816,
+    "seen": 1794940799.408418,
+    "ast_hash": "225809a6e942486012ae0bae73fbccc6",
     "semantic_hash": ""
   },
   "src/core/preload.js": {
-    "mtime": 1794938596.0888305,
-    "seen": 1794938884.7179728,
-    "ast_hash": "a78247835c1c9e136c3ba342777d74d8",
+    "mtime": 1794940313.4753816,
+    "seen": 1794940799.408418,
+    "ast_hash": "67daaf754515ca58818bec0cf754222d",
     "semantic_hash": ""
   },
   "src/core/renderer/bootstrapPage.js": {
@@ -1152,16 +1152,16 @@
     "semantic_hash": "fd844c56888ec82945e96f47d3c75b6b"
   },
   "src/core/renderer/config/settingsSectionIds.js": {
-    "mtime": 1794298042.7195947,
-    "seen": 1794303652.1132734,
-    "ast_hash": "c941087505ac9a41e9d16947c72d0698",
-    "semantic_hash": "c941087505ac9a41e9d16947c72d0698"
+    "mtime": 1794940313.4753816,
+    "seen": 1794940799.408418,
+    "ast_hash": "a74a04107602cf167c5a1acd2a6d1540",
+    "semantic_hash": ""
   },
   "src/core/renderer/config/settingsSections.js": {
-    "mtime": 1794299030.7367797,
-    "seen": 1794303652.1132734,
-    "ast_hash": "85b52094f4fdad9c9d865b16f92b8247",
-    "semantic_hash": "85b52094f4fdad9c9d865b16f92b8247"
+    "mtime": 1794940313.4763865,
+    "seen": 1794940799.408418,
+    "ast_hash": "6a4fd8be95e4d38bec43c123ac0284e9",
+    "semantic_hash": ""
   },
   "src/core/renderer/controllers/agentFileInstallFlow.js": {
     "mtime": 1794298846.0375032,
@@ -1182,9 +1182,9 @@
     "semantic_hash": "0959fc74ae1f7f57f8dd17b027ab2e9a"
   },
   "src/core/renderer/controllers/graphifyActions.js": {
-    "mtime": 1794305268.9653325,
-    "seen": 1794305608.702539,
-    "ast_hash": "3d2bb9c5457d71e57a8463e16fe81c19",
+    "mtime": 1794940313.4763865,
+    "seen": 1794940799.409417,
+    "ast_hash": "fb140cc26a7dea70c2be1f031c8c0746",
     "semantic_hash": ""
   },
   "src/core/renderer/controllers/installedSkillsController.js": {
@@ -1194,10 +1194,10 @@
     "semantic_hash": "a3761c4f3ec5b6af5f762b0588910f9c"
   },
   "src/core/renderer/controllers/mcpInstallFlow.js": {
-    "mtime": 1794298042.869762,
-    "seen": 1794303652.1132734,
-    "ast_hash": "180775aba20fc5dae4cf1c34ead7a8e6",
-    "semantic_hash": "180775aba20fc5dae4cf1c34ead7a8e6"
+    "mtime": 1794940313.4763865,
+    "seen": 1794940799.409417,
+    "ast_hash": "058884e1570d64d82307cf78dda1153c",
+    "semantic_hash": ""
   },
   "src/core/renderer/controllers/projectController.js": {
     "mtime": 1794300742.4193125,
@@ -1398,9 +1398,9 @@
     "semantic_hash": "5b51a0cc3f17e5386c4db4843a0a82ff"
   },
   "src/core/renderer/services/skimaApiClient.js": {
-    "mtime": 1794938596.0888305,
-    "seen": 1794938884.7179728,
-    "ast_hash": "fa35f213f4673e3ffe588b9d14407095",
+    "mtime": 1794940313.4773865,
+    "seen": 1794940799.409417,
+    "ast_hash": "29d5492fadb15b11ab58a79def866a15",
     "semantic_hash": ""
   },
   "src/core/renderer/services/wizardEngine.js": {
@@ -1422,9 +1422,9 @@
     "semantic_hash": "96bf02240462a33e3fa8fc12f17b8264"
   },
   "src/core/renderer/settings/promptLaunchSettingsSection.js": {
-    "mtime": 1794933925.2290206,
-    "seen": 1794934073.457382,
-    "ast_hash": "94ac97c607003012516b75dbab833cbe",
+    "mtime": 1794940313.4783862,
+    "seen": 1794940799.409417,
+    "ast_hash": "cebe712480fd217e4445d0ce46e4fade",
     "semantic_hash": ""
   },
   "src/core/renderer/views/detailView.js": {
@@ -1548,9 +1548,9 @@
     "semantic_hash": "480a25da8fb486d5ad67fa234b0e606b"
   },
   "test/fixtures/fakeGraphify.js": {
-    "mtime": 1794305338.151466,
-    "seen": 1794305608.702539,
-    "ast_hash": "a7dfd55807ca3693659a714a1c17b470",
+    "mtime": 1794940391.7490017,
+    "seen": 1794940799.409417,
+    "ast_hash": "9274140c85b6f433ef03db84b43de8c7",
     "semantic_hash": ""
   },
   "test/fixtures/fakeInstallTool.js": {
@@ -1566,9 +1566,9 @@
     "semantic_hash": "e2c7954a5a9fb2951df697888cb861d2"
   },
   "test/graphify/graphify.test.js": {
-    "mtime": 1794305338.151466,
-    "seen": 1794305608.702539,
-    "ast_hash": "fdf0aa71bd9b9b6d3de2c3f7abbade78",
+    "mtime": 1794940391.7500021,
+    "seen": 1794940799.409417,
+    "ast_hash": "6dc53f834633ba69411e8030f1d0ac1a",
     "semantic_hash": ""
   },
   "test/helpers/fakeAgentEnvironment.js": {
@@ -1830,9 +1830,9 @@
     "semantic_hash": "56e848400f82c81ed3432025df074492"
   },
   "source-of-truth/graphify-usage-and-integration.md": {
-    "mtime": 1794305483.7391336,
-    "seen": 1794305608.702539,
-    "ast_hash": "d33b228fa812191795ba704c1bdbf88b",
+    "mtime": 1794940791.6183794,
+    "seen": 1794940799.409417,
+    "ast_hash": "3fa66be5163a828d3c7bf93e84fb1225",
     "semantic_hash": ""
   },
   "source-of-truth/install-claude-code-cli.md": {
@@ -2016,27 +2016,21 @@
     "semantic_hash": ""
   },
   "src/core/main/graphify/graphifyInstaller.js": {
-    "mtime": 1794305102.2995162,
-    "seen": 1794305608.702539,
-    "ast_hash": "e5344bf45121a2d802839f0d217cdd71",
+    "mtime": 1794940313.4703674,
+    "seen": 1794940799.408418,
+    "ast_hash": "7a25551ecd2bca1deda71826879362e1",
     "semantic_hash": ""
   },
   "src/core/main/graphify/graphifyIntegrationService.js": {
-    "mtime": 1794305164.9660923,
-    "seen": 1794305608.702539,
-    "ast_hash": "3cc10bc957b6a442a615dc3c1ac9f8e8",
+    "mtime": 1794940313.4716263,
+    "seen": 1794940799.408418,
+    "ast_hash": "bfed8f1bdfdc352a9e799a4a5caf8ebd",
     "semantic_hash": ""
   },
   "src/core/main/graphify/graphifySection.js": {
     "mtime": 1794305308.222651,
     "seen": 1794305608.702539,
     "ast_hash": "9a32de6a83e7aeeb74b8c5ecaa7a7917",
-    "semantic_hash": ""
-  },
-  "src/core/renderer/controllers/graphifyInstallFlow.js": {
-    "mtime": 1794305268.9653325,
-    "seen": 1794305608.702539,
-    "ast_hash": "53b574eaaafe86e9c2594cdda435001c",
     "semantic_hash": ""
   },
   "src/core/renderer/controllers/graphifyIntegrationDialog.js": {
@@ -2058,9 +2052,9 @@
     "semantic_hash": ""
   },
   "test/graphify/graphifyInstaller.test.js": {
-    "mtime": 1794305438.366187,
-    "seen": 1794305608.702539,
-    "ast_hash": "04093bf73ed185adb4b524b67007e50e",
+    "mtime": 1794940313.4961748,
+    "seen": 1794940799.409417,
+    "ast_hash": "3c1b0691f63df824566542e67f8ac68f",
     "semantic_hash": ""
   },
   "test/graphify/graphifyIntegration.test.js": {
@@ -2136,9 +2130,9 @@
     "semantic_hash": ""
   },
   "src/core/main/skillsSite/skillsSiteGuard.js": {
-    "mtime": 1794938772.1812322,
-    "seen": 1794938884.7179728,
-    "ast_hash": "a6cae937fed312ad7543c7a3eefc116e",
+    "mtime": 1794940667.931029,
+    "seen": 1794940799.408418,
+    "ast_hash": "6ed0b23d8964ba1da379a99c4eb6b596",
     "semantic_hash": ""
   },
   "src/core/main/skillsSite/skillsSitePolicy.js": {
@@ -2190,9 +2184,39 @@
     "semantic_hash": ""
   },
   "prompts/05_graphify.md": {
-    "mtime": 1794938724.3617194,
-    "seen": 1794938884.7179728,
-    "ast_hash": "a35ba7b4d8d93f13941100d743499911",
+    "mtime": 1794939653.43276,
+    "seen": 1794940799.409417,
+    "ast_hash": "73d0cc16c8c44370932e012543714f1b",
+    "semantic_hash": ""
+  },
+  "src/core/main/graphify/graphViewerGuard.js": {
+    "mtime": 1794940714.8049867,
+    "seen": 1794940799.408418,
+    "ast_hash": "e2c28ffd30c9c6dc6055ea350e36e26c",
+    "semantic_hash": ""
+  },
+  "src/core/main/graphify/graphifySettingsService.js": {
+    "mtime": 1794940113.0230935,
+    "seen": 1794940799.408418,
+    "ast_hash": "c8494df1d53613cbc97583d5d7841cce",
+    "semantic_hash": ""
+  },
+  "src/core/main/prompts/definitions/graphifyGenerate.js": {
+    "mtime": 1794939953.0703566,
+    "seen": 1794940799.408418,
+    "ast_hash": "4ea26333013360142d8f2bde070f456e",
+    "semantic_hash": ""
+  },
+  "src/core/renderer/controllers/graphifyViewers.js": {
+    "mtime": 1794940231.3557405,
+    "seen": 1794940799.409417,
+    "ast_hash": "39f285ba7f1209f950b552e85e5e76be",
+    "semantic_hash": ""
+  },
+  "src/core/renderer/settings/graphifySettingsSection.js": {
+    "mtime": 1794940746.7731235,
+    "seen": 1794940799.409417,
+    "ast_hash": "8c1cb27130431d47afbe38d5c7d5c192",
     "semantic_hash": ""
   },
   "package-lock.json": {

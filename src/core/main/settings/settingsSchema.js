@@ -62,10 +62,47 @@ const createDefaultPromptLaunch = () => ({
   promptOverrides: {}
 })
 
+const graphifyCloudDefaults = Object.freeze({
+  mcpUrl: 'https://api.graphify.com/mcp',
+  consoleUrl: 'https://app.graphify.com'
+})
+
+const createDefaultGraphify = () => ({
+  ignoreOutput: false,
+  cloud: { enabled: false, mcpUrl: graphifyCloudDefaults.mcpUrl, consoleUrl: graphifyCloudDefaults.consoleUrl }
+})
+
+const asHttpsUrl = (value, fallback) => {
+  const text = asTrimmedString(value, { maxLength: 2048 })
+  if (!text) {
+    return fallback
+  }
+  try {
+    return new URL(text).protocol === 'https:' ? text : fallback
+  } catch {
+    return fallback
+  }
+}
+
+const sanitizeGraphify = (value) => {
+  const defaults = createDefaultGraphify()
+  const source = isPlainObject(value) ? value : {}
+  const cloud = isPlainObject(source.cloud) ? source.cloud : {}
+  return {
+    ignoreOutput: asBoolean(source.ignoreOutput, defaults.ignoreOutput),
+    cloud: {
+      enabled: asBoolean(cloud.enabled, defaults.cloud.enabled),
+      mcpUrl: asHttpsUrl(cloud.mcpUrl, defaults.cloud.mcpUrl),
+      consoleUrl: asHttpsUrl(cloud.consoleUrl, defaults.cloud.consoleUrl)
+    }
+  }
+}
+
 const createDefaultSettings = () => ({
   schemaVersion: currentSchemaVersion,
   agents: {},
   promptLaunch: createDefaultPromptLaunch(),
+  graphify: createDefaultGraphify(),
   projects: [],
   installedOrigins: []
 })
@@ -228,6 +265,7 @@ const sanitizeSettings = (value, { now = () => new Date() } = {}) => {
     schemaVersion: currentSchemaVersion,
     agents: sanitizeAgents(source.agents),
     promptLaunch: sanitizePromptLaunch(source.promptLaunch),
+    graphify: sanitizeGraphify(source.graphify),
     projects: sanitizeProjects(source.projects, fallbackDate),
     installedOrigins: Array.isArray(source.installedOrigins)
       ? source.installedOrigins.map(sanitizeInstalledOrigin).filter(Boolean)
@@ -250,5 +288,8 @@ module.exports = {
   sanitizeSettings,
   sanitizeAgentSettings,
   sanitizePromptLaunch,
-  sanitizeProject
+  sanitizeProject,
+  sanitizeGraphify,
+  createDefaultGraphify,
+  graphifyCloudDefaults
 }

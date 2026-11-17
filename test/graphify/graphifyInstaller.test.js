@@ -42,9 +42,9 @@ const createFixture = ({ withUv = true, withLock = true, timeoutMs } = {}) => {
   const runtime = {
     getStatus: async () => {
       if (fs.existsSync(path.join(venvDirectory, 'installed.flag'))) {
-        return { state: 'installed', version: '0.9.105', message: '' }
+        return { state: 'installed', available: true, source: 'skima', version: '0.9.105', message: '' }
       }
-      return fs.existsSync(venvDirectory) ? { state: 'broken', version: null, message: 'roto' } : { state: 'missing', version: null, message: 'falta' }
+      return fs.existsSync(venvDirectory) ? { state: 'broken', available: false, source: 'skima', version: null, message: 'roto' } : { state: 'missing', available: false, version: null, message: 'falta' }
     }
   }
   const events = []
