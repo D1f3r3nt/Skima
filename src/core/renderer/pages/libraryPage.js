@@ -1,18 +1,15 @@
 import { bootstrapPage } from '../bootstrapPage.js'
-import { LibraryStore } from '../models/libraryStore.js'
-import { LibraryView } from '../views/libraryView.js'
-import { LibraryController } from '../controllers/libraryController.js'
+import { SkillsSiteView } from '../views/skillsSiteView.js'
+import { SkillsSiteController } from '../controllers/skillsSiteController.js'
 import { readPageParams } from '../services/navigation.js'
 
 bootstrapPage({
   activePageId: 'library',
   createPage: ({ apiClient, contentElement }) => {
-    const libraryController = new LibraryController({
-      libraryStore: new LibraryStore(apiClient),
+    new SkillsSiteController({
       apiClient,
-      view: new LibraryView(contentElement),
+      view: new SkillsSiteView(contentElement),
       projectId: readPageParams().projectId ?? null
-    })
-    libraryController.init()
+    }).init()
   }
 })

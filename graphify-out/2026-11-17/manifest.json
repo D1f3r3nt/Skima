@@ -167,12 +167,6 @@
     "ast_hash": "64d4e1b71bf45ea29e50e85ab8cf1bb1",
     "semantic_hash": "64d4e1b71bf45ea29e50e85ab8cf1bb1"
   },
-  "src/components/molecules/listEditor.js": {
-    "mtime": 1794256877.3261104,
-    "seen": 1794303652.1122725,
-    "ast_hash": "e3b425e0bf7a7990f162806f8198b2c6",
-    "semantic_hash": "e3b425e0bf7a7990f162806f8198b2c6"
-  },
   "src/components/molecules/metadataList.js": {
     "mtime": 1794244579.3986003,
     "seen": 1794303652.1122725,
@@ -366,22 +360,22 @@
     "semantic_hash": "42e96f914af903b4dc4d99e61e16c386"
   },
   "src/core/main/agentBridge/adapters/claudeCodeCli.js": {
-    "mtime": 1794245321.7606213,
-    "seen": 1794303652.1122725,
-    "ast_hash": "3e37b98cc3796fe8ae275df6c3ad7f56",
-    "semantic_hash": "3e37b98cc3796fe8ae275df6c3ad7f56"
+    "mtime": 1794933925.221385,
+    "seen": 1794934073.4563813,
+    "ast_hash": "038734022901d571c5a93725346e63d7",
+    "semantic_hash": ""
   },
   "src/core/main/agentBridge/adapters/codexCli.js": {
-    "mtime": 1794245380.240403,
-    "seen": 1794303652.1122725,
-    "ast_hash": "c5125ecaf8160c1be6bdadbc40adaf59",
-    "semantic_hash": "c5125ecaf8160c1be6bdadbc40adaf59"
+    "mtime": 1794933925.221385,
+    "seen": 1794934073.4563813,
+    "ast_hash": "243c26504e341e21bc428a15e007d6fa",
+    "semantic_hash": ""
   },
   "src/core/main/agentBridge/adapters/geminiCliAdapter.js": {
-    "mtime": 1794245380.6747847,
-    "seen": 1794303652.1122725,
-    "ast_hash": "d9a60967e8ac578be1339672c4d28947",
-    "semantic_hash": "d9a60967e8ac578be1339672c4d28947"
+    "mtime": 1794933925.222746,
+    "seen": 1794934073.4563813,
+    "ast_hash": "ebb6366c37b93fbdfb48c7f313c6f0b6",
+    "semantic_hash": ""
   },
   "src/core/main/agentBridge/adapters/openCodeCli.js": {
     "mtime": 1794245380.610333,
@@ -402,10 +396,10 @@
     "semantic_hash": "7be65c95690be37b573d1ec1bd0a255d"
   },
   "src/core/main/agentBridge/askAi.js": {
-    "mtime": 1794300330.818158,
-    "seen": 1794303652.1122725,
-    "ast_hash": "18ee67003616011387810a1c095ffb3a",
-    "semantic_hash": "18ee67003616011387810a1c095ffb3a"
+    "mtime": 1794933925.222746,
+    "seen": 1794934073.4563813,
+    "ast_hash": "74b201812864a05b68948cbbe91b4fcf",
+    "semantic_hash": ""
   },
   "src/core/main/agentBridge/modelSelector.js": {
     "mtime": 1794298042.9127617,
@@ -456,9 +450,9 @@
     "semantic_hash": "d46fb531fbb210761682a2f6a3988634"
   },
   "src/core/main/appContainer.js": {
-    "mtime": 1794305192.6758792,
-    "seen": 1794305608.702539,
-    "ast_hash": "ba7d003709114e02c255bf0f9cd8cf3e",
+    "mtime": 1794933925.2240133,
+    "seen": 1794934073.4563813,
+    "ast_hash": "685ed19440ff1acace0a88e51b0bf259",
     "semantic_hash": ""
   },
   "src/core/main/artifacts/agentFileAdapters.js": {
@@ -648,10 +642,10 @@
     "semantic_hash": "9533b86eeaa7798974d5121706a972fe"
   },
   "src/core/main/controllers/mySkillsIpcController.js": {
-    "mtime": 1794257113.7006028,
-    "seen": 1794303652.1122725,
-    "ast_hash": "fa4052db302fb4576067e139a4b63df0",
-    "semantic_hash": "fa4052db302fb4576067e139a4b63df0"
+    "mtime": 1794933925.2240133,
+    "seen": 1794934073.457382,
+    "ast_hash": "4e5179025065d2aa0befea7f63eb672e",
+    "semantic_hash": ""
   },
   "src/core/main/controllers/profileIpcController.js": {
     "mtime": 1794298996.0279455,
@@ -756,9 +750,9 @@
     "semantic_hash": "581d08fd067b002547023bc90c76cd11"
   },
   "src/core/main/ipcChannels.js": {
-    "mtime": 1794305563.7186725,
-    "seen": 1794305608.702539,
-    "ast_hash": "014371e2a721de8658f607a1f7755563",
+    "mtime": 1794933925.22502,
+    "seen": 1794934073.457382,
+    "ast_hash": "112e0b8d3db992a66d5f1f4af0b73484",
     "semantic_hash": ""
   },
   "src/core/main/markdown/markdownRenderer.js": {
@@ -893,12 +887,6 @@
     "ast_hash": "9b55fa938cc39d4346666b0cd19f6289",
     "semantic_hash": "9b55fa938cc39d4346666b0cd19f6289"
   },
-  "src/core/main/prompts/definitions/skillOptimizeEn.js": {
-    "mtime": 1794257309.1958761,
-    "seen": 1794303652.1122725,
-    "ast_hash": "b195d34f9eb7e0e67139a01d1c6c4615",
-    "semantic_hash": "b195d34f9eb7e0e67139a01d1c6c4615"
-  },
   "src/core/main/prompts/promptLaunchSettingsService.js": {
     "mtime": 1794298042.9538338,
     "seen": 1794303652.1132734,
@@ -906,10 +894,10 @@
     "semantic_hash": "026687afea8a4620be653eae788c09a9"
   },
   "src/core/main/prompts/promptRegistry.js": {
-    "mtime": 1794300330.8171577,
-    "seen": 1794303652.1132734,
-    "ast_hash": "9c4d30d5822fdbc8b59f1af1095ad6c2",
-    "semantic_hash": "9c4d30d5822fdbc8b59f1af1095ad6c2"
+    "mtime": 1794933925.22502,
+    "seen": 1794934073.457382,
+    "ast_hash": "af7d8cafb80086b63aea0f843e979db4",
+    "semantic_hash": ""
   },
   "src/core/main/prompts/promptRegistryChecks.js": {
     "mtime": 1794246401.6613095,
@@ -1080,22 +1068,16 @@
     "semantic_hash": "fe0af590a7a8a6d13551f7bb5d492434"
   },
   "src/core/main/skills/mySkillsStore.js": {
-    "mtime": 1794256745.4294968,
-    "seen": 1794303652.1132734,
-    "ast_hash": "0d6c5c00126fa7cb7c77004987a8f8b0",
-    "semantic_hash": "0d6c5c00126fa7cb7c77004987a8f8b0"
+    "mtime": 1794933925.2260191,
+    "seen": 1794934073.457382,
+    "ast_hash": "f7d5c0b71b5aff5f1294842cb0fae6b5",
+    "semantic_hash": ""
   },
   "src/core/main/skills/skillFolderHash.js": {
     "mtime": 1794246614.0208485,
     "seen": 1794303652.1132734,
     "ast_hash": "463f85651365111fe4ceefe8d03dc4c9",
     "semantic_hash": "463f85651365111fe4ceefe8d03dc4c9"
-  },
-  "src/core/main/skills/skillGenerator.js": {
-    "mtime": 1794256823.302598,
-    "seen": 1794303652.1132734,
-    "ast_hash": "6f5ac90020a9c299064cdd6f36c8e500",
-    "semantic_hash": "6f5ac90020a9c299064cdd6f36c8e500"
   },
   "src/core/main/skills/skillInstaller.js": {
     "mtime": 1794298042.93876,
@@ -1110,28 +1092,16 @@
     "semantic_hash": "0e6ea9cb0eec9b9a703ba2775173891a"
   },
   "src/core/main/skills/skillOptimizationValidator.js": {
-    "mtime": 1794257426.1164973,
-    "seen": 1794303652.1132734,
+    "mtime": 1794933633.27506,
+    "seen": 1794934073.457382,
     "ast_hash": "80d69f31627d6b34e220a373e538c4ef",
     "semantic_hash": "80d69f31627d6b34e220a373e538c4ef"
-  },
-  "src/core/main/skills/skillOptimizer.js": {
-    "mtime": 1794257154.363892,
-    "seen": 1794303652.1132734,
-    "ast_hash": "8e4d7a213ac3f21658126b3a0f6fa742",
-    "semantic_hash": "8e4d7a213ac3f21658126b3a0f6fa742"
   },
   "src/core/main/skills/skillSpecConstants.js": {
     "mtime": 1794244396.8560338,
     "seen": 1794303652.1132734,
     "ast_hash": "ffab0bb3e14fba9b012b2efcbbbbfbd6",
     "semantic_hash": "ffab0bb3e14fba9b012b2efcbbbbfbd6"
-  },
-  "src/core/main/skills/skillTemplate.js": {
-    "mtime": 1794256700.1891868,
-    "seen": 1794303652.1132734,
-    "ast_hash": "9d715ecb5d6074e691c23f21d933a368",
-    "semantic_hash": "9d715ecb5d6074e691c23f21d933a368"
   },
   "src/core/main/skills/skillUninstaller.js": {
     "mtime": 1794246975.1808014,
@@ -1182,9 +1152,9 @@
     "semantic_hash": "9aaa513180a39c07970e60ff875fe1e4"
   },
   "src/core/preload.js": {
-    "mtime": 1794305563.7186725,
-    "seen": 1794305608.702539,
-    "ast_hash": "e4ca225dfce215c7267e1b3db2cfd261",
+    "mtime": 1794933925.2260191,
+    "seen": 1794934073.457382,
+    "ast_hash": "b93c0b8a251b9b492005bee0cca9f56f",
     "semantic_hash": ""
   },
   "src/core/renderer/bootstrapPage.js": {
@@ -1240,12 +1210,6 @@
     "seen": 1794303652.1132734,
     "ast_hash": "85b52094f4fdad9c9d865b16f92b8247",
     "semantic_hash": "85b52094f4fdad9c9d865b16f92b8247"
-  },
-  "src/core/renderer/config/skillWizardQuestions.js": {
-    "mtime": 1794256877.2415116,
-    "seen": 1794303652.1132734,
-    "ast_hash": "2be71d5b7302644c723667f5008d2792",
-    "semantic_hash": "2be71d5b7302644c723667f5008d2792"
   },
   "src/core/renderer/controllers/agentFileInstallFlow.js": {
     "mtime": 1794298846.0375032,
@@ -1331,12 +1295,6 @@
     "ast_hash": "630aa8687d62c61de6a39edcdda1fbd8",
     "semantic_hash": "630aa8687d62c61de6a39edcdda1fbd8"
   },
-  "src/core/renderer/controllers/skillWizardController.js": {
-    "mtime": 1794298042.898762,
-    "seen": 1794303652.1132734,
-    "ast_hash": "b20ba76bf411fa28b9181049816656f9",
-    "semantic_hash": "b20ba76bf411fa28b9181049816656f9"
-  },
   "src/core/renderer/models/libraryStore.js": {
     "mtime": 1794299607.7823913,
     "seen": 1794303652.1132734,
@@ -1362,10 +1320,10 @@
     "semantic_hash": "650ce1e9f8cf82711ecde6681f800bef"
   },
   "src/core/renderer/pages/editorPage.js": {
-    "mtime": 1794256952.3983047,
-    "seen": 1794303652.1132734,
-    "ast_hash": "bdcbe974dd7d2c0ee6382780bb481683",
-    "semantic_hash": "bdcbe974dd7d2c0ee6382780bb481683"
+    "mtime": 1794933925.2270212,
+    "seen": 1794934073.457382,
+    "ast_hash": "64e945303408201405ebcb4677426b43",
+    "semantic_hash": ""
   },
   "src/core/renderer/pages/globalPage.js": {
     "mtime": 1794305582.2683702,
@@ -1380,10 +1338,10 @@
     "semantic_hash": "241fc45b7656e842ff1763c8425e2b72"
   },
   "src/core/renderer/pages/mySkillsPage.js": {
-    "mtime": 1794299998.6840217,
-    "seen": 1794303652.1132734,
-    "ast_hash": "88feef6211b36baca2b0521b6d573031",
-    "semantic_hash": "88feef6211b36baca2b0521b6d573031"
+    "mtime": 1794933925.22802,
+    "seen": 1794934073.457382,
+    "ast_hash": "fb21fd1d828ca6c06307ecd2884f7f57",
+    "semantic_hash": ""
   },
   "src/core/renderer/pages/projectPage.js": {
     "mtime": 1794247210.8554945,
@@ -1410,10 +1368,10 @@
     "semantic_hash": "78134645ea8471a5a62a2fb2b46fc226"
   },
   "src/core/renderer/presenters/mySkillDetailPresenter.js": {
-    "mtime": 1794256976.5206738,
-    "seen": 1794303652.1132734,
-    "ast_hash": "39fb0a08c5148e984703c0b409e587ff",
-    "semantic_hash": "39fb0a08c5148e984703c0b409e587ff"
+    "mtime": 1794933925.22802,
+    "seen": 1794934073.457382,
+    "ast_hash": "c305faffc1eb381e145e7e650712fa7c",
+    "semantic_hash": ""
   },
   "src/core/renderer/projectTabs/contextTab.js": {
     "mtime": 1794300495.875344,
@@ -1524,9 +1482,9 @@
     "semantic_hash": "5b51a0cc3f17e5386c4db4843a0a82ff"
   },
   "src/core/renderer/services/skimaApiClient.js": {
-    "mtime": 1794305563.7201784,
-    "seen": 1794305608.702539,
-    "ast_hash": "7c07c87cebf85e7383b528634f54ddc1",
+    "mtime": 1794933925.22802,
+    "seen": 1794934073.457382,
+    "ast_hash": "875bfc62225df0796113eec150ef3cf4",
     "semantic_hash": ""
   },
   "src/core/renderer/services/wizardEngine.js": {
@@ -1548,10 +1506,10 @@
     "semantic_hash": "96bf02240462a33e3fa8fc12f17b8264"
   },
   "src/core/renderer/settings/promptLaunchSettingsSection.js": {
-    "mtime": 1794298047.5718935,
-    "seen": 1794303652.1132734,
-    "ast_hash": "8618bd52f609b51c46396fe4e8ea2c40",
-    "semantic_hash": "8618bd52f609b51c46396fe4e8ea2c40"
+    "mtime": 1794933925.2290206,
+    "seen": 1794934073.457382,
+    "ast_hash": "94ac97c607003012516b75dbab833cbe",
+    "semantic_hash": ""
   },
   "src/core/renderer/views/detailView.js": {
     "mtime": 1794244646.2597034,
@@ -1582,12 +1540,6 @@
     "seen": 1794303652.1132734,
     "ast_hash": "7e28515bd7209c6a6310da78693c2d2e",
     "semantic_hash": "7e28515bd7209c6a6310da78693c2d2e"
-  },
-  "src/core/renderer/views/skillWizardView.js": {
-    "mtime": 1794256976.410303,
-    "seen": 1794303652.1132734,
-    "ast_hash": "d90c51b44f374cfaf426223c7f1933d0",
-    "semantic_hash": "d90c51b44f374cfaf426223c7f1933d0"
   },
   "src/data/libraryCatalog.json": {
     "mtime": 1794244083.7597494,
@@ -1842,10 +1794,10 @@
     "semantic_hash": "6b5006f546f95ef9cebf6b1a877c9f92"
   },
   "test/skills/mySkills.test.js": {
-    "mtime": 1794256823.302598,
-    "seen": 1794303652.1132734,
-    "ast_hash": "7d295729da73ac371ce675d444985c5d",
-    "semantic_hash": "7d295729da73ac371ce675d444985c5d"
+    "mtime": 1794933925.2300208,
+    "seen": 1794934073.457382,
+    "ast_hash": "038ba8ae1b98af6d16594f6c7cd9bcc8",
+    "semantic_hash": ""
   },
   "test/skills/skillInstaller.test.js": {
     "mtime": 1794246721.972831,
@@ -1858,12 +1810,6 @@
     "seen": 1794303652.1132734,
     "ast_hash": "102d6d4331f5f0bec89d6cf850581464",
     "semantic_hash": "102d6d4331f5f0bec89d6cf850581464"
-  },
-  "test/skills/skillOptimizer.test.js": {
-    "mtime": 1794257445.590973,
-    "seen": 1794303652.1132734,
-    "ast_hash": "ab11264c0c685cd925da3837c1fdf90b",
-    "semantic_hash": "ab11264c0c685cd925da3837c1fdf90b"
   },
   "test/skima/skimaRepositorySource.test.js": {
     "mtime": 1794299651.4383307,
@@ -1890,9 +1836,9 @@
     "semantic_hash": "67d88e9d0760c3ba54c75dfd9551c1c5"
   },
   "README.md": {
-    "mtime": 1794305501.5805714,
-    "seen": 1794305608.702539,
-    "ast_hash": "3498c4ddcaaa8b2804af6509bb86a398",
+    "mtime": 1794933925.2203853,
+    "seen": 1794934073.457382,
+    "ast_hash": "90127ebeeaa4d25894eb4f60a6b095c3",
     "semantic_hash": ""
   },
   "catalog/verification-report.md": {
@@ -2223,6 +2169,54 @@
     "mtime": 1794305379.2738755,
     "seen": 1794305608.702539,
     "ast_hash": "5e3067a0cf5042ea26aa585873dbf7fa",
+    "semantic_hash": ""
+  },
+  "src/core/main/prompts/definitions/skillCreate.js": {
+    "mtime": 1794933810.9487383,
+    "seen": 1794934073.457382,
+    "ast_hash": "31f186ed14bd7870dc85027fd8d6939e",
+    "semantic_hash": ""
+  },
+  "src/core/main/skills/skillCreator.js": {
+    "mtime": 1794933810.971077,
+    "seen": 1794934073.457382,
+    "ast_hash": "3526821652f7ffdb8f80549a2c6c6bc2",
+    "semantic_hash": ""
+  },
+  "src/core/main/skills/skillForm.js": {
+    "mtime": 1794933810.9937005,
+    "seen": 1794934073.457382,
+    "ast_hash": "65819cab7424aee0bb137be3ae197fec",
+    "semantic_hash": ""
+  },
+  "src/core/renderer/controllers/skillFormController.js": {
+    "mtime": 1794933811.0162547,
+    "seen": 1794934073.457382,
+    "ast_hash": "5024f9595eb77c814fb91f2b13a3a241",
+    "semantic_hash": ""
+  },
+  "src/core/renderer/controllers/skillTextEditorController.js": {
+    "mtime": 1794933811.0378177,
+    "seen": 1794934073.457382,
+    "ast_hash": "c22fc8c2d70e046f25e194eb818ab470",
+    "semantic_hash": ""
+  },
+  "src/core/renderer/views/skillFormView.js": {
+    "mtime": 1794933811.059985,
+    "seen": 1794934073.457382,
+    "ast_hash": "0babf1a987b70803519ee315c1b6a47f",
+    "semantic_hash": ""
+  },
+  "src/core/renderer/views/skillTextEditorView.js": {
+    "mtime": 1794934038.645084,
+    "seen": 1794934073.457382,
+    "ast_hash": "3026867b0790fdf3082f722f9c40b7f8",
+    "semantic_hash": ""
+  },
+  "prompts/03_editor_skills.md": {
+    "mtime": 1794933810.9205687,
+    "seen": 1794934073.457382,
+    "ast_hash": "391c6983b462557a5d1f88a28a70943b",
     "semantic_hash": ""
   },
   "package-lock.json": {

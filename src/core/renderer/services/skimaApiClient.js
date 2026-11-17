@@ -432,6 +432,26 @@ export class SkimaApiClient {
     return this.bridge.onCliInstallEvent(callback)
   }
 
+  describeSkillsSiteInstall(request) {
+    return this.unwrapCoded(this.bridge.describeSkillsSiteInstall(request))
+  }
+
+  installFromSkillsSite(request) {
+    return this.unwrapCoded(this.bridge.installFromSkillsSite(request))
+  }
+
+  cancelSkillsSiteInstall() {
+    return this.unwrapCoded(this.bridge.cancelSkillsSiteInstall())
+  }
+
+  onSkillsSiteInstallOutput(callback) {
+    return this.bridge.onSkillsSiteInstallOutput(callback)
+  }
+
+  onSkillsSiteBlocked(callback) {
+    return this.bridge.onSkillsSiteBlocked(callback)
+  }
+
   getProfileStatus(options) {
     return this.unwrap(this.bridge.getProfileStatus(options))
   }
@@ -478,6 +498,14 @@ export class SkimaApiClient {
 
   onWindowMaximizedChange(callback) {
     return this.bridge.onWindowMaximizedChange(callback)
+  }
+
+  async unwrapCoded(pendingResponse) {
+    const result = await this.unwrap(pendingResponse)
+    if (!result.ok) {
+      throw Object.assign(new Error(result.error.message), { code: result.error.code })
+    }
+    return result.value
   }
 
   async unwrap(pendingResponse) {

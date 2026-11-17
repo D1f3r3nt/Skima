@@ -67,6 +67,8 @@ const { SkillPublisher } = require('./publishing/skillPublisher')
 const { AgentsMdService } = require('./agentsMd/agentsMdService')
 const { GraphifyRuntime } = require('./graphify/graphifyRuntime')
 const { CliInstaller } = require('./cliInstall/cliInstaller')
+const { SkillsShInstaller } = require('./skillsSite/skillsShInstaller')
+const { SkillsSiteIpcController } = require('./controllers/skillsSiteIpcController')
 const { CliInstallIpcController } = require('./controllers/cliInstallIpcController')
 const { GraphifyService } = require('./graphify/graphifyService')
 const { GraphifyInstaller, resolveBundledPaths } = require('./graphify/graphifyInstaller')
@@ -266,6 +268,16 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     })
   }
 
+  const skillsShInstaller = new SkillsShInstaller({
+    registry: providerRegistry,
+    settingsStore,
+    projectModel,
+    executableLocator,
+    processRunner,
+    platformPaths,
+    broadcast: (text) => broadcast(ipcChannels.skillsSiteInstallOutput, text)
+  })
+
   const registerControllers = () => {
     new ProjectIpcController({ ipcMain, projectModel, projectDataStore }).register()
     new EnvironmentIpcController({ ipcMain, projectModel, envFileService }).register()
@@ -281,6 +293,7 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     new AgentsMdIpcController({ ipcMain, agentsMdService }).register()
     new GraphifyIpcController({ ipcMain, graphifyService, graphifyInstaller, graphifyIntegrationService }).register()
     new CliInstallIpcController({ ipcMain, cliInstaller }).register()
+    new SkillsSiteIpcController({ ipcMain, skillsShInstaller }).register()
     new PublishIpcController({ ipcMain, skillPublisher, externalLinkService: new ExternalLinkService({ shell }) }).register()
     new MySkillsIpcController({ ipcMain, mySkillsStore, markdownRenderer, dialog, BrowserWindow, scanner, skillCreator }).register()
     new InstalledIpcController({ ipcMain, scanner, installedDetailsService, uninstaller, shell, platformPaths, projectModel, installationLocator }).register()
@@ -324,6 +337,7 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     graphifyInstaller,
     graphifyIntegrationService,
     cliInstaller,
+    skillsShInstaller,
     repositoryImporter,
     importedLibraryStore,
     mySkillsStore,

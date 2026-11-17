@@ -128,6 +128,19 @@ contextBridge.exposeInMainWorld('skimaApi', {
     ipcRenderer.on('cli-install:event', listener)
     return () => ipcRenderer.removeListener('cli-install:event', listener)
   },
+  describeSkillsSiteInstall: (request) => ipcRenderer.invoke('skills-site:describe-install', request),
+  installFromSkillsSite: (request) => ipcRenderer.invoke('skills-site:install', request),
+  cancelSkillsSiteInstall: () => ipcRenderer.invoke('skills-site:cancel-install'),
+  onSkillsSiteInstallOutput: (callback) => {
+    const listener = (event, text) => callback(text)
+    ipcRenderer.on('skills-site:install-output', listener)
+    return () => ipcRenderer.removeListener('skills-site:install-output', listener)
+  },
+  onSkillsSiteBlocked: (callback) => {
+    const listener = (event, payload) => callback(payload)
+    ipcRenderer.on('skills-site:blocked', listener)
+    return () => ipcRenderer.removeListener('skills-site:blocked', listener)
+  },
   getProfileStatus: (options) => ipcRenderer.invoke('profile:get-status', options),
   logoutProfile: () => ipcRenderer.invoke('profile:logout'),
   startGhLogin: () => ipcRenderer.invoke('profile:start-gh-login'),

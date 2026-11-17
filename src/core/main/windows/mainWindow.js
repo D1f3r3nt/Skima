@@ -2,11 +2,13 @@ const { BrowserWindow } = require('electron')
 const path = require('node:path')
 const { pathToFileURL } = require('node:url')
 const { ipcChannels } = require('../ipcChannels')
+const { hardenSkillsSiteWebview } = require('../skillsSite/skillsSiteGuard')
 
 const windowBackgroundColor = '#1e1f22'
 const sourceDirectory = path.join(__dirname, '..', '..', '..')
 const pagesDirectory = path.join(sourceDirectory, 'pages')
 const appIconPath = path.join(sourceDirectory, 'assets', 'icons', 'skima.png')
+const skillsSitePreloadPath = path.join(sourceDirectory, 'core', 'skillsSitePreload.js')
 const startPage = 'library.html'
 
 const isInternalPage = (url) => url.startsWith(pathToFileURL(pagesDirectory).href)
@@ -43,11 +45,13 @@ const createMainWindow = () => {
       preload: path.join(sourceDirectory, 'core', 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: true
+      sandbox: true,
+      webviewTag: true
     }
   })
 
   protectNavigation(mainWindow)
+  hardenSkillsSiteWebview({ hostContents: mainWindow.webContents, guestPreloadPath: skillsSitePreloadPath, blockedChannel: ipcChannels.skillsSiteBlocked })
   notifyMaximizedChanges(mainWindow)
 
   mainWindow.once('ready-to-show', () => mainWindow.show())
