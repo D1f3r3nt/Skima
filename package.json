@@ -8,7 +8,6 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "launch": "electron .",
     "test": "node --test \"test/**/*.test.js\"",
     "sot:index": "node scripts/sourceOfTruthTasks.js index",
     "sot:check": "node scripts/sourceOfTruthTasks.js check",
