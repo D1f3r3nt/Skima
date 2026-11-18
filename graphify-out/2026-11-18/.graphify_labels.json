@@ -1,7 +1,6 @@
 {
   "0": "Catalog Service",
   "16": "CLI Install Recipes",
-  "19": "Bootstrap & Brand Icon",
   "22": "Git Session Service",
   "23": "IPC Controllers (AGENTS, AI, Catalog)",
   "27": "with Group",
@@ -12,7 +11,6 @@
   "46": "promptRegistry.js Group",
   "47": "CliInstaller Group",
   "49": "shellView.js Group",
-  "50": "skillWizardView.js Group",
   "56": "MySkillsStore Group",
   "58": "build Group",
   "65": "AskAi Group",
@@ -22,7 +20,6 @@
   "79": "prompts/02_fases_9_10_11.md Group",
   "80": "Phase 9: skill wizard and Mis skills Group",
   "81": "AgentDetector Group",
-  "83": "AgentFileInstaller Group",
   "84": "GraphifyService Group",
   "85": "ProjectModel Group",
   "86": "Unverified or low-confidence provider registry rows Group",

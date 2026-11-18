@@ -3,7 +3,7 @@ import { createNavItem, createNavSubItem } from '../molecules/navItem.js'
 const createExpandedNavItem = (item, isPageActive, activeSubPageId, onAction) => {
   const groupElement = document.createElement('div')
   groupElement.className = 'sidebar__subgroup'
-  const parentElement = createNavItem({ ...item, isActive: false, isExpanded: true, onAction })
+  const parentElement = createNavItem({ ...item, isActive: false, isExpanded: isPageActive, onAction })
   const listElement = document.createElement('div')
   listElement.className = 'sidebar__subitems'
   listElement.setAttribute('role', 'group')

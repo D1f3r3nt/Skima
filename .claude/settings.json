@@ -39,6 +39,7 @@
         "hooks": [
           {
             "type": "command",
+            "async": true,
             "command": "[ -n \"$SKIMA_HOOK_ACTIVE\" ] || SKIMA_HOOK_ACTIVE=1 claude -p \"Usa la skill readme-checker con la informacion recibida por stdin\" --model \"haiku\" --permission-mode acceptEdits --allowedTools \"Bash(git diff:*),Bash(git status:*),Bash(git log:*)\"",
             "timeout": 60,
             "statusMessage": "Actualizando el README"
