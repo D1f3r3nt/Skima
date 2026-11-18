@@ -1,11 +1,16 @@
 import { createButton } from '../../../components/atoms/button.js'
 import { createIcon } from '../../../components/atoms/icon.js'
+import { createLoader } from '../../../components/atoms/loader.js'
 import { showToast } from '../../../components/molecules/toast.js'
 import { skillsSite } from '../config/skillsSite.js'
 import { buildSkillsSiteThemeCss } from '../services/skillsSiteTheme.js'
 import { onThemeChange } from '../services/themeService.js'
 
 const tooltipId = 'skillsSiteInfoTooltip'
+const loadingFallbackMilliseconds = 10000
+const styledCheckAttempts = 40
+const styledCheckIntervalMilliseconds = 50
+const pageStyledScript = "Boolean(document.getElementById('skima-skills-site-style')) && document.documentElement.hasAttribute('data-skima-page')"
 
 export class SkillsSiteView {
   constructor(contentElement) {
@@ -13,6 +18,9 @@ export class SkillsSiteView {
     this.webviewElement = null
     this.backButton = null
     this.themeCssKey = null
+    this.themePromise = Promise.resolve()
+    this.loadingElement = null
+    this.loadingFallbackTimer = null
   }
 
   createInfoBadge() {
@@ -73,23 +81,66 @@ export class SkillsSiteView {
     const syncNavigation = () => this.syncNavigationState()
     this.webviewElement.addEventListener('did-navigate', syncNavigation)
     this.webviewElement.addEventListener('did-navigate-in-page', syncNavigation)
-    this.webviewElement.addEventListener('dom-ready', () => this.applyTheme())
+    this.webviewElement.addEventListener('did-start-navigation', (event) => {
+      if (event.isMainFrame && !event.isInPage) {
+        this.setLoading(true)
+      }
+    })
+    this.webviewElement.addEventListener('dom-ready', () => {
+      this.themePromise = this.applyTheme()
+    })
+    this.webviewElement.addEventListener('did-finish-load', () => this.revealWhenReady())
     this.webviewElement.addEventListener('did-fail-load', (event) => {
       if (event.isMainFrame && event.errorCode !== -3) {
+        this.setLoading(false)
         showToast({ message: `No se pudo cargar skills.sh (${event.errorDescription || event.errorCode}).`, variant: 'error' })
       }
     })
     onThemeChange(() => this.applyTheme())
 
+    this.loadingElement = document.createElement('div')
+    this.loadingElement.className = 'skills-site__loading'
+    this.loadingElement.append(createLoader({ label: 'Cargando skills.sh…' }))
+
     const frameElement = document.createElement('div')
     frameElement.className = 'skills-site__frame'
-    frameElement.append(this.webviewElement, this.createInfoBadge())
+    frameElement.append(this.webviewElement, this.loadingElement, this.createInfoBadge())
+    this.setLoading(true)
 
     const sectionElement = document.createElement('section')
     sectionElement.className = 'skills-site'
     sectionElement.append(this.createToolbar(), frameElement)
     this.contentElement.classList.add('app-shell__content--embedded')
     this.contentElement.replaceChildren(sectionElement)
+  }
+
+  setLoading(isLoading) {
+    clearTimeout(this.loadingFallbackTimer)
+    this.webviewElement.classList.toggle('skills-site__webview--loading', isLoading)
+    this.loadingElement.style.display = isLoading ? '' : 'none'
+    if (isLoading) {
+      this.loadingFallbackTimer = setTimeout(() => this.setLoading(false), loadingFallbackMilliseconds)
+    }
+  }
+
+  async isPageStyled() {
+    try {
+      return await this.webviewElement.executeJavaScript(pageStyledScript)
+    } catch {
+      return false
+    }
+  }
+
+  async revealWhenReady() {
+    await this.themePromise
+    for (let attempt = 0; attempt < styledCheckAttempts; attempt += 1) {
+      if (this.themeCssKey && await this.isPageStyled()) {
+        break
+      }
+      await new Promise((resolve) => setTimeout(resolve, styledCheckIntervalMilliseconds))
+    }
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+    this.setLoading(false)
   }
 
   async applyTheme() {

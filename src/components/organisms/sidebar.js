@@ -1,6 +1,6 @@
 import { createNavItem, createNavSubItem } from '../molecules/navItem.js'
 
-const createExpandedNavItem = (item, activeSubPageId, onAction) => {
+const createExpandedNavItem = (item, isPageActive, activeSubPageId, onAction) => {
   const groupElement = document.createElement('div')
   groupElement.className = 'sidebar__subgroup'
   const parentElement = createNavItem({ ...item, isActive: false, isExpanded: true, onAction })
@@ -9,15 +9,15 @@ const createExpandedNavItem = (item, activeSubPageId, onAction) => {
   listElement.setAttribute('role', 'group')
   listElement.setAttribute('aria-label', item.label)
   const activeChildId = item.children.some((child) => child.id === activeSubPageId) ? activeSubPageId : item.children[0].id
-  listElement.append(...item.children.map((child) => createNavSubItem({ ...child, isActive: child.id === activeChildId })))
+  listElement.append(...item.children.map((child) => createNavSubItem({ ...child, isActive: isPageActive && child.id === activeChildId })))
   groupElement.append(parentElement, listElement)
   return groupElement
 }
 
 const createNavEntry = (item, activePageId, activeSubPageId, onAction) => {
   const isActive = item.id === activePageId
-  if (isActive && item.children?.length) {
-    return createExpandedNavItem(item, activeSubPageId, onAction)
+  if (item.children?.length) {
+    return createExpandedNavItem(item, isActive, activeSubPageId, onAction)
   }
   return createNavItem({ ...item, isActive, onAction })
 }

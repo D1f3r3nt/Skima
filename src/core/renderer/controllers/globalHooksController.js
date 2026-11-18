@@ -34,7 +34,6 @@ export class GlobalHooksController {
     this.element.replaceChildren(createLoader({ label: 'Cargando hooks…', inline: true }))
     try {
       const hooks = await this.apiClient.listHooks()
-      this.onCountChange?.(hooks.length)
       this.render(hooks)
     } catch (error) {
       this.element.replaceChildren(createNoticeBanner({ variant: 'error', text: error.message, actionLabel: 'Reintentar', onAction: () => this.load() }))
@@ -55,10 +54,7 @@ export class GlobalHooksController {
 
     const toolbarElement = document.createElement('div')
     toolbarElement.className = 'installed-list__toolbar hooks-library__toolbar'
-    const statusElement = document.createElement('p')
-    statusElement.className = 'installed-list__status'
-    statusElement.textContent = `${hooks.length} ${hooks.length === 1 ? 'hook guardado' : 'hooks guardados'} en Skima`
-    toolbarElement.append(statusElement, createButton({ label: 'Crear hook', icon: 'plus', size: 'small', onClick: () => this.openEditor() }))
+    toolbarElement.append(createButton({ label: 'Crear hook', icon: 'plus', size: 'small', onClick: () => this.openEditor() }))
 
     const listElement = document.createElement('ul')
     listElement.className = 'installed-list__items'

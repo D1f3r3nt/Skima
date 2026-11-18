@@ -8,11 +8,11 @@ export const presentInstallations = (installations, { onOpenFolder }) => install
   onOpenFolder: () => onOpenFolder(installation.path)
 }))
 
-export const presentInstalledDetail = (details, { onInstallElsewhere, onUpdate, onUninstall, onOpenFolder, onOpenLink, onBack, backLabel }) => {
+export const presentInstalledDetail = (details, { isInstalledGlobally, onInstallElsewhere, onUpdate, onUninstall, onOpenFolder, onOpenLink, onBack, backLabel }) => {
   const { row, scope, project, score, documents, fileTree, repositoryMetrics } = details
   const scopeLabel = scope === 'global' ? 'Global' : `Proyecto: ${project?.name ?? ''}`
   const origin = row.origin
-  const canUpdate = origin.type === 'github' || origin.type === 'mySkill'
+  const canUpdate = origin.type === 'github'
 
   return {
     variant: 'installed',
@@ -20,24 +20,24 @@ export const presentInstalledDetail = (details, { onInstallElsewhere, onUpdate, 
     typeIcon: 'skill',
     typeLabel: 'Skill instalada',
     title: row.name,
-    author: origin.type === 'github' ? origin.repository : origin.label,
+    author: origin.type === 'github' ? origin.repository : origin.type === 'manual' ? null : origin.label,
     description: row.description,
     badges: [
       { label: scopeLabel, variant: 'accent' },
       ...(row.differentVersions ? [{ label: 'Versiones distintas', variant: 'warning' }] : []),
       ...(!row.headerValid ? [{ label: 'Cabecera no válida', variant: 'danger' }] : [])
     ],
-    primaryAction: { label: 'Instalar en otro agente o ámbito', icon: 'download', onClick: onInstallElsewhere },
-    secondaryActions: [
-      ...(canUpdate ? [{ label: origin.type === 'github' ? 'Buscar actualización' : 'Reinstalar desde Mis skills', icon: 'refresh', onClick: onUpdate }] : []),
-      { label: 'Desinstalar', icon: 'trash', variant: 'danger', onClick: onUninstall }
+    compactActions: true,
+    primaryAction: isInstalledGlobally ? null : { label: 'Instalar', icon: 'download', onClick: onInstallElsewhere },
+    secondaryActions: isInstalledGlobally ? [{ label: 'Desinstalar', icon: 'trash', variant: 'danger', onClick: onUninstall }] : [],
+    menuActions: [
+      ...(canUpdate ? [{ label: 'Buscar actualización', icon: 'refresh', onClick: onUpdate }] : []),
+      ...(isInstalledGlobally ? [] : [{ label: 'Desinstalar', icon: 'trash', variant: 'danger', onClick: onUninstall }])
     ],
     notices: [
       ...row.issues.map((issue) => ({ variant: issue.severity === 'error' ? 'warning' : 'info', text: issue.message })),
       ...(row.differentVersions ? [{ variant: 'warning', text: 'Esta skill tiene contenido distinto según el agente. Reinstálala para dejar la misma versión en todos.' }] : []),
-      ...(row.matchesMySkill && origin.type !== 'mySkill' ? [{ variant: 'info', text: `Tiene el mismo nombre que tu skill «${row.matchesMySkill}» de Mis skills.` }] : []),
-      ...(origin.type === 'manual' ? [{ variant: 'info', text: 'Skima no tiene registro de su origen: se instaló a mano o con otra herramienta.' }] : [])
-    ],
+      ...(row.matchesMySkill && origin.type !== 'mySkill' ? [{ variant: 'info', text: `Tiene el mismo nombre que tu skill «${row.matchesMySkill}» de Mis skills.` }] : [])    ],
     score,
     documents,
     fileTree,
@@ -48,7 +48,7 @@ export const presentInstalledDetail = (details, { onInstallElsewhere, onUpdate, 
     metadata: {
       title: 'Origen',
       entries: [
-        { icon: 'info', label: 'Origen', value: origin.type === 'github' ? 'GitHub' : origin.label },
+        { icon: 'info', label: 'Origen', value: origin.type === 'github' ? 'GitHub' : origin.type === 'manual' ? null : origin.label },
         { icon: 'user', label: 'Repositorio', value: origin.repository ?? null },
         { icon: 'folder', label: 'Carpeta', value: origin.subPath || null },
         { icon: 'tag', label: 'Commit', value: origin.commit ? origin.commit.slice(0, 10) : null, title: origin.commit ?? '' },

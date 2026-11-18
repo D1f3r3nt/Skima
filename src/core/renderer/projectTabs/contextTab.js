@@ -13,7 +13,6 @@ import { agentsMdQuestions } from '../config/agentsMdQuestions.js'
 import { clampStep, isLastStep, mergeAnswers } from '../services/wizardEngine.js'
 import { createLoader } from '../../../components/atoms/loader.js'
 
-const privacyNotice = 'Este archivo puede enviarse a tus agentes de IA cuando lances un prompt desde este proyecto. No escribas contraseñas, claves ni otros secretos.'
 const answerKeys = ['overview', 'stack', 'structure', 'commands', 'conventions', 'testing', 'boundariesAlways', 'boundariesAsk', 'boundariesNever', 'workflow']
 const languageOptions = [{ value: 'original', label: 'Idioma original' }, { value: 'en', label: 'Inglés' }]
 
@@ -75,7 +74,6 @@ export function createContextTab({ apiClient, project }) {
   const createNoticeList = () => {
     const container = document.createElement('div')
     container.className = 'context-tab__notices'
-    container.append(createNoticeBanner({ variant: 'info', text: privacyNotice }))
     if (state.configWarning) {
       container.append(createNoticeBanner({ variant: 'warning', text: state.configWarning }))
     }
@@ -205,7 +203,6 @@ export function createContextTab({ apiClient, project }) {
     const step = agentsMdQuestions[form.step]
     const elements = [
       ...(form.regenerate ? [createNoticeBanner({ variant: 'warning', text: 'Al terminar, el AGENTS.md actual se reemplazará. Antes se guardará una copia de seguridad en .skima/backups/ (nunca en la raíz del proyecto).' })] : []),
-      createNoticeBanner({ variant: 'info', text: privacyNotice }),
       createQuestionStep({
         step,
         index: form.step,
@@ -285,7 +282,6 @@ export function createContextTab({ apiClient, project }) {
 
     show(
       createParagraph('Así quedará el AGENTS.md. Revisa los avisos antes de crearlo.'),
-      createNoticeBanner({ variant: 'info', text: privacyNotice }),
       languageField,
       aiBlock,
       ...renderWarnings(preview.validation),

@@ -55,7 +55,11 @@ export class DetailController {
       }
       if (this.params.source === detailSources.installed) {
         this.details = await this.apiClient.getInstalledDetails({ scope: this.params.scope, projectId: this.params.projectId, key: this.params.id })
+        this.isInstalledGlobally = this.details.scope === 'global'
         this.render()
+        if (!this.isInstalledGlobally) {
+          this.loadInstalledGlobalStatus()
+        }
         return
       }
       throw new Error('Tipo de detalle desconocido.')
@@ -87,6 +91,7 @@ export class DetailController {
     if (this.params.source === detailSources.installed) {
       this.view.render(presentInstalledDetail(this.details, {
         ...handlers,
+        isInstalledGlobally: Boolean(this.isInstalledGlobally),
         onInstallElsewhere: () => this.installInstalledElsewhere(),
         onUpdate: () => this.updateInstalled(),
         onUninstall: () => this.uninstall()
@@ -270,6 +275,26 @@ export class DetailController {
       return { kind: 'mySkill', name: origin.mySkillName, skills: [{ folder: '', name: origin.mySkillName }] }
     }
     return { kind: 'installedCopy', path: row.installations[0].path, skills: [{ folder: '', name: row.folderName }] }
+  }
+
+  async loadInstalledGlobalStatus() {
+    try {
+      const { row } = this.details
+      const origin = row.origin
+      const locations = await this.apiClient.findInstallations({
+        repository: origin.type === 'github' ? origin.repository : null,
+        subPath: origin.type === 'github' ? origin.subPath ?? '' : '',
+        skillNames: [row.folderName],
+        mySkillName: origin.type === 'mySkill' ? origin.mySkillName : null
+      })
+      const installedGlobally = locations.some((location) => location.scope === 'global')
+      if (installedGlobally) {
+        this.isInstalledGlobally = true
+        this.render()
+      }
+    } catch {
+      this.isInstalledGlobally = false
+    }
   }
 
   installInstalledElsewhere() {

@@ -155,7 +155,7 @@ class InstalledScanner {
       return { type: 'github', label: origin.source.repository, repository: origin.source.repository, ref: origin.source.ref, commit: origin.source.commit, subPath: origin.source.subPath, installedAt: origin.installedAt }
     }
     if (origin.source.type === 'mySkill') {
-      return { type: 'mySkill', label: 'Mis skills', mySkillName: origin.source.mySkillName, installedAt: origin.installedAt }
+      return { type: 'mySkill', label: 'Skill propia', mySkillName: origin.source.mySkillName, installedAt: origin.installedAt }
     }
     return { type: 'manual', label: 'Instalada manualmente' }
   }

@@ -185,7 +185,7 @@
 }
 
 .hooks-library__toolbar {
-    justify-content: space-between;
+    justify-content: flex-end;
 }
 
 .hook-row {

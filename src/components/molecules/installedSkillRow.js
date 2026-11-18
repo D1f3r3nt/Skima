@@ -34,7 +34,10 @@ export function createInstalledSkillRow({ skill, onOpen, favorite = null, locati
   const nameElement = document.createElement('span')
   nameElement.className = 'installed-row__name'
   nameElement.textContent = skill.name
-  titleRow.append(nameElement, createBadge({ label: skill.origin.type === 'manual' ? 'Manual' : skill.origin.type === 'mySkill' ? 'Propia' : 'GitHub', variant: originVariants[skill.origin.type] }))
+  titleRow.append(nameElement)
+  if (skill.origin.type !== 'manual') {
+    titleRow.append(createBadge({ label: skill.origin.type === 'mySkill' ? 'Propia' : 'GitHub', variant: originVariants[skill.origin.type] }))
+  }
   if (!skill.headerValid) {
     titleRow.append(createBadge({ label: 'Cabecera no válida', variant: 'danger' }))
   }
