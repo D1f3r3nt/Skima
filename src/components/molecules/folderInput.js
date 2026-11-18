@@ -1,7 +1,7 @@
 import { createTextInput } from '../atoms/textInput.js'
 import { createButton } from '../atoms/button.js'
 
-export function createFolderInput({ id, placeholder, onPick }) {
+export function createFolderInput({ id, placeholder, onPick, browseLabel = 'Seleccionar carpeta', browseIcon = 'folderOpen' }) {
   const wrapperElement = document.createElement('div')
   wrapperElement.className = 'folder-input'
 
@@ -14,9 +14,9 @@ export function createFolderInput({ id, placeholder, onPick }) {
   })
 
   const browseButton = createButton({
-    icon: 'folderOpen',
+    icon: browseIcon,
     variant: 'ghost',
-    ariaLabel: 'Seleccionar carpeta',
+    ariaLabel: browseLabel,
     className: 'folder-input__button'
   })
 

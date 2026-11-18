@@ -5,9 +5,9 @@ import { configureSettingsModal, openSettings } from './services/settingsModalSe
 import { settingsSections } from './config/settingsSections.js'
 import { syncThemeFromPreferences } from './services/themeService.js'
 
-export function bootstrapPage({ activePageId, createPage }) {
+export function bootstrapPage({ activePageId, activeSubPageId = null, createPage }) {
   const apiClient = new SkimaApiClient(window.skimaApi)
-  const shellView = new ShellView({ rootElement: document.getElementById('app'), activePageId })
+  const shellView = new ShellView({ rootElement: document.getElementById('app'), activePageId, activeSubPageId })
   const shellController = new ShellController({ apiClient, view: shellView })
 
   syncThemeFromPreferences(apiClient)

@@ -183,3 +183,21 @@
 .installed-row__favorite--on .icon {
     fill: currentColor;
 }
+
+.hooks-library__toolbar {
+    justify-content: space-between;
+}
+
+.hook-row {
+    align-items: center;
+}
+
+.hook-row__chevron {
+    color: var(--color-text-muted);
+    transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.hook-row:hover .hook-row__chevron {
+    color: var(--color-text-strong);
+    transform: translateX(2px);
+}

@@ -5,16 +5,17 @@ import { showToast } from '../../../components/molecules/toast.js'
 import { navigationGroups } from '../config/navigationGroups.js'
 
 export class ShellView {
-  constructor({ rootElement, activePageId }) {
+  constructor({ rootElement, activePageId, activeSubPageId = null }) {
     this.rootElement = rootElement
     this.activePageId = activePageId
+    this.activeSubPageId = activeSubPageId
     this.contentElement = null
     this.titleBar = null
   }
 
   mount({ onMinimize, onToggleMaximize, onClose, onNavigationAction }) {
     this.titleBar = createTitleBar({ onMinimize, onToggleMaximize, onClose })
-    const sidebar = createSidebar({ navigationGroups, activePageId: this.activePageId, onAction: onNavigationAction })
+    const sidebar = createSidebar({ navigationGroups, activePageId: this.activePageId, activeSubPageId: this.activeSubPageId, onAction: onNavigationAction })
     const appShell = createAppShell({ titleBar: this.titleBar.element, sidebar })
 
     this.contentElement = appShell.contentElement

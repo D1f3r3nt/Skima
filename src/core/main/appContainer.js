@@ -83,6 +83,9 @@ const { PublishIpcController } = require('./controllers/publishIpcController')
 const { EnvironmentIpcController } = require('./controllers/environmentIpcController')
 const { PreferencesService } = require('./preferences/preferencesService')
 const { PreferencesIpcController } = require('./controllers/preferencesIpcController')
+const { HooksStore } = require('./hooks/hooksStore')
+const { ProjectHooksService } = require('./hooks/projectHooksService')
+const { HooksIpcController } = require('./controllers/hooksIpcController')
 
 const { ipcChannels } = require('./ipcChannels')
 
@@ -277,6 +280,9 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     platformPaths
   })
 
+  const hooksStore = new HooksStore({ directory: path.join(userDataDirectory, 'hooks') })
+  const projectHooksService = new ProjectHooksService({ projectModel, hooksStore, platformPaths })
+
   const broadcast = (channel, payload) => {
     BrowserWindow.getAllWindows().forEach((window) => {
       if (!window.isDestroyed()) {
@@ -315,6 +321,7 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     new SkillsSiteIpcController({ ipcMain, skillsShInstaller }).register()
     new PublishIpcController({ ipcMain, skillPublisher, externalLinkService: new ExternalLinkService({ shell }) }).register()
     new MySkillsIpcController({ ipcMain, mySkillsStore, markdownRenderer, dialog, BrowserWindow, scanner, skillCreator }).register()
+    new HooksIpcController({ ipcMain, hooksStore, projectHooksService }).register()
     new InstalledIpcController({ ipcMain, scanner, installedDetailsService, uninstaller, shell, platformPaths, projectModel, installationLocator }).register()
     new DialogIpcController({ ipcMain, folderDialogService: new FolderDialogService({ dialog, BrowserWindow }) }).register()
     new LinkIpcController({ ipcMain, externalLinkService: new ExternalLinkService({ shell }) }).register()
@@ -361,6 +368,8 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     repositoryImporter,
     importedLibraryStore,
     mySkillsStore,
+    hooksStore,
+    projectHooksService,
     scanner,
     uninstaller,
     registerControllers,

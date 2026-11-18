@@ -2,7 +2,7 @@ import { createIcon } from '../atoms/icon.js'
 
 let overflowMenuCount = 0
 
-export function createOverflowMenu({ items, ariaLabel = 'Más acciones', size = 'medium' }) {
+export function createOverflowMenu({ items, ariaLabel = 'Más acciones', size = 'medium', triggerIcon = 'moreVertical', align = 'end' }) {
   overflowMenuCount += 1
   const menuId = `overflowMenu${overflowMenuCount}`
 
@@ -17,10 +17,10 @@ export function createOverflowMenu({ items, ariaLabel = 'Más acciones', size = 
   triggerElement.setAttribute('aria-expanded', 'false')
   triggerElement.setAttribute('aria-controls', menuId)
   triggerElement.title = ariaLabel
-  triggerElement.append(createIcon('moreVertical', { size: 18, strokeWidth: 3 }))
+  triggerElement.append(createIcon(triggerIcon, { size: 18, strokeWidth: triggerIcon === 'moreVertical' ? 3 : 2 }))
 
   const listElement = document.createElement('div')
-  listElement.className = 'overflow-menu__list'
+  listElement.className = `overflow-menu__list overflow-menu__list--${align}`
   listElement.id = menuId
   listElement.setAttribute('role', 'menu')
   listElement.hidden = true

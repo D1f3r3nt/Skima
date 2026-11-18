@@ -644,6 +644,55 @@ h3 {
     transform: scaleY(1);
 }
 
+.nav-item--expanded,
+.nav-item--expanded .nav-item__icon {
+    color: var(--color-text-strong);
+}
+
+.nav-item--expanded .nav-item__icon {
+    color: var(--color-accent-hover);
+}
+
+.sidebar__subgroup {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sidebar__subitems {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-left: 20px;
+    padding-left: 10px;
+    border-left: 1px solid var(--color-border);
+    animation: sidebar-subitems-enter var(--transition-medium);
+}
+
+.nav-item--sub {
+    height: 32px;
+    font-size: 13px;
+}
+
+.nav-item--sub::before {
+    left: -11px;
+    top: 7px;
+    bottom: 7px;
+}
+
+@keyframes sidebar-subitems-enter {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sidebar__subitems {
+        animation: none;
+    }
+}
+
 .page {
     display: flex;
     flex-direction: column;
@@ -866,6 +915,14 @@ h3 {
 
 .artifact-type--command {
     --artifact-color: var(--color-command);
+}
+
+.artifact-type--prompt {
+    --artifact-color: var(--color-subagent);
+}
+
+.artifact-type--agent {
+    --artifact-color: var(--color-tool);
 }
 
 .toast--success .icon {
@@ -2191,6 +2248,14 @@ div.agent-row__summary {
     border-radius: var(--radius-medium);
     box-shadow: var(--shadow-popover);
     animation: overflow-menu-enter 140ms ease-out;
+}
+
+.overflow-menu__list--center {
+    right: auto;
+    left: 50%;
+    translate: -50% 0;
+    max-height: 280px;
+    overflow-y: auto;
 }
 
 .overflow-menu__item {

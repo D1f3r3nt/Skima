@@ -15,7 +15,8 @@ const pageFiles = Object.freeze({
   projects: 'projects.html',
   project: 'project.html',
   mySkills: 'mySkills.html',
-  editor: 'editor.html'
+  editor: 'editor.html',
+  hook: 'hook.html'
 })
 
 export const buildPageUrl = (pageId, params = {}) => {

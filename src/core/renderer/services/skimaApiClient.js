@@ -496,6 +496,30 @@ export class SkimaApiClient {
     return this.bridge.onProfileLoginEvent(callback)
   }
 
+  listHooks() {
+    return this.unwrap(this.bridge.listHooks())
+  }
+
+  getHook(name) {
+    return this.unwrap(this.bridge.getHook(name))
+  }
+
+  createHook(request) {
+    return this.unwrap(this.bridge.createHook(request))
+  }
+
+  getProjectHooks(projectId) {
+    return this.unwrap(this.bridge.getProjectHooks(projectId))
+  }
+
+  addProjectHook(projectId, hookEvent, hookName) {
+    return this.unwrap(this.bridge.addProjectHook(projectId, hookEvent, hookName))
+  }
+
+  removeProjectHook(projectId, hookEvent, hookName) {
+    return this.unwrap(this.bridge.removeProjectHook(projectId, hookEvent, hookName))
+  }
+
   openExternalLink(url) {
     return this.unwrap(this.bridge.openExternalLink(url))
   }

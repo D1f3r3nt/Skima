@@ -156,6 +156,12 @@ contextBridge.exposeInMainWorld('skimaApi', {
     ipcRenderer.on('profile:login-event', listener)
     return () => ipcRenderer.removeListener('profile:login-event', listener)
   },
+  listHooks: () => ipcRenderer.invoke('hooks:list'),
+  getHook: (name) => ipcRenderer.invoke('hooks:get', name),
+  createHook: (request) => ipcRenderer.invoke('hooks:create', request),
+  getProjectHooks: (projectId) => ipcRenderer.invoke('hooks:get-project', projectId),
+  addProjectHook: (projectId, hookEvent, hookName) => ipcRenderer.invoke('hooks:add-to-project', projectId, hookEvent, hookName),
+  removeProjectHook: (projectId, hookEvent, hookName) => ipcRenderer.invoke('hooks:remove-from-project', projectId, hookEvent, hookName),
   openExternalLink: (url) => ipcRenderer.invoke('links:open-external', url),
   minimizeWindow: () => ipcRenderer.invoke('window:minimize'),
   toggleMaximizeWindow: () => ipcRenderer.invoke('window:toggle-maximize'),
