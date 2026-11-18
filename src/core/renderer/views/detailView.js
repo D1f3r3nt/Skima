@@ -12,7 +12,7 @@ export class DetailView {
   }
 
   showLoading({ onBack, backLabel }) {
-    this.pageElement.replaceChildren(createItemDetailSkeleton({ onBack, backLabel, message: 'Cargando información del repositorio…' }))
+    this.pageElement.replaceChildren(createItemDetailSkeleton({ onBack, backLabel, message: 'Cargando información…', description: 'Skima lee el README, los archivos y dónde está instalado.' }))
   }
 
   showFailure({ message, onBack, onRetry, backLabel }) {

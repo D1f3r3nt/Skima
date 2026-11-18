@@ -1,10 +1,11 @@
 import { createButton } from '../../../components/atoms/button.js'
-import { createIcon } from '../../../components/atoms/icon.js'
+import { createLoader } from '../../../components/atoms/loader.js'
+import { createVerifiedBadge } from '../../../components/atoms/verifiedBadge.js'
 import { createNoticeBanner } from '../../../components/molecules/noticeBanner.js'
+import { createOverflowMenu } from '../../../components/molecules/overflowMenu.js'
 import { showToast } from '../../../components/molecules/toast.js'
+import { buildPageUrl, navigateTo } from '../services/navigation.js'
 import { formatRelativeTime } from '../services/formatters.js'
-import { GraphifyIntegrationDialog } from './graphifyIntegrationDialog.js'
-import { openGraphViewer, openGraphReport } from './graphifyViewers.js'
 
 const graphTooltipTitle = '¿Por qué generar un grafo?'
 const graphTooltipText = [
@@ -35,33 +36,30 @@ const createTooltipButton = (button) => {
   return wrapperElement
 }
 
-const createHealthIndicator = (health) => {
-  const indicatorElement = document.createElement('span')
-  indicatorElement.setAttribute('role', 'status')
-  if (!health) {
-    indicatorElement.className = 'graphify-health graphify-health--checking'
-    indicatorElement.textContent = 'Comprobando…'
-    return indicatorElement
-  }
-  const healthy = health.healthy
-  indicatorElement.className = `graphify-health graphify-health--${healthy ? 'ok' : 'failing'}`
-  const labelElement = document.createElement('span')
-  labelElement.textContent = healthy ? 'Funciona' : 'No responde'
-  indicatorElement.append(createIcon(healthy ? 'check' : 'alert', { size: 14 }), labelElement)
-  const details = healthy && health.nodes.length ? `\nNodos principales: ${health.nodes.map((node) => node.label).join(', ')}` : ''
-  indicatorElement.title = `${health.message}${details}`
-  indicatorElement.setAttribute('aria-label', `Graphify ${healthy ? 'funciona' : 'no responde'}. ${health.message}`)
-  return indicatorElement
+const describeGraph = (output) => [
+  output.generatedAt ? `Generado ${formatRelativeTime(output.generatedAt)}` : '',
+  output.nodeCount !== null && output.nodeCount !== undefined ? `${output.nodeCount} nodos` : ''
+].filter(Boolean).join(' · ')
+
+const createHealthBadge = (health, output) => {
+  const healthy = Boolean(health.healthy)
+  const nodes = healthy && health.nodes.length ? `Nodos principales: ${health.nodes.map((node) => node.label).join(', ')}` : ''
+  return createVerifiedBadge({
+    isHealthy: healthy,
+    icon: 'fork',
+    label: healthy ? 'El grafo de Graphify funciona' : 'El grafo de Graphify no responde',
+    description: [health.message, describeGraph(output), nodes].filter(Boolean).join('\n')
+  })
 }
 
-export function createGraphifyActions({ apiClient, project, noticesElement }) {
+export function createGraphifyActions({ apiClient, project, noticesElement, badgeSlot, onOpenFolder, onRemoveProject }) {
   const containerElement = document.createElement('div')
   containerElement.className = 'project-page__header-actions graphify-actions'
   let isDisposed = false
   let state = null
   let health = null
   let timerId = null
-  let runningStatusElement = null
+  let runningLoader = null
   let lastActivity = ''
   let failureBanner = null
 
@@ -77,20 +75,38 @@ export function createGraphifyActions({ apiClient, project, noticesElement }) {
     return response.value
   }
 
-  const checkHealth = async () => {
-    if (!state?.output?.exists) {
-      health = null
+  const openOutput = (kind) => navigateTo(buildPageUrl('graphViewer', { projectId: project.id, kind }))
+
+  const createMenu = (output) => createOverflowMenu({
+    ariaLabel: 'Más acciones del proyecto',
+    items: [
+      ...(output?.exists && output.hasHtml ? [{ label: 'Abrir grafo', icon: 'fork', onClick: () => openOutput('graph') }] : []),
+      ...(output?.exists && output.hasReport ? [{ label: 'Abrir informe', icon: 'file', onClick: () => openOutput('report') }] : []),
+      { label: 'Abrir carpeta', icon: 'folderOpen', onClick: onOpenFolder },
+      { label: 'Quitar proyecto', icon: 'trash', variant: 'danger', onClick: onRemoveProject }
+    ]
+  }).element
+
+  const renderBadge = () => {
+    if (!badgeSlot) {
       return
     }
+    badgeSlot.replaceChildren(...(state?.output?.exists && health ? [createHealthBadge(health, state.output)] : []))
+  }
+
+  const checkHealth = async () => {
     health = null
-    render()
+    renderBadge()
+    if (!state?.output?.exists) {
+      return
+    }
     try {
       health = await apiClient.checkGraphHealth(project.id)
     } catch (error) {
       health = { healthy: false, nodes: [], message: error.message }
     }
     if (!isDisposed) {
-      render()
+      renderBadge()
     }
   }
 
@@ -99,10 +115,10 @@ export function createGraphifyActions({ apiClient, project, noticesElement }) {
       state = unwrap(await apiClient.getGraphifyState(project.id))
     } catch (error) {
       state = null
-      const button = createButton({ label: 'Generar grafo', icon: 'fork', variant: 'secondary', size: 'small' })
+      const button = createButton({ label: 'Generar grafo', icon: 'fork', size: 'small' })
       button.disabled = true
       button.title = error.message
-      containerElement.replaceChildren(button)
+      containerElement.replaceChildren(button, createMenu(null))
       return
     }
     if (!isDisposed) {
@@ -133,73 +149,40 @@ export function createGraphifyActions({ apiClient, project, noticesElement }) {
     await checkHealth()
   }
 
-  const openOutput = async (kind) => {
-    try {
-      const output = await apiClient.readGraphOutput(project.id, kind)
-      if (kind === 'report') {
-        openGraphReport({ apiClient, projectName: project.name, output })
-      } else {
-        openGraphViewer({ projectName: project.name, output })
-      }
-    } catch (error) {
-      showToast({ message: error.message, variant: 'error' })
-    }
-  }
-
   const renderRunning = (running) => {
-    runningStatusElement = document.createElement('span')
-    runningStatusElement.className = 'graphify-actions__status'
-    runningStatusElement.setAttribute('role', 'status')
+    runningLoader = createLoader({ label: 'Generando grafo…', inline: true, className: 'graphify-actions__status' })
     const startedAt = Date.parse(running.startedAt)
     lastActivity = running.lastLines?.at(-1) ?? lastActivity
     const update = () => {
       const seconds = Math.max(0, Math.round((Date.now() - startedAt) / 1000))
       const percent = running.percent !== null && running.percent !== undefined ? `${running.percent}% · ` : ''
-      runningStatusElement.textContent = `Generando grafo… ${percent}${seconds}s`
-      runningStatusElement.title = lastActivity
+      runningLoader.setLabel(`Generando grafo… ${percent}${seconds}s`, '')
+      runningLoader.title = lastActivity
     }
     update()
     timerId = setInterval(update, 1000)
-    return [runningStatusElement, createButton({ label: 'Cancelar', variant: 'ghost', size: 'small', onClick: () => apiClient.cancelGraph(project.id) })]
+    return [runningLoader, createButton({ label: 'Cancelar', variant: 'ghost', size: 'small', onClick: () => apiClient.cancelGraph(project.id) })]
   }
 
   const render = () => {
     clearTimer()
-    runningStatusElement = null
+    runningLoader = null
     if (!state) {
       return
     }
     const { runtime, output, running, installing } = state
-    const elements = []
     if (running) {
-      elements.push(...renderRunning(running))
-      containerElement.replaceChildren(...elements)
+      containerElement.replaceChildren(...renderRunning(running), createMenu(output))
       return
     }
+    const elements = []
     if (installing && !runtime.available) {
-      const preparingElement = document.createElement('span')
-      preparingElement.className = 'graphify-actions__status'
-      preparingElement.textContent = 'Preparando Graphify…'
-      elements.push(preparingElement)
+      elements.push(createLoader({ label: 'Preparando Graphify…', inline: true, className: 'graphify-actions__status' }))
     }
-    if (output.exists) {
-      const dateElement = document.createElement('span')
-      dateElement.className = 'graphify-actions__status'
-      dateElement.textContent = `Grafo ${formatRelativeTime(output.generatedAt)}${output.nodeCount !== null && output.nodeCount !== undefined ? ` · ${output.nodeCount} nodos` : ''}`
-      elements.push(createHealthIndicator(health), dateElement)
-      elements.push(createTooltipButton(createButton({ label: 'Regenerar', icon: 'refresh', variant: 'secondary', size: 'small', onClick: () => run() })))
-      if (output.hasHtml) {
-        elements.push(createButton({ label: 'Abrir grafo', icon: 'fork', variant: 'ghost', size: 'small', onClick: () => openOutput('graph') }))
-      }
-      if (output.hasReport) {
-        elements.push(createButton({ label: 'Abrir informe', icon: 'file', variant: 'ghost', size: 'small', onClick: () => openOutput('report') }))
-      }
-    } else {
-      elements.push(createTooltipButton(createButton({ label: 'Generar grafo', icon: 'fork', variant: 'primary', size: 'small', onClick: () => run() })))
-    }
-    if (runtime.available && output.exists) {
-      elements.push(createButton({ label: 'Integrar con agentes', variant: 'ghost', size: 'small', onClick: () => new GraphifyIntegrationDialog({ apiClient, project, onFinished: () => refresh() }).open() }))
-    }
+    elements.push(output.exists
+      ? createTooltipButton(createButton({ label: 'Regenerar', icon: 'refresh', variant: 'secondary', size: 'small', onClick: () => run() }))
+      : createTooltipButton(createButton({ label: 'Generar grafo', icon: 'fork', size: 'small', onClick: () => run() })))
+    elements.push(createMenu(output))
     containerElement.replaceChildren(...elements)
   }
 
@@ -214,8 +197,8 @@ export function createGraphifyActions({ apiClient, project, noticesElement }) {
       if (state?.running && event.percent !== undefined) {
         state.running.percent = event.percent
       }
-      if (runningStatusElement) {
-        runningStatusElement.title = lastActivity
+      if (runningLoader) {
+        runningLoader.title = lastActivity
       }
       return
     }

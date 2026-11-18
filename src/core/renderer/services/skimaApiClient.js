@@ -115,6 +115,18 @@ export class SkimaApiClient {
     return this.unwrap(this.bridge.listAgentModels(agentId))
   }
 
+  getPreferences() {
+    return this.unwrap(this.bridge.getPreferences())
+  }
+
+  setTheme(themeId) {
+    return this.unwrap(this.bridge.setTheme(themeId))
+  }
+
+  setFavoriteSkill(skillKey, isFavorite) {
+    return this.unwrap(this.bridge.setFavoriteSkill(skillKey, isFavorite))
+  }
+
   listLibraryArtifacts() {
     return this.unwrap(this.bridge.listLibraryArtifacts())
   }

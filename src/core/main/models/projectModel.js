@@ -102,8 +102,7 @@ class ProjectModel {
       settings.projects.push(createdProject)
     })
 
-    const dataFolder = this.projectDataStore ? await this.projectDataStore.ensure(createdProject.path) : null
-    return { ...(await this.withStatus(createdProject)), dataFolder }
+    return this.withStatus(createdProject)
   }
 
   async remove(projectId) {

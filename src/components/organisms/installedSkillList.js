@@ -4,8 +4,9 @@ import { createButton } from '../atoms/button.js'
 import { createInstalledSkillRow } from '../molecules/installedSkillRow.js'
 import { createNoticeBanner } from '../molecules/noticeBanner.js'
 import { createEmptyState } from './emptyState.js'
+import { createLoader } from '../atoms/loader.js'
 
-export function createInstalledSkillList({ onFilterChange, onRefresh, onOpen }) {
+export function createInstalledSkillList({ onFilterChange, onRefresh, onOpen, describeRow = () => ({}) }) {
   const sectionElement = document.createElement('section')
   sectionElement.className = 'installed-list'
 
@@ -33,7 +34,7 @@ export function createInstalledSkillList({ onFilterChange, onRefresh, onOpen }) 
 
   sectionElement.append(toolbarElement, statusElement, contentElement)
 
-  const render = ({ isLoading, error, skills, totalCount, agentOptions, agentId, warnings = [], emptyState, onRetry }) => {
+  const render = ({ isLoading, error, skills, totalCount, agentOptions, agentId, warnings = [], emptyState, onRetry, statusSuffix = 'skills instaladas' }) => {
     refreshButton.disabled = isLoading
     sectionElement.classList.toggle('installed-list--loading', isLoading)
     agentSelect.setOptions([{ value: '', label: 'Todos los agentes' }, ...agentOptions], agentId)
@@ -44,13 +45,13 @@ export function createInstalledSkillList({ onFilterChange, onRefresh, onOpen }) 
       return
     }
     if (isLoading && totalCount === 0) {
-      statusElement.textContent = 'Escaneando las carpetas de skills…'
-      contentElement.replaceChildren()
+      statusElement.replaceChildren()
+      contentElement.replaceChildren(createLoader({ label: 'Escaneando las carpetas de skills…', description: 'Skima revisa las carpetas de los agentes que tienes activados.' }))
       return
     }
-    statusElement.textContent = isLoading
-      ? 'Actualizando…'
-      : `${skills.length === totalCount ? totalCount : `${skills.length} de ${totalCount}`} skills instaladas`
+    statusElement.replaceChildren(isLoading
+      ? createLoader({ label: 'Actualizando…', inline: true })
+      : `${skills.length === totalCount ? totalCount : `${skills.length} de ${totalCount}`} ${statusSuffix}`)
 
     if (totalCount === 0) {
       contentElement.replaceChildren(createEmptyState(emptyState))
@@ -64,7 +65,7 @@ export function createInstalledSkillList({ onFilterChange, onRefresh, onOpen }) 
     }
     const listElement = document.createElement('ul')
     listElement.className = 'installed-list__items'
-    listElement.append(...skills.map((skill) => createInstalledSkillRow({ skill, onOpen })))
+    listElement.append(...skills.map((skill) => createInstalledSkillRow({ skill, onOpen, ...describeRow(skill) })))
     contentElement.replaceChildren(...notices, listElement)
   }
 

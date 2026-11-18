@@ -4,6 +4,7 @@ import { createBadge } from '../../../components/atoms/badge.js'
 import { createNoticeBanner } from '../../../components/molecules/noticeBanner.js'
 import { createMarkdownBody } from '../../../components/organisms/markdownViewer.js'
 import { showToast } from '../../../components/molecules/toast.js'
+import { createLoader } from '../../../components/atoms/loader.js'
 
 const createParagraph = (text, className = 'install-flow__text') => {
   const paragraphElement = document.createElement('p')
@@ -134,18 +135,14 @@ export class CliInstallFlow {
     outputElement.className = 'cli-install__output'
     outputElement.setAttribute('role', 'log')
     outputElement.setAttribute('aria-live', 'polite')
-    const statusElement = createParagraph('Instalando…')
-    statusElement.setAttribute('role', 'status')
-    const progressElement = document.createElement('progress')
-    progressElement.className = 'import-flow__progress'
-    progressElement.setAttribute('aria-label', 'Instalando')
+    const statusElement = createLoader({ label: 'Instalando…', description: 'Skima ejecuta el instalador oficial; la salida aparece debajo.', inline: true })
     this.unsubscribe?.()
     this.unsubscribe = this.apiClient.onCliInstallEvent((event) => {
       if (event.type === 'output') {
         outputElement.textContent += `${event.line}\n`
         outputElement.scrollTop = outputElement.scrollHeight
       } else if (event.type === 'step') {
-        statusElement.textContent = `Ejecutando: ${event.description}`
+        statusElement.setLabel(`Ejecutando: ${event.description}`)
       } else if (event.type === 'info') {
         outputElement.textContent += `${event.message}\n`
       }
@@ -153,7 +150,7 @@ export class CliInstallFlow {
     this.isRunning = true
     this.modal.setStep({
       label: 'Instalando',
-      body: [statusElement, progressElement, outputElement],
+      body: [statusElement, outputElement],
       actions: [createButton({ label: 'Cancelar la instalación', variant: 'secondary', onClick: () => this.apiClient.cancelCliInstall().catch(() => {}) })]
     })
     let outcome
@@ -185,7 +182,7 @@ export class CliInstallFlow {
   }
 
   async showManual(message = '') {
-    this.modal.setStep({ label: 'Instrucciones manuales', body: [createParagraph('Cargando las instrucciones…')], actions: [] })
+    this.modal.setStep({ label: 'Instrucciones manuales', body: [createLoader({ label: 'Cargando las instrucciones…', description: 'Skima lee la guía de instalación oficial guardada en la app.' })], actions: [] })
     try {
       const manual = unwrap(await this.apiClient.getCliManual(this.toolId))
       const body = [

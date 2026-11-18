@@ -8,6 +8,7 @@ import { createNoticeBanner } from '../../../components/molecules/noticeBanner.j
 import { showToast } from '../../../components/molecules/toast.js'
 import { openSettings } from '../services/settingsModalService.js'
 import { settingsSectionIds } from '../config/settingsSectionIds.js'
+import { createLoader } from '../../../components/atoms/loader.js'
 
 const resultVariants = { installed: 'success', skipped: 'neutral', error: 'danger' }
 const resultLabels = { installed: 'Correcto', skipped: 'Omitido', error: 'Error' }
@@ -226,7 +227,7 @@ export class McpInstallFlow {
 
   async showPlanStep() {
     this.modal.setBusy(true)
-    this.modal.setStep({ label: 'Paso 2 de 3', body: [createNoticeBanner({ variant: 'info', text: 'Leyendo la configuración de tus agentes…' })], actions: [] })
+    this.modal.setStep({ label: 'Paso 2 de 3', body: [createLoader({ label: 'Leyendo la configuración de tus agentes…', description: 'Skima comprueba qué servidores MCP tiene ya cada agente.' })], actions: [] })
     let response
     try {
       const { source, confidence, ...definition } = this.definition

@@ -6,6 +6,7 @@ import { createPathSettingField } from '../../../components/molecules/pathSettin
 import { createNoticeBanner } from '../../../components/molecules/noticeBanner.js'
 import { describeAgentRow } from '../services/agentRowPresenter.js'
 import { CliInstallFlow } from '../controllers/cliInstallFlow.js'
+import { createLoader } from '../../../components/atoms/loader.js'
 
 const getSessionSet = (sessionState, key) => {
   if (!sessionState) {
@@ -122,8 +123,6 @@ export function createAgentsSettingsSection({ apiClient, reportSaving, reportSav
       blockElement.append(createParagraph('agent-row__help', 'Skima no instala servidores MCP en este agente.'))
     }
 
-    blockElement.append(createParagraph('agent-row__help', `Dentro de un proyecto: skills en ${agent.paths.projectSkillsConvention}${agent.paths.projectMcpConvention ? ` · MCP en ${agent.paths.projectMcpConvention}` : ''}`))
-
     if (agent.sharedWith.length > 0) {
       blockElement.append(createNoticeBanner({
         variant: 'info',
@@ -197,7 +196,7 @@ export function createAgentsSettingsSection({ apiClient, reportSaving, reportSav
       return blockElement
     }
 
-    blockElement.append(createParagraph('agent-row__status', `${presentation.message}${agent.cli.installed && agent.cli.version ? ` · versión ${agent.cli.version}` : ''}`))
+    blockElement.append(createParagraph('agent-row__status', `${presentation.cliStatus}${agent.cli.installed && agent.cli.version ? ` · versión ${agent.cli.version}` : ''}`))
 
     if (agent.cli.installed && !agent.cli.connected && agent.cli.connectionDetail) {
       blockElement.append(createParagraph('agent-row__help', agent.cli.connectionDetail))
@@ -224,12 +223,9 @@ export function createAgentsSettingsSection({ apiClient, reportSaving, reportSav
     const contentElement = document.createElement('div')
     contentElement.className = 'agent-row__content'
     if (agent.detection.detected && !agent.enabled) {
-      contentElement.append(createParagraph('agent-row__suggestion', `Parece instalado (${agent.detection.reasons.map((reason) => reason.path).join(', ')}). Actívalo si lo usas.`))
+      contentElement.append(createParagraph('agent-row__suggestion', `Detectado en ${agent.detection.reasons.map((reason) => reason.path).join(', ')}. Actívalo si lo usas.`))
     }
     if (agent.enabled) {
-      if (agent.notes) {
-        contentElement.append(createParagraph('agent-row__help', agent.notes))
-      }
       contentElement.append(createPathsBlock(agent), createCliBlock(agent, presentation))
     }
     return contentElement
@@ -333,10 +329,7 @@ export function createAgentsSettingsSection({ apiClient, reportSaving, reportSav
   }
 
   refreshButton.addEventListener('click', () => load({ refresh: true }))
-  const loadingElement = document.createElement('p')
-  loadingElement.className = 'settings-section__loading'
-  loadingElement.textContent = 'Detectando agentes instalados…'
-  listElement.append(loadingElement)
+  listElement.append(createLoader({ label: 'Detectando agentes instalados…', description: 'Skima busca en este ordenador las carpetas y los programas de cada agente.' }))
   load()
 
   return {

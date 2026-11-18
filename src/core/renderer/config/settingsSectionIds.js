@@ -2,5 +2,7 @@ export const settingsSectionIds = Object.freeze({
   profile: 'profile',
   paths: 'paths',
   aiProvider: 'ai-provider',
-  graphify: 'graphify'
+  promptOverrides: 'prompt-overrides',
+  graphify: 'graphify',
+  themes: 'themes'
 })

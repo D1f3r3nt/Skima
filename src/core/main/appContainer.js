@@ -81,6 +81,8 @@ const { AgentsMdIpcController } = require('./controllers/agentsMdIpcController')
 const { PublishedSkillsStore } = require('./publishing/publishedSkillsStore')
 const { PublishIpcController } = require('./controllers/publishIpcController')
 const { EnvironmentIpcController } = require('./controllers/environmentIpcController')
+const { PreferencesService } = require('./preferences/preferencesService')
+const { PreferencesIpcController } = require('./controllers/preferencesIpcController')
 
 const { ipcChannels } = require('./ipcChannels')
 
@@ -300,6 +302,7 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     new CatalogIpcController({ ipcMain, catalogService, repositoryDetailsService, importedDetailsService, skimaRepositorySource, broadcast }).register()
     new ImportIpcController({ ipcMain, importer: repositoryImporter, broadcast }).register()
     new SettingsIpcController({ ipcMain, agentSettingsService, promptLaunchSettingsService, agentBridge }).register()
+    new PreferencesIpcController({ ipcMain, preferencesService: new PreferencesService({ settingsStore }) }).register()
     new AiIpcController({ ipcMain, askAi, agentBridge }).register()
     new InstallerIpcController({ ipcMain, skillInstaller, settingsStore, projectModel, registry: providerRegistry }).register()
     new McpIpcController({ ipcMain, mcpInstaller }).register()

@@ -1,7 +1,7 @@
 import { presentCatalogDetail } from '../presenters/catalogDetailPresenter.js'
 import { presentInstalledDetail, presentInstallations } from '../presenters/installedDetailPresenter.js'
 import { presentMySkillDetail } from '../presenters/mySkillDetailPresenter.js'
-import { buildDetailUrl, buildPageUrl, detailSources, goBack, navigateTo } from '../services/navigation.js'
+import { buildPageUrl, detailSources, goBack, navigateTo } from '../services/navigation.js'
 import { confirmDialog } from '../../../components/organisms/confirmDialog.js'
 import { SkillInstallFlow } from './skillInstallFlow.js'
 import { McpInstallFlow } from './mcpInstallFlow.js'
@@ -20,11 +20,11 @@ export class DetailController {
   }
 
   get backLabel() {
-    return { global: 'Volver a Global', project: 'Volver al proyecto', mySkills: 'Volver a Mis skills' }[this.params.from] ?? 'Volver al catálogo'
+    return { global: 'Volver a Global', myPc: 'Volver a Mi PC', project: 'Volver al proyecto', mySkills: 'Volver a Mis skills' }[this.params.from] ?? 'Volver al catálogo'
   }
 
   goBack() {
-    goBack(buildPageUrl(this.params.from ?? 'library', this.params.from === 'project' && this.params.projectId ? { id: this.params.projectId } : {}))
+    goBack(buildPageUrl(this.params.from ?? 'global', this.params.from === 'project' && this.params.projectId ? { id: this.params.projectId } : {}))
   }
 
   async init() {
@@ -79,8 +79,6 @@ export class DetailController {
           onInstall: () => this.installMySkill(),
           onReinstall: () => this.installMySkill(),
           onEdit: () => navigateTo(buildPageUrl('editor', { edit: this.details.name })),
-          onDuplicate: () => this.duplicateMySkill(),
-          onExport: (format) => this.exportMySkill(format),
           onRemove: () => this.removeMySkill()
         }
       }))
@@ -330,26 +328,6 @@ export class DetailController {
 
   installMySkill() {
     this.skillInstallFlow.start({ source: { kind: 'mySkill', name: this.details.name, skills: [{ folder: '', name: this.details.name }] }, title: this.details.name })
-  }
-
-  async duplicateMySkill() {
-    const response = await this.apiClient.duplicateMySkill(this.details.name).catch((error) => ({ ok: false, error: { message: error.message } }))
-    if (!response.ok) {
-      this.view.showError(response.error.message)
-      return
-    }
-    navigateTo(buildDetailUrl({ source: detailSources.mySkill, id: response.value.name, from: 'mySkills' }))
-  }
-
-  async exportMySkill(format) {
-    const response = await this.apiClient.exportMySkill(this.details.name, format).catch((error) => ({ ok: false, error: { message: error.message } }))
-    if (!response.ok) {
-      this.view.showError(response.error.message)
-      return
-    }
-    if (response.value) {
-      this.view.showInfo(`Exportada en ${response.value.displayPath}`)
-    }
   }
 
   async removeMySkill() {

@@ -1,0 +1,115 @@
+.app-shell__content--embedded {
+    display: flex;
+    overflow: hidden;
+}
+
+.skills-site {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+}
+
+.skills-site__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    padding: 6px 12px;
+}
+
+.skills-site__toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.skills-site__frame {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.skills-site__info {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    z-index: 2;
+}
+
+.skills-site__info-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    color: var(--color-accent);
+    box-shadow: var(--shadow-popover);
+    cursor: help;
+    transition: transform var(--transition-fast);
+}
+
+.skills-site__info-button:hover {
+    transform: scale(1.06);
+}
+
+.skills-site__tooltip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 0;
+    width: max-content;
+    max-width: 320px;
+    margin: 0;
+    padding: 8px 12px;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-popover);
+    color: var(--color-text);
+    font-size: 12.5px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(4px);
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.skills-site__info:hover .skills-site__tooltip,
+.skills-site__info:focus-within .skills-site__tooltip {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.skills-site__webview {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    background: var(--color-background);
+}
+
+.skills-install__output {
+    max-height: 280px;
+}
+
+.skills-install__skill-name {
+    color: var(--color-accent);
+}
+
+.skills-install__question {
+    margin: 4px 0 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-strong);
+}
+
+.skills-install__agents {
+    overflow: hidden;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-large);
+}

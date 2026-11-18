@@ -90,9 +90,15 @@ class SkillsShInstaller {
     if (!scope) {
       throw createCodedError('INVALID_SCOPE', 'Elige si quieres instalar de forma global o local.')
     }
-    const agents = await this.listEnabledAgents()
-    if (agents.length === 0) {
+    const enabledAgents = await this.listEnabledAgents()
+    if (enabledAgents.length === 0) {
       throw createCodedError('NO_AGENTS', 'No hay ningún agente activado. Indica en Configuración qué agentes usas.')
+    }
+    const agents = Array.isArray(request.agentIds)
+      ? enabledAgents.filter((agent) => request.agentIds.includes(agent.id))
+      : enabledAgents
+    if (agents.length === 0) {
+      throw createCodedError('NO_AGENTS_SELECTED', 'Elige al menos un agente para instalar la skill.')
     }
     const { cwd, locationLabel } = await this.resolveWorkingDirectory(scope, request.projectId)
     const npx = await this.executableLocator.find('npx').catch(() => ({ path: null }))

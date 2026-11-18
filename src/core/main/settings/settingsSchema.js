@@ -7,6 +7,9 @@ const quickModelModes = Object.freeze(['auto', 'manual'])
 const installScopes = Object.freeze(['global', 'project'])
 const originSourceTypes = Object.freeze(['github', 'mySkill', 'unknown'])
 const installKinds = Object.freeze(['skill', 'mcp'])
+const themeIds = Object.freeze(['cream', 'navy', 'silver', 'glacier-blue', 'deep-teal'])
+const defaultThemeId = 'cream'
+const maximumFavoriteSkills = 1000
 
 const limits = Object.freeze({
   projectNameMaxLength: 80,
@@ -98,11 +101,25 @@ const sanitizeGraphify = (value) => {
   }
 }
 
+const createDefaultPreferences = () => ({ theme: defaultThemeId, favoriteSkills: [] })
+
+const sanitizePreferences = (value) => {
+  const source = isPlainObject(value) ? value : {}
+  const favoriteSkills = Array.isArray(source.favoriteSkills)
+    ? [...new Set(source.favoriteSkills.map((key) => asTrimmedString(key, { maxLength: 255 })).filter(Boolean))].slice(0, maximumFavoriteSkills)
+    : []
+  return {
+    theme: asEnum(source.theme, themeIds, defaultThemeId),
+    favoriteSkills
+  }
+}
+
 const createDefaultSettings = () => ({
   schemaVersion: currentSchemaVersion,
   agents: {},
   promptLaunch: createDefaultPromptLaunch(),
   graphify: createDefaultGraphify(),
+  preferences: createDefaultPreferences(),
   projects: [],
   installedOrigins: []
 })
@@ -266,6 +283,7 @@ const sanitizeSettings = (value, { now = () => new Date() } = {}) => {
     agents: sanitizeAgents(source.agents),
     promptLaunch: sanitizePromptLaunch(source.promptLaunch),
     graphify: sanitizeGraphify(source.graphify),
+    preferences: sanitizePreferences(source.preferences),
     projects: sanitizeProjects(source.projects, fallbackDate),
     installedOrigins: Array.isArray(source.installedOrigins)
       ? source.installedOrigins.map(sanitizeInstalledOrigin).filter(Boolean)
@@ -280,6 +298,8 @@ module.exports = {
   workingDirectoryModes,
   quickModelModes,
   installScopes,
+  themeIds,
+  defaultThemeId,
   limits,
   agentIdPattern,
   isPlainObject,
@@ -290,6 +310,8 @@ module.exports = {
   sanitizePromptLaunch,
   sanitizeProject,
   sanitizeGraphify,
+  sanitizePreferences,
+  createDefaultPreferences,
   createDefaultGraphify,
   graphifyCloudDefaults
 }

@@ -10,7 +10,7 @@ const sourceDirectory = path.join(__dirname, '..', '..', '..')
 const pagesDirectory = path.join(sourceDirectory, 'pages')
 const appIconPath = path.join(sourceDirectory, 'assets', 'icons', 'skima.png')
 const skillsSitePreloadPath = path.join(sourceDirectory, 'core', 'skillsSitePreload.js')
-const startPage = 'library.html'
+const startPage = 'global.html'
 
 const isInternalPage = (url) => url.startsWith(pathToFileURL(pagesDirectory).href)
 

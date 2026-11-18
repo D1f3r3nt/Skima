@@ -4,10 +4,10 @@ import { DetailController } from '../controllers/detailController.js'
 import { readPageParams } from '../services/navigation.js'
 
 const params = readPageParams()
-const activePageByOrigin = { global: 'global', project: 'projects', projects: 'projects', mySkills: 'mySkills' }
+const activePageByOrigin = { global: 'global', myPc: 'myPc', project: 'projects', projects: 'projects', mySkills: 'mySkills' }
 
 bootstrapPage({
-  activePageId: activePageByOrigin[params.from] ?? 'library',
+  activePageId: activePageByOrigin[params.from] ?? 'marketplace',
   createPage: ({ apiClient, contentElement }) => {
     new DetailController({ apiClient, view: new DetailView(contentElement), params }).init()
   }

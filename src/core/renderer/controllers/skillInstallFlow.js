@@ -7,6 +7,7 @@ import { createNoticeBanner } from '../../../components/molecules/noticeBanner.j
 import { showToast } from '../../../components/molecules/toast.js'
 import { openSettings } from '../services/settingsModalService.js'
 import { settingsSectionIds } from '../config/settingsSectionIds.js'
+import { createLoader } from '../../../components/atoms/loader.js'
 
 const statusLabels = {
   new: { label: 'Nueva', variant: 'success' },
@@ -189,7 +190,7 @@ export class SkillInstallFlow {
     this.modal.setBusy(true)
     this.modal.setStep({
       label: 'Paso 2 de 3',
-      body: [createNoticeBanner({ variant: 'info', text: this.source.kind === 'github' ? 'Descargando el repositorio y preparando la instalación…' : 'Preparando la instalación…' })],
+      body: [createLoader({ label: 'Preparando la instalación…', description: this.source.kind === 'github' ? 'Skima descarga el repositorio para revisar sus archivos antes de instalar.' : 'Skima revisa los archivos antes de instalar.' })],
       actions: []
     })
 
@@ -287,7 +288,7 @@ export class SkillInstallFlow {
   async execute(decisions) {
     const planId = this.planId
     this.modal.setBusy(true)
-    this.modal.setStep({ label: 'Paso 3 de 3', body: [createNoticeBanner({ variant: 'info', text: 'Instalando…' })], actions: [] })
+    this.modal.setStep({ label: 'Paso 3 de 3', body: [createLoader({ label: 'Instalando…', description: 'Skima copia la skill en las carpetas de los agentes elegidos.' })], actions: [] })
 
     let outcome
     try {

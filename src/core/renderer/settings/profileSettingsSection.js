@@ -4,11 +4,10 @@ import { createNoticeBanner } from '../../../components/molecules/noticeBanner.j
 import { confirmDialog } from '../../../components/organisms/confirmDialog.js'
 import { createModal } from '../../../components/organisms/modal.js'
 import { CliInstallFlow } from '../controllers/cliInstallFlow.js'
+import { createLoader } from '../../../components/atoms/loader.js'
 
 const tokenHelpUrl = 'https://github.com/settings/personal-access-tokens/new'
 const deviceUrl = 'https://github.com/login/device'
-
-const methodLabels = { gh: 'GitHub CLI', 'credential-manager': 'Credencial guardada en el gestor de Git' }
 
 const createParagraph = (text, className = 'settings-group__description') => {
   const paragraphElement = document.createElement('p')
@@ -59,7 +58,7 @@ export function createProfileSettingsSection({ apiClient, reportSaving, reportSa
   const openLink = (url) => apiClient.openExternalLink(url).catch((error) => reportError(error.message))
 
   const refresh = async ({ refresh: forceRefresh = true } = {}) => {
-    contentElement.replaceChildren(createParagraph('Comprobando la sesión…', 'settings-section__loading'))
+    contentElement.replaceChildren(createLoader({ label: 'Comprobando la sesión…', description: 'Skima consulta a Git y a GitHub CLI qué cuenta hay iniciada en este ordenador.' }))
     try {
       render(await apiClient.getProfileStatus({ refresh: forceRefresh }))
     } catch (error) {
@@ -95,17 +94,6 @@ export function createProfileSettingsSection({ apiClient, reportSaving, reportSa
     addDetail('Usuario', session.user)
     addDetail('Nombre', session.name)
     addDetail('Correo', session.email)
-    addDetail('Iniciada con', methodLabels[session.method])
-    addDetail('Permisos', session.scopes?.length ? session.scopes.join(', ') : (session.method === 'gh' ? 'No se han podido leer' : 'Los define el token'))
-    addDetail('Comprobada', session.verifiedOnline ? 'En línea, ahora mismo' : 'Solo en local (sin verificar en línea)')
-
-    const usesElement = document.createElement('ul')
-    usesElement.className = 'profile-card__uses'
-    const clone = document.createElement('li')
-    clone.textContent = session.canClone ? 'Sirve para: clonar repositorios privados.' : 'No sirve ahora para clonar repositorios privados.'
-    const publish = document.createElement('li')
-    publish.textContent = session.canPublish ? 'Sirve para: publicar skills.' : `No sirve para publicar skills. ${session.publishHint ?? ''}`.trim()
-    usesElement.append(clone, publish)
 
     const actionsElement = document.createElement('div')
     actionsElement.className = 'profile-card__actions'
@@ -114,7 +102,7 @@ export function createProfileSettingsSection({ apiClient, reportSaving, reportSa
       createButton({ label: 'Cerrar sesión', variant: 'danger', size: 'small', onClick: () => logout(session) })
     )
 
-    cardElement.append(headerRow, detailsElement, usesElement)
+    cardElement.append(headerRow, detailsElement)
     if (session.invalid) {
       cardElement.append(createNoticeBanner({ variant: 'warning', text: 'La sesión existe pero ya no es válida. Ciérrala e inicia sesión de nuevo.' }))
     }

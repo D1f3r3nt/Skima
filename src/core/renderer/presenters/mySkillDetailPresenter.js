@@ -8,17 +8,16 @@ export const presentMySkillDetail = (skill, { installations, handlers }) => {
     variant: 'mySkill',
     typeId: 'skill',
     typeIcon: 'skill',
-    typeLabel: 'Skill propia',
+    typeLabel: null,
     title: skill.name,
-    author: 'Mis skills',
+    author: null,
     description: skill.description ?? '',
     badges: [{ label: 'Creada por ti', variant: 'accent' }],
+    compactActions: true,
     primaryAction: { label: 'Instalar', icon: 'download', onClick: handlers.onInstall },
-    secondaryActions: [
+    secondaryActions: [],
+    menuActions: [
       { label: 'Editar', icon: 'editor', onClick: handlers.onEdit },
-      { label: 'Duplicar', icon: 'copy', onClick: handlers.onDuplicate },
-      { label: 'Exportar .zip', icon: 'download', onClick: () => handlers.onExport('zip') },
-      { label: 'Exportar carpeta', icon: 'folderOpen', onClick: () => handlers.onExport('folder') },
       { label: 'Eliminar', icon: 'trash', variant: 'danger', onClick: handlers.onRemove }
     ],
     notices: outdated.length > 0

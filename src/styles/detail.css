@@ -10,12 +10,6 @@
     color: var(--color-text-muted);
 }
 
-.item-detail__loading {
-    padding: 48px 0;
-    color: var(--color-text-muted);
-    text-align: center;
-}
-
 .item-detail__header {
     display: flex;
     align-items: flex-start;
@@ -87,6 +81,14 @@
 
 .item-detail__primary {
     min-width: 140px;
+}
+
+.item-detail__actions--compact {
+    justify-content: flex-end;
+}
+
+.item-detail__actions--compact .item-detail__primary {
+    min-width: 0;
 }
 
 .item-detail__hint {
@@ -218,15 +220,15 @@
 }
 
 .score-card--high {
-    --score-color: #73c991;
+    --score-color: var(--color-tool);
 }
 
 .score-card--medium {
-    --score-color: #e0af68;
+    --score-color: var(--color-skill);
 }
 
 .score-card--low {
-    --score-color: #f2777a;
+    --score-color: var(--color-danger);
 }
 
 .score-card__summary {

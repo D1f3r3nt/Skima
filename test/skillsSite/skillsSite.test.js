@@ -64,6 +64,14 @@ test('instala en un proyecto con los agentes activados mediante npx skills', asy
   assert.deepEqual(calls[0].args, ['--yes', 'skills@1', 'add', 'vercel-labs/skills', '--skill', 'find-skills', '--agent', 'claude-code', 'roo', '--yes'])
 })
 
+test('instala solo para los agentes elegidos', async () => {
+  const { installer, calls } = createInstaller()
+  const outcome = await installer.install({ source: 'vercel-labs/skills', skill: 'find-skills', scope: 'global', agentIds: ['claude-code'] })
+  assert.deepEqual(outcome.agents, ['Claude Code'])
+  assert.deepEqual(calls[0].args, ['--yes', 'skills@1', 'add', 'vercel-labs/skills', '--skill', 'find-skills', '--agent', 'claude-code', '--yes', '--global'])
+  await assert.rejects(installer.install({ source: 'vercel-labs/skills', skill: 'find-skills', scope: 'global', agentIds: [] }), { code: 'NO_AGENTS_SELECTED' })
+})
+
 test('rechaza orígenes no válidos y la falta de agentes', async () => {
   const { installer } = createInstaller()
   await assert.rejects(installer.install({ source: 'https://evil.com/a/b', skill: 'x', scope: 'global' }), { code: 'INVALID_SKILL' })

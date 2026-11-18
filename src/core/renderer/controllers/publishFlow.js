@@ -4,6 +4,7 @@ import { createNoticeBanner } from '../../../components/molecules/noticeBanner.j
 import { showToast } from '../../../components/molecules/toast.js'
 import { openSettings } from '../services/settingsModalService.js'
 import { settingsSectionIds } from '../config/settingsSectionIds.js'
+import { createLoader } from '../../../components/atoms/loader.js'
 
 const descriptionMaxLength = 1500
 const titleMaxLength = 120
@@ -133,7 +134,7 @@ export class PublishFlow {
 
   async runPrepare() {
     this.modal.setBusy(true)
-    this.modal.setStep({ label: 'Paso 1 de 2', body: [createNoticeBanner({ variant: 'info', text: 'Comprobando la skill, los secretos y si el nombre está libre…' })], actions: [] })
+    this.modal.setStep({ label: 'Paso 1 de 2', body: [createLoader({ label: 'Comprobando la skill…', description: 'Se revisan los secretos, la estructura y si el nombre está libre.' })], actions: [] })
     let response
     try {
       response = await this.apiClient.preparePublish({ skillName: this.skillName, publicName: this.form.publicName, title: this.form.title, description: this.form.description })
@@ -201,10 +202,9 @@ export class PublishFlow {
   }
 
   async runPublish() {
-    const statusElement = createParagraph('Empezando…')
-    statusElement.setAttribute('role', 'status')
+    const statusElement = createLoader({ label: 'Empezando…', description: 'Skima prepara tu bifurcación y abre la solicitud en GitHub.' })
     this.unsubscribe?.()
-    this.unsubscribe = this.apiClient.onPublishProgress((event) => { statusElement.textContent = event.label })
+    this.unsubscribe = this.apiClient.onPublishProgress((event) => statusElement.setLabel(event.label))
     this.modal.setBusy(false)
     this.modal.setStep({ label: 'Publicando', body: [statusElement], actions: [createButton({ label: 'Cancelar', variant: 'secondary', onClick: () => this.apiClient.cancelPublish().catch(() => {}) })] })
     let response

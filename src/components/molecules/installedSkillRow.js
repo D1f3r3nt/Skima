@@ -3,8 +3,21 @@ import { createBadge } from '../atoms/badge.js'
 
 const originVariants = { github: 'accent', mySkill: 'success', manual: 'neutral' }
 
-export function createInstalledSkillRow({ skill, onOpen }) {
+const createFavoriteButton = ({ skillName, isFavorite, onToggle }) => {
+  const favoriteButton = document.createElement('button')
+  favoriteButton.type = 'button'
+  favoriteButton.className = `installed-row__favorite${isFavorite ? ' installed-row__favorite--on' : ''}`
+  favoriteButton.setAttribute('aria-pressed', String(isFavorite))
+  favoriteButton.setAttribute('aria-label', isFavorite ? `Quitar ${skillName} de favoritas` : `Marcar ${skillName} como favorita`)
+  favoriteButton.title = isFavorite ? 'Quitar de favoritas' : 'Marcar como favorita'
+  favoriteButton.append(createIcon('star', { size: 16 }))
+  favoriteButton.addEventListener('click', () => onToggle())
+  return favoriteButton
+}
+
+export function createInstalledSkillRow({ skill, onOpen, favorite = null, locationLabels = [] }) {
   const itemElement = document.createElement('li')
+  itemElement.className = 'installed-row__item'
   const buttonElement = document.createElement('button')
   buttonElement.type = 'button'
   buttonElement.className = 'installed-row artifact-type--skill'
@@ -38,6 +51,7 @@ export function createInstalledSkillRow({ skill, onOpen }) {
 
   const metaElement = document.createElement('span')
   metaElement.className = 'installed-row__meta'
+  locationLabels.forEach((locationLabel) => metaElement.append(createBadge({ label: locationLabel, variant: 'accent' })))
   skill.agentNames.forEach((agentName) => metaElement.append(createBadge({ label: agentName })))
   if (skill.origin.type === 'github') {
     const originElement = document.createElement('span')
@@ -50,5 +64,9 @@ export function createInstalledSkillRow({ skill, onOpen }) {
   buttonElement.append(iconElement, textElement)
   buttonElement.addEventListener('click', () => onOpen(skill))
   itemElement.append(buttonElement)
+  if (favorite) {
+    buttonElement.classList.add('installed-row--with-favorite')
+    itemElement.append(createFavoriteButton({ skillName: skill.name, ...favorite }))
+  }
   return itemElement
 }

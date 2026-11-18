@@ -7,8 +7,11 @@ export const detailSources = Object.freeze({
 })
 
 const pageFiles = Object.freeze({
-  library: 'library.html',
   global: 'global.html',
+  myPc: 'myPc.html',
+  memories: 'memories.html',
+  marketplace: 'marketplace.html',
+  graphViewer: 'graphViewer.html',
   projects: 'projects.html',
   project: 'project.html',
   mySkills: 'mySkills.html',
@@ -18,7 +21,7 @@ const pageFiles = Object.freeze({
 export const buildPageUrl = (pageId, params = {}) => {
   const query = new URLSearchParams(Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ''))
   const queryString = query.toString()
-  return `${pageFiles[pageId] ?? pageFiles.library}${queryString ? `?${queryString}` : ''}`
+  return `${pageFiles[pageId] ?? pageFiles.global}${queryString ? `?${queryString}` : ''}`
 }
 
 export const buildDetailUrl = ({ source, id, from, ...rest }) => {

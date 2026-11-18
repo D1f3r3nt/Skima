@@ -30,7 +30,7 @@ const createRow = (skill, publishContext) => {
   const nameElement = document.createElement('span')
   nameElement.className = 'installed-row__name'
   nameElement.textContent = skill.name
-  titleRow.append(nameElement, createBadge({ label: 'Creada por ti', variant: 'accent' }))
+  titleRow.append(nameElement)
   const descriptionElement = document.createElement('span')
   descriptionElement.className = 'installed-row__description'
   descriptionElement.textContent = skill.description || 'Sin descripción.'

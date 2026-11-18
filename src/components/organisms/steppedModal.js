@@ -11,7 +11,7 @@ export function createSteppedModal({ title, onClose = null, className = '' }) {
   const titleElement = document.createElement('h2')
   titleElement.className = 'modal__title'
   titleElement.id = 'steppedModalTitle'
-  titleElement.textContent = title
+  titleElement.append(...[].concat(title))
 
   const stepLabelElement = document.createElement('span')
   stepLabelElement.className = 'stepped-modal__step'

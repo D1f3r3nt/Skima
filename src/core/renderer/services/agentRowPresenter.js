@@ -1,7 +1,7 @@
 export const allowedAgentBadges = Object.freeze({
   detected: { label: 'Detectado', variant: 'accent' },
   cliMissing: { label: 'CLI no encontrado', variant: 'danger' },
-  connected: { label: 'Conectado', variant: 'success' }
+  connected: { label: 'CLI conectado', variant: 'success' }
 })
 
 export const describeCliMessage = (agent) => {
@@ -20,11 +20,10 @@ export const describeAgentRow = (agent) => {
     ...(agent.hasCli && !agent.cli.installed ? [allowedAgentBadges.cliMissing] : []),
     ...(agent.hasCli && agent.cli.installed && agent.cli.connected ? [allowedAgentBadges.connected] : [])
   ]
-  const message = agent.hasCli && agent.cli.installed
-    ? describeCliMessage(agent)
-    : (agent.detection.detected && !agent.enabled ? 'Parece instalado' : describeCliMessage(agent))
+  const cliStatus = describeCliMessage(agent)
+  const message = agent.hasCli && agent.cli.installed && !agent.cli.connected ? cliStatus : ''
   const hasExpandableContent = agent.enabled || (agent.detection.detected && agent.detection.reasons.length > 0)
   const hasManualExecutable = Boolean(agent.executablePathOverride)
   const showExecutableDisclosure = agent.hasCli && (hasManualExecutable || !agent.cli.installed || !agent.cli.connected)
-  return { badges, message, hasExpandableContent, showExecutableDisclosure, hasManualExecutable }
+  return { badges, message, cliStatus, hasExpandableContent, showExecutableDisclosure, hasManualExecutable }
 }

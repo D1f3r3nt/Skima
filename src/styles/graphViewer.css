@@ -1,0 +1,69 @@
+.graph-viewer-content {
+    display: flex;
+}
+
+.graph-viewer {
+    flex: 1;
+    min-width: 0;
+}
+
+.graph-viewer--graph {
+    min-height: 0;
+    max-width: none;
+    padding-bottom: 20px;
+}
+
+.graph-viewer-content:has(.graph-viewer--graph) {
+    overflow: hidden;
+}
+
+.graph-viewer__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.graph-viewer__back {
+    margin-left: -8px;
+    color: var(--color-text-muted);
+}
+
+.graph-viewer__title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--color-text-strong);
+    overflow-wrap: anywhere;
+}
+
+.graph-viewer__frame {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: var(--color-background);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-large);
+}
+
+.graph-viewer__webview {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.graph-viewer__loader {
+    position: absolute;
+    inset: 0;
+    background: var(--color-background);
+}
+
+.graph-viewer__report {
+    padding: 24px 28px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-large);
+    user-select: text;
+}

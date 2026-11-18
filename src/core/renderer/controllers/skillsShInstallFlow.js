@@ -1,12 +1,13 @@
 import { createSteppedModal } from '../../../components/organisms/steppedModal.js'
 import { createButton } from '../../../components/atoms/button.js'
-import { createBadge } from '../../../components/atoms/badge.js'
 import { createSelectInput } from '../../../components/atoms/selectInput.js'
-import { createRadioGroup } from '../../../components/molecules/radioGroup.js'
+import { createChoiceCardGroup } from '../../../components/molecules/choiceCardGroup.js'
+import { createToggleRow } from '../../../components/molecules/toggleRow.js'
 import { createNoticeBanner } from '../../../components/molecules/noticeBanner.js'
 import { showToast } from '../../../components/molecules/toast.js'
 import { openSettings } from '../services/settingsModalService.js'
 import { settingsSectionIds } from '../config/settingsSectionIds.js'
+import { createLoader } from '../../../components/atoms/loader.js'
 
 const maximumVisibleOutput = 60000
 
@@ -63,51 +64,78 @@ export class SkillsShInstallFlow {
     this.availableProjects = availableProjects
     this.selection = {
       scope: defaultProject ? 'project' : 'global',
-      projectId: defaultProject?.id ?? availableProjects[0]?.id ?? null
+      projectId: defaultProject?.id ?? availableProjects[0]?.id ?? null,
+      agentIds: new Set(context.agents.map((agent) => agent.id))
     }
-    this.modal = createSteppedModal({ title: `Instalar ${context.skill}`, className: 'install-flow skills-install' })
+    this.modal = createSteppedModal({ title: this.createTitle(), className: 'install-flow skills-install' })
     this.modal.open()
     this.showChooseStep()
   }
 
+  createQuestion(text) {
+    const questionElement = document.createElement('h3')
+    questionElement.className = 'skills-install__question'
+    questionElement.textContent = text
+    return questionElement
+  }
+
+  createTitle() {
+    const nameElement = document.createElement('span')
+    nameElement.className = 'skills-install__skill-name'
+    nameElement.textContent = this.context.skill
+    return ['Instalar ', nameElement]
+  }
+
+  createAgentRows() {
+    const listElement = document.createElement('div')
+    listElement.className = 'skills-install__agents'
+    listElement.append(...this.context.agents.map((agent) => createToggleRow({
+      label: agent.name,
+      checked: this.selection.agentIds.has(agent.id),
+      onChange: (isChecked) => {
+        if (isChecked) {
+          this.selection.agentIds.add(agent.id)
+        } else {
+          this.selection.agentIds.delete(agent.id)
+        }
+      }
+    }).element))
+    return listElement
+  }
+
   showChooseStep() {
-    const { context, availableProjects } = this
+    const { availableProjects } = this
     const errorElement = createParagraph('', 'form-field__error')
     errorElement.hidden = true
-    const commandElement = createOutputBlock()
-    const refreshCommand = () => { commandElement.textContent = context.commands[this.selection.scope] }
 
     const projectSelect = createSelectInput({
       id: 'skillsShInstallProject',
+      ariaLabel: 'Proyecto',
       options: availableProjects.length
-        ? availableProjects.map((project) => ({ value: project.id, label: `${project.name} — ${project.displayPath}` }))
+        ? availableProjects.map((project) => ({ value: project.id, label: project.name }))
         : [{ value: '', label: 'No hay proyectos cargados en Skima' }],
       value: this.selection.projectId ?? '',
       onChange: (projectId) => { this.selection.projectId = projectId }
     })
+    projectSelect.element.classList.add('skills-install__project')
+    projectSelect.element.disabled = availableProjects.length === 0
     const syncProjectSelect = () => {
-      projectSelect.element.disabled = this.selection.scope !== 'project' || availableProjects.length === 0
+      projectSelect.element.hidden = this.selection.scope !== 'project'
     }
 
-    const scopeGroup = createRadioGroup({
-      legend: '¿Dónde quieres instalarla?',
+    const scopeCards = createChoiceCardGroup({
+      ariaLabel: '¿Dónde quieres que se instale?',
       options: [
-        { value: 'global', label: 'Instalar globalmente', description: 'Disponible en todos los proyectos de este ordenador.' },
-        { value: 'project', label: 'Instalar localmente en un proyecto', description: 'Solo en la carpeta del proyecto que elijas.' }
+        { value: 'global', label: 'De manera global', description: 'Disponible en todos tus proyectos.', icon: 'globe' },
+        { value: 'project', label: 'De manera local', description: 'Solo en el proyecto que elijas.', icon: 'folder' }
       ],
       value: this.selection.scope,
       onChange: (scope) => {
         this.selection.scope = scope
         syncProjectSelect()
-        refreshCommand()
       }
     })
     syncProjectSelect()
-    refreshCommand()
-
-    const agentsElement = document.createElement('div')
-    agentsElement.className = 'skills-install__agents'
-    agentsElement.append(...context.agents.map((agent) => createBadge({ label: agent.name, variant: 'accent' })))
 
     const installButton = createButton({
       label: 'Instalar',
@@ -118,6 +146,11 @@ export class SkillsShInstallFlow {
           errorElement.hidden = false
           return
         }
+        if (this.selection.agentIds.size === 0) {
+          errorElement.textContent = 'Elige al menos un agente.'
+          errorElement.hidden = false
+          return
+        }
         this.execute()
       }
     })
@@ -125,13 +158,11 @@ export class SkillsShInstallFlow {
     this.modal.setStep({
       label: 'Paso 1 de 2',
       body: [
-        createParagraph(`Skima usará el instalador oficial de skills.sh para instalar «${context.skill}» desde ${context.source.replace('https://github.com/', '')}.`),
-        createParagraph('Cuando el instalador pregunta para qué agentes instalar, Skima selecciona automáticamente los que tienes activados:'),
-        agentsElement,
-        scopeGroup.element,
+        this.createQuestion('¿Dónde quieres que se instale?'),
+        scopeCards.element,
         projectSelect.element,
-        createParagraph('Comando que se ejecutará:'),
-        commandElement,
+        this.createQuestion('¿Para qué agente lo quieres instalar?'),
+        this.createAgentRows(),
         errorElement
       ],
       actions: [createButton({ label: 'Cancelar', variant: 'secondary', onClick: () => this.modal.close() }), installButton]
@@ -153,13 +184,13 @@ export class SkillsShInstallFlow {
     this.modal.setBusy(true)
     this.modal.setStep({
       label: 'Paso 2 de 2',
-      body: [createNoticeBanner({ variant: 'info', text: 'Instalando… la primera vez puede tardar mientras se descarga el instalador.' }), outputElement],
+      body: [createLoader({ label: 'Instalando…', description: 'La primera vez puede tardar mientras se descarga el instalador de skills.sh.', inline: true }), outputElement],
       actions: [createButton({ label: 'Cancelar instalación', variant: 'secondary', onClick: () => this.apiClient.cancelSkillsSiteInstall().catch(() => {}) })]
     })
 
     let outcome
     try {
-      outcome = await this.apiClient.installFromSkillsSite({ source: this.context.source, skill: this.context.skill, scope: this.selection.scope, projectId: this.selection.projectId })
+      outcome = await this.apiClient.installFromSkillsSite({ source: this.context.source, skill: this.context.skill, scope: this.selection.scope, projectId: this.selection.projectId, agentIds: [...this.selection.agentIds] })
     } catch (error) {
       outcome = { ok: false, errorMessage: error.message, output: '' }
     } finally {

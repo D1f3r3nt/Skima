@@ -52,11 +52,11 @@ export class InstalledSkillsController {
       icon: 'skill',
       title: 'Todavía no hay skills instaladas',
       description: this.scope === 'global'
-        ? 'Las skills globales están disponibles en todos tus proyectos. Busca alguna en el catálogo e instálala.'
-        : 'Este proyecto no tiene skills en las carpetas de tus agentes. Instala alguna desde el catálogo.',
-      actionLabel: 'Ir al catálogo',
-      actionIcon: 'library',
-      onAction: () => navigateTo(buildPageUrl('library', this.projectId ? { projectId: this.projectId } : {}))
+        ? 'Las skills globales están disponibles en todos tus proyectos. Busca alguna en el Marketplace e instálala.'
+        : 'Este proyecto no tiene skills en las carpetas de tus agentes. Instala alguna desde el Marketplace.',
+      actionLabel: 'Ir al Marketplace',
+      actionIcon: 'store',
+      onAction: () => navigateTo(buildPageUrl('marketplace', this.projectId ? { projectId: this.projectId } : {}))
     }
   }
 

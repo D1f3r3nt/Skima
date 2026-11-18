@@ -22,7 +22,7 @@ test('el botón de quitar solo se activa con la palabra eliminar', async () => {
   assert.equal(matchesConfirmationWord('', 'eliminar'), false)
 })
 
-test('quitar el proyecto no borra archivos de su carpeta y conserva .skima', async () => {
+test('añadir no crea .skima y quitar el proyecto no borra archivos de su carpeta', async () => {
   const projectPath = fs.mkdtempSync(path.join(os.tmpdir(), 'skima-remove-'))
   try {
     fs.writeFileSync(path.join(projectPath, 'index.js'), 'console.log(1)\n')
@@ -34,7 +34,9 @@ test('quitar el proyecto no borra archivos de su carpeta y conserva .skima', asy
       projectDataStore: new ProjectDataStore({ platformPaths })
     })
     const project = await model.add({ name: 'Prueba', path: projectPath })
-    assert.equal(fs.existsSync(path.join(projectPath, '.skima', 'config.json')), true)
+    assert.equal(fs.existsSync(path.join(projectPath, '.skima')), false)
+    fs.mkdirSync(path.join(projectPath, '.skima'))
+    fs.writeFileSync(path.join(projectPath, '.skima', 'config.json'), '{}')
 
     const remaining = await model.remove(project.id)
     assert.deepEqual(remaining, [])

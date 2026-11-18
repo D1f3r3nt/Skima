@@ -6,6 +6,7 @@ import { createNoticeBanner } from '../../../components/molecules/noticeBanner.j
 import { showToast } from '../../../components/molecules/toast.js'
 import { settingsSectionIds } from '../config/settingsSectionIds.js'
 import { McpInstallFlow } from '../controllers/mcpInstallFlow.js'
+import { createLoader } from '../../../components/atoms/loader.js'
 
 const sourceLabels = { skima: 'Copia de Graphify incluida en Skima', system: 'Instalado en el sistema', test: 'Pruebas' }
 
@@ -148,7 +149,7 @@ export function createGraphifySettingsSection({ apiClient, reportSaving, reportS
       : 'No hay ningún agente conectado: el grafo se generará solo con el análisis de código, sin IA.'
     const actionsElement = document.createElement('div')
     actionsElement.className = 'settings-inline-actions'
-    actionsElement.append(createButton({ label: 'Cambiar agente o modelo', icon: 'command', variant: 'secondary', size: 'small', onClick: () => openSection(settingsSectionIds.aiProvider) }))
+    actionsElement.append(createButton({ label: 'Cambiar agente o modelo', icon: 'command', variant: 'secondary', size: 'small', onClick: () => openSection(settingsSectionIds.promptOverrides) }))
     const hintElement = document.createElement('p')
     hintElement.className = 'path-setting__meta'
     hintElement.textContent = 'Se ajusta en «Proveedor de IA», en los ajustes del prompt «Generar el grafo de conocimiento (Graphify)».'
@@ -213,7 +214,7 @@ export function createGraphifySettingsSection({ apiClient, reportSaving, reportS
   }
 
   const load = async () => {
-    contentElement.replaceChildren(createNoticeBanner({ variant: 'info', text: 'Comprobando Graphify…' }))
+    contentElement.replaceChildren(createLoader({ label: 'Comprobando Graphify…', description: 'Skima revisa si su copia de Graphify está instalada y lista.' }))
     try {
       state = await apiClient.getGraphifySettings({ refresh: true })
       render()

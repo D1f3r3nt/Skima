@@ -32,11 +32,11 @@ html[${pageAttribute}="skill"] main a {
 }
 .skima-install-card__header {
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--border, #333);
+  border-bottom: 1px solid var(--skima-border, #333);
   font-family: ui-monospace, monospace;
   font-size: 14px;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--skima-text, #fff);
 }
 .skima-install-card__row {
   display: flex;
@@ -51,18 +51,18 @@ html[${pageAttribute}="skill"] main a {
   padding: 10px 18px;
   border: none;
   border-radius: 8px;
-  background: #fff;
-  color: #000;
+  background: var(--skima-aim, #fff);
+  color: var(--skima-on-aim, #000);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 }
 .skima-install-card__button:hover {
-  background: #e5e5e5;
+  filter: brightness(1.08);
 }
 .skima-install-card__hint {
   font-size: 13px;
-  color: #a1a1a1;
+  color: var(--skima-muted, #a1a1a1);
 }
 `
 

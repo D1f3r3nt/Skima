@@ -46,13 +46,14 @@ test('fila cerrada: solo los distintivos permitidos y nunca la ruta del ejecutab
   const { describeAgentRow, allowedAgentBadges } = await loadModule('src/core/renderer/services/agentRowPresenter.js')
   const allowedLabels = Object.values(allowedAgentBadges).map((badge) => badge.label)
   const connected = describeAgentRow(createAgent({ cli: { installed: true, connected: true, executablePath: '/usr/local/bin/claude' } }))
-  assert.equal(connected.message, 'CLI conectado correctamente')
-  assert.deepEqual(connected.badges.map((badge) => badge.label), ['Detectado', 'Conectado'])
+  assert.equal(connected.message, '')
+  assert.equal(connected.cliStatus, 'CLI conectado correctamente')
+  assert.deepEqual(connected.badges.map((badge) => badge.label), ['Detectado', 'CLI conectado'])
   assert.doesNotMatch(connected.message, /\/usr\/local/)
   assert.equal(connected.showExecutableDisclosure, false)
 
   const missing = describeAgentRow(createAgent({ cli: { installed: false, connected: false } }))
-  assert.equal(missing.message, 'CLI no encontrado')
+  assert.equal(missing.message, '')
   assert.ok(missing.badges.some((badge) => badge.label === 'CLI no encontrado'))
   assert.equal(missing.showExecutableDisclosure, true)
 
@@ -62,12 +63,12 @@ test('fila cerrada: solo los distintivos permitidos y nunca la ruta del ejecutab
   ;[connected, missing, manual].forEach((presentation) => presentation.badges.forEach((badge) => assert.ok(allowedLabels.includes(badge.label))))
 })
 
-test('agentes sin contenido no se pueden desplegar y los detectados sin activar dicen «Parece instalado»', async () => {
+test('agentes sin contenido no se pueden desplegar y los detectados sin activar no muestran mensaje', async () => {
   const { describeAgentRow } = await loadModule('src/core/renderer/services/agentRowPresenter.js')
   const editorWithoutCli = describeAgentRow(createAgent({ enabled: false, hasCli: false, detection: { detected: false, reasons: [] } }))
   assert.equal(editorWithoutCli.hasExpandableContent, false)
   assert.equal(editorWithoutCli.badges.length, 0)
   const detected = describeAgentRow(createAgent({ enabled: false, hasCli: false }))
-  assert.equal(detected.message, 'Parece instalado')
+  assert.equal(detected.message, '')
   assert.equal(detected.hasExpandableContent, true)
 })

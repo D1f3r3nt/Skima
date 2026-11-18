@@ -11,6 +11,7 @@ import { openSettings } from '../services/settingsModalService.js'
 import { settingsSectionIds } from '../config/settingsSectionIds.js'
 import { agentsMdQuestions } from '../config/agentsMdQuestions.js'
 import { clampStep, isLastStep, mergeAnswers } from '../services/wizardEngine.js'
+import { createLoader } from '../../../components/atoms/loader.js'
 
 const privacyNotice = 'Este archivo puede enviarse a tus agentes de IA cuando lances un prompt desde este proyecto. No escribas contraseñas, claves ni otros secretos.'
 const answerKeys = ['overview', 'stack', 'structure', 'commands', 'conventions', 'testing', 'boundariesAlways', 'boundariesAsk', 'boundariesNever', 'workflow']
@@ -57,7 +58,7 @@ export function createContextTab({ apiClient, project }) {
   }
 
   const load = async () => {
-    show(createParagraph('Leyendo el AGENTS.md del proyecto…', 'settings-section__loading'))
+    show(createLoader({ label: 'Leyendo el AGENTS.md del proyecto…', description: 'Skima carga el contexto que leen tus agentes en este proyecto.' }))
     try {
       state = unwrap(await apiClient.getAgentsMdState(project.id))
     } catch (error) {
@@ -232,7 +233,7 @@ export function createContextTab({ apiClient, project }) {
   const chosenAnswers = () => (form.optimization && form.useOptimized ? form.optimization.answers : form.answers)
 
   const renderPreview = async ({ aiMessage = '' } = {}) => {
-    show(createParagraph('Preparando la vista previa…', 'settings-section__loading'))
+    show(createLoader({ label: 'Preparando la vista previa…', description: 'Skima rellena la plantilla del AGENTS.md con tus respuestas.' }))
     let preview
     try {
       preview = unwrap(await apiClient.previewAgentsMd(project.id, { answers: chosenAnswers(), language: form.language === 'en' ? 'en' : 'es' }))
@@ -294,7 +295,7 @@ export function createContextTab({ apiClient, project }) {
   }
 
   const optimize = async () => {
-    show(createParagraph('Optimizando con IA… (solo se usa lo que has escrito en el formulario)', 'settings-section__loading'))
+    show(createLoader({ label: 'Optimizando con IA…', description: 'Solo se usa lo que has escrito en el formulario. Puede tardar un minuto.' }))
     try {
       const result = unwrap(await apiClient.optimizeAgentsMd(project.id, { answers: form.answers, language: form.language, runId: crypto.randomUUID() }))
       if (result.optimized) {

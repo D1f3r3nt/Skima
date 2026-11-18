@@ -7,6 +7,7 @@ import { createPageHeader } from '../../../components/molecules/pageHeader.js'
 import { createFormField } from '../../../components/molecules/formField.js'
 import { createEmptyState } from '../../../components/organisms/emptyState.js'
 import { showToast } from '../../../components/molecules/toast.js'
+import { createLoader } from '../../../components/atoms/loader.js'
 
 const pageTitle = 'Crear una skill'
 const pageDescription = 'Rellena el formulario y la IA escribirá el SKILL.md con su skill skill-creator.'
@@ -76,7 +77,7 @@ export class SkillFormView {
   }
 
   renderLoading() {
-    this.renderShell(createNoticeBanner({ variant: 'info', text: 'Comprobando si hay un proveedor de IA conectado…' }))
+    this.renderShell(createLoader({ label: 'Comprobando el proveedor de IA…', description: 'El editor necesita un agente conectado para escribir la skill.' }))
   }
 
   renderUnavailable({ reason, onOpenSettings }) {
@@ -93,16 +94,7 @@ export class SkillFormView {
   renderGenerating({ agentName, modelLabel, onCancel }) {
     const statusElement = document.createElement('section')
     statusElement.className = 'skill-form__generating'
-    const titleElement = document.createElement('p')
-    titleElement.className = 'skill-form__generating-title'
-    titleElement.textContent = 'Generando tu skill…'
-    const detailElement = document.createElement('p')
-    detailElement.className = 'skill-form__hint'
-    detailElement.textContent = `${modelLabel ?? 'El modelo por defecto'} vía ${agentName ?? 'tu agente'} está usando skill-creator. Puede tardar unos minutos.`
-    const progressElement = document.createElement('progress')
-    progressElement.className = 'skill-form__progress'
-    progressElement.setAttribute('aria-label', 'Generando la skill')
-    statusElement.append(titleElement, detailElement, progressElement, createButton({ label: 'Cancelar', icon: 'close', variant: 'secondary', onClick: onCancel }))
+    statusElement.append(createLoader({ label: 'Generando tu skill…', description: `${modelLabel ?? 'El modelo por defecto'} vía ${agentName ?? 'tu agente'} está usando skill-creator. Puede tardar unos minutos.` }), createButton({ label: 'Cancelar', icon: 'close', variant: 'secondary', onClick: onCancel }))
     this.renderShell(statusElement)
   }
 
@@ -134,7 +126,7 @@ export class SkillFormView {
     const nameInput = createTextInput({ id: 'skillName', value: form.name, placeholder: 'revisar-pull-requests' })
     nameInput.maxLength = spec.nameMaxLength
     nameInput.addEventListener('input', () => handlers.onChange({ name: nameInput.value }, 'name'))
-    const nameField = createField({ id: 'skillName', label: 'name *', control: nameInput, hint: 'Minúsculas, números y guiones. Es el nombre de la carpeta.', maxLength: spec.nameMaxLength })
+    const nameField = createField({ id: 'skillName', label: 'Name *', control: nameInput, hint: 'Minúsculas, números y guiones. Es el nombre de la carpeta.', maxLength: spec.nameMaxLength })
     this.fieldSetters.name = nameField.setError
     this.nameWarningElement = document.createElement('p')
     this.nameWarningElement.className = 'skill-form__warning'
@@ -143,7 +135,7 @@ export class SkillFormView {
 
     const descriptionInput = createTextArea({ id: 'skillDescription', value: form.description, rows: 3, maxLength: spec.descriptionMaxLength, placeholder: 'Qué hace la skill y cuándo debe usarla el agente.' })
     descriptionInput.addEventListener('input', () => handlers.onChange({ description: descriptionInput.value }, 'description'))
-    const descriptionField = createField({ id: 'skillDescription', label: 'description *', control: descriptionInput, hint: 'Qué hace y cuándo usarla. El agente la lee para decidir si la activa.', maxLength: spec.descriptionMaxLength })
+    const descriptionField = createField({ id: 'skillDescription', label: 'Description *', control: descriptionInput, hint: 'Qué hace y cuándo usarla. El agente la lee para decidir si la activa.', maxLength: spec.descriptionMaxLength })
     this.fieldSetters.description = descriptionField.setError
 
     sectionElement.append(nameField.element, descriptionField.element)
@@ -288,14 +280,11 @@ export class SkillFormView {
 
     const footerElement = document.createElement('div')
     footerElement.className = 'skill-form__footer'
-    const agentElement = document.createElement('p')
-    agentElement.className = 'skill-form__hint'
-    agentElement.textContent = `Se usará ${status.modelLabel ?? 'el modelo por defecto'} vía ${status.agentName} con su skill skill-creator. El formulario y los archivos se envían a ese proveedor. Puedes cambiar el agente y el modelo en Configuración → Proveedor de IA.`
     this.generalErrorElement = document.createElement('div')
     const actionsElement = document.createElement('div')
     actionsElement.className = 'skill-form__actions'
     actionsElement.append(createButton({ label: 'Vaciar formulario', icon: 'trash', variant: 'secondary', onClick: handlers.onReset }), createButton({ label: 'Generar', icon: 'check', type: 'submit' }))
-    footerElement.append(agentElement, this.generalErrorElement, actionsElement)
+    footerElement.append(this.generalErrorElement, actionsElement)
 
     formElement.append(
       this.buildBasicSection({ form, spec, handlers }),

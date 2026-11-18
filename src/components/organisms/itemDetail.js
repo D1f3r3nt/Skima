@@ -1,4 +1,5 @@
 import { createIcon } from '../atoms/icon.js'
+import { createOverflowMenu } from '../molecules/overflowMenu.js'
 import { createBadge } from '../atoms/badge.js'
 import { createButton } from '../atoms/button.js'
 import { createScoreCard } from '../molecules/scoreCard.js'
@@ -6,6 +7,7 @@ import { createMetadataList } from '../molecules/metadataList.js'
 import { createNoticeBanner } from '../molecules/noticeBanner.js'
 import { createFileTree } from '../molecules/fileTree.js'
 import { createMarkdownViewer } from './markdownViewer.js'
+import { createLoader } from '../atoms/loader.js'
 
 const createSidebarSection = (title, content) => {
   const sectionElement = document.createElement('section')
@@ -24,7 +26,7 @@ const createInstallationsList = ({ installations, isLoading, emptyText }) => {
   if (isLoading) {
     const loadingElement = document.createElement('li')
     loadingElement.className = 'installation-list__empty'
-    loadingElement.textContent = 'Comprobando dónde está instalado…'
+    loadingElement.append(createLoader({ label: 'Comprobando dónde está instalado…', inline: true }))
     listElement.append(loadingElement)
     return listElement
   }
@@ -116,7 +118,7 @@ export function createItemDetail(viewModel) {
   }
   const badgesElement = document.createElement('span')
   badgesElement.className = 'item-detail__badges'
-  badgesElement.append(createBadge({ label: viewModel.typeLabel }), ...(viewModel.badges ?? []).map((badge) => createBadge(badge)))
+  badgesElement.append(...(viewModel.typeLabel ? [createBadge({ label: viewModel.typeLabel })] : []), ...(viewModel.badges ?? []).map((badge) => createBadge(badge)))
   subtitleElement.append(badgesElement)
 
   const descriptionElement = document.createElement('p')
@@ -124,13 +126,14 @@ export function createItemDetail(viewModel) {
   descriptionElement.textContent = viewModel.description || 'Sin descripción.'
 
   const actionsElement = document.createElement('div')
-  actionsElement.className = 'item-detail__actions'
+  actionsElement.className = `item-detail__actions${viewModel.compactActions ? ' item-detail__actions--compact' : ''}`
+  const actionSize = viewModel.compactActions ? 'medium' : 'large'
 
   if (viewModel.primaryAction) {
     const primaryButton = createButton({
       label: viewModel.primaryAction.label,
       icon: viewModel.primaryAction.icon ?? 'download',
-      size: 'large',
+      size: actionSize,
       className: 'item-detail__primary',
       onClick: viewModel.primaryAction.onClick
     })
@@ -142,13 +145,17 @@ export function createItemDetail(viewModel) {
   }
 
   ;(viewModel.secondaryActions ?? []).forEach((action) => {
-    const actionButton = createButton({ label: action.label, icon: action.icon, variant: action.variant ?? 'secondary', size: 'large', onClick: action.onClick })
+    const actionButton = createButton({ label: action.label, icon: action.icon, variant: action.variant ?? 'secondary', size: actionSize, onClick: action.onClick })
     actionButton.disabled = Boolean(action.disabled)
     if (action.hint) {
       actionButton.title = action.hint
     }
     actionsElement.append(actionButton)
   })
+
+  if (viewModel.menuActions?.length) {
+    actionsElement.append(createOverflowMenu({ items: viewModel.menuActions, ariaLabel: `Más acciones de ${viewModel.title}` }).element)
+  }
 
   if (viewModel.primaryAction?.hint && viewModel.primaryAction.disabled) {
     const hintElement = document.createElement('p')
@@ -207,12 +214,9 @@ export function createItemDetail(viewModel) {
   return rootElement
 }
 
-export function createItemDetailSkeleton({ onBack, backLabel = 'Volver', message = 'Cargando…' }) {
+export function createItemDetailSkeleton({ onBack, backLabel = 'Volver', message = 'Cargando…', description = '' }) {
   const rootElement = document.createElement('div')
   rootElement.className = 'item-detail item-detail--loading'
-  const messageElement = document.createElement('p')
-  messageElement.className = 'item-detail__loading'
-  messageElement.textContent = message
-  rootElement.append(createButton({ label: backLabel, icon: 'arrowLeft', variant: 'ghost', size: 'small', className: 'item-detail__back', onClick: onBack }), messageElement)
+  rootElement.append(createButton({ label: backLabel, icon: 'arrowLeft', variant: 'ghost', size: 'small', className: 'item-detail__back', onClick: onBack }), createLoader({ label: message, description }))
   return rootElement
 }

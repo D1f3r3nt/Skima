@@ -2,6 +2,7 @@ import { createInlineEditableTitle } from '../../../components/molecules/inlineE
 import { createNoticeBanner } from '../../../components/molecules/noticeBanner.js'
 import { createButton } from '../../../components/atoms/button.js'
 import { createTabs } from '../../../components/molecules/tabs.js'
+import { createOverflowMenu } from '../../../components/molecules/overflowMenu.js'
 import { createEmptyState } from '../../../components/organisms/emptyState.js'
 import { typedConfirmDialog } from '../../../components/organisms/typedConfirmDialog.js'
 import { showToast } from '../../../components/molecules/toast.js'
@@ -58,23 +59,6 @@ export class ProjectController {
     }
     this.activeTabId = this.pickInitialTab()
     this.render()
-    this.ensureDataFolder()
-  }
-
-  async ensureDataFolder() {
-    if (!this.project.folderExists) {
-      return
-    }
-    try {
-      const result = await this.apiClient.ensureProjectDataFolder(this.project.id)
-      if (!result.writable && result.warning) {
-        this.noticesElement.append(createNoticeBanner({ variant: 'warning', text: result.warning }))
-      } else if (result.gitignoreUpdated) {
-        showToast({ message: 'Skima ha añadido .skima/ al .gitignore del proyecto para que sus datos no se suban al repositorio.', variant: 'info' })
-      }
-    } catch (error) {
-      this.noticesElement.append(createNoticeBanner({ variant: 'warning', text: error.message }))
-    }
   }
 
   getDisabledTabs() {
@@ -111,7 +95,16 @@ export class ProjectController {
     })
     editState.subscribe((state) => title.render(state))
     title.render(editState.getState())
-    return title.element
+    this.badgeSlot = document.createElement('span')
+    this.badgeSlot.className = 'project-page__badge'
+    const rowElement = document.createElement('div')
+    rowElement.className = 'project-page__title-row'
+    rowElement.append(title.element, this.badgeSlot)
+    return rowElement
+  }
+
+  openProjectFolder() {
+    this.apiClient.openFolder(this.project.path).catch((error) => showToast({ message: error.message, variant: 'error' }))
   }
 
   createPathLine() {
@@ -122,10 +115,6 @@ export class ProjectController {
     pathElement.textContent = this.project.displayPath
     pathElement.title = 'El nombre es solo de Skima: la carpeta del disco no cambia.'
     lineElement.append(pathElement)
-    if (this.project.folderExists) {
-      lineElement.append(createButton({ label: 'Abrir carpeta', icon: 'folderOpen', variant: 'ghost', size: 'small', onClick: () => this.apiClient.openFolder(this.project.path).catch((error) => showToast({ message: error.message, variant: 'error' })) }))
-    }
-    lineElement.append(createButton({ label: 'Quitar proyecto', icon: 'trash', variant: 'danger', size: 'small', className: 'project-page__remove', onClick: () => this.removeProject() }))
     return lineElement
   }
 
@@ -136,16 +125,26 @@ export class ProjectController {
     if (!this.project.folderExists) {
       const actionsElement = document.createElement('div')
       actionsElement.className = 'project-page__header-actions'
-      const graphButton = createButton({ label: 'Generar grafo', icon: 'fork', variant: 'secondary', size: 'small' })
+      const graphButton = createButton({ label: 'Generar grafo', icon: 'fork', size: 'small' })
       graphButton.disabled = true
       graphButton.title = 'La carpeta del proyecto no está disponible.'
       graphButton.setAttribute('aria-description', graphButton.title)
-      actionsElement.append(graphButton)
+      actionsElement.append(graphButton, createOverflowMenu({
+        ariaLabel: 'Más acciones del proyecto',
+        items: [{ label: 'Quitar proyecto', icon: 'trash', variant: 'danger', onClick: () => this.removeProject() }]
+      }).element)
       return actionsElement
     }
     this.graphifyNoticesElement = document.createElement('div')
     this.graphifyNoticesElement.className = 'project-page__notices'
-    this.graphifyActions = createGraphifyActions({ apiClient: this.apiClient, project: this.project, noticesElement: this.graphifyNoticesElement })
+    this.graphifyActions = createGraphifyActions({
+      apiClient: this.apiClient,
+      project: this.project,
+      noticesElement: this.graphifyNoticesElement,
+      badgeSlot: this.badgeSlot,
+      onOpenFolder: () => this.openProjectFolder(),
+      onRemoveProject: () => this.removeProject()
+    })
     return this.graphifyActions.element
   }
 
@@ -252,7 +251,6 @@ export class ProjectController {
       showToast({ message: 'Carpeta localizada.', variant: 'success' })
       this.activeTabId = this.pickInitialTab()
       this.render()
-      this.ensureDataFolder()
     } catch (error) {
       showToast({ message: error.message, variant: 'error' })
     }
@@ -266,7 +264,6 @@ export class ProjectController {
         'Solo se quita de Skima: no se borra ningún archivo de la carpeta del proyecto.'
       ],
       details: [
-        'Se conserva la carpeta .skima/ del proyecto: si vuelves a añadirlo, recuperará su configuración.',
         'Las skills y servidores MCP instalados en el proyecto no se tocan.'
       ],
       confirmationWord: removalConfirmationWord,
