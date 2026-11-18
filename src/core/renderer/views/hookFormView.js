@@ -1,4 +1,5 @@
 import { createButton } from '../../../components/atoms/button.js'
+import { createLoader } from '../../../components/atoms/loader.js'
 import { createTextInput } from '../../../components/atoms/textInput.js'
 import { createSelectInput } from '../../../components/atoms/selectInput.js'
 import { createPageHeader } from '../../../components/molecules/pageHeader.js'
@@ -12,6 +13,8 @@ import { hookTypeOptions } from '../config/hookTypes.js'
 
 const pageTitle = 'Crear un hook'
 const pageDescription = 'Un hook es una acción que el agente lanza antes o después de la sesión o de cada prompt. Se guarda en Skima y lo activas desde la pestaña Hooks de cada proyecto.'
+const editTitle = 'Editar hook'
+const editDescription = 'Cambia la configuración del hook. Los proyectos que ya lo usan se actualizan con los cambios.'
 const automaticModelValue = ''
 
 const createHint = (text) => {
@@ -36,9 +39,10 @@ export class HookFormView {
     contentElement.replaceChildren(this.pageElement)
   }
 
-  buildNameField({ form, limits, handlers }) {
+  buildNameField({ form, limits, handlers, isEditing }) {
     const nameInput = createTextInput({ id: 'hookName', value: form.name, placeholder: 'revisar-turno' })
     nameInput.maxLength = limits.nameMaxLength
+    nameInput.disabled = isEditing
     nameInput.addEventListener('input', () => handlers.onChange({ name: nameInput.value }))
     const field = createField({ id: 'hookName', label: 'Nombre *', control: nameInput, hint: 'Minúsculas, números y guiones. Es el nombre con el que verás el hook en Skima.' })
     this.setNameError = field.setError
@@ -117,8 +121,11 @@ export class HookFormView {
       browseIcon: 'file',
       onPick: () => handlers.onPickScript()
     })
-    scriptInput.setValue(form.scriptPath)
-    return createField({ id: 'hookScript', label: 'Bash *', control: scriptInput.element, hint: 'Skima guarda una copia del script. Al usar el hook en un proyecto, se copia a .claude/hooks/<nombre>.sh.' }).element
+    scriptInput.setValue(form.scriptPath || form.scriptDisplayName)
+    const scriptHint = form.scriptDisplayName
+      ? 'Se conserva el script guardado. Selecciona otro archivo .sh solo si quieres reemplazarlo.'
+      : 'Skima guarda una copia del script. Al usar el hook en un proyecto, se copia a .claude/hooks/<nombre>.sh.'
+    return createField({ id: 'hookScript', label: 'Bash *', control: scriptInput.element, hint: scriptHint }).element
   }
 
   buildAsyncField({ form, handlers }) {
@@ -148,16 +155,25 @@ export class HookFormView {
     return sectionElement
   }
 
-  buildActions({ form, isSaving, handlers }) {
+  buildActions({ form, isSaving, isEditing, handlers }) {
     const actionsElement = document.createElement('div')
     actionsElement.className = 'hook-form__actions'
-    const saveButton = createButton({ label: isSaving ? 'Guardando…' : 'Guardar hook', icon: 'check', size: 'large', type: 'submit' })
+    const saveLabel = isEditing ? 'Guardar cambios' : 'Guardar hook'
+    const saveButton = createButton({ label: isSaving ? 'Guardando…' : saveLabel, icon: 'check', size: 'large', type: 'submit' })
     saveButton.disabled = isSaving || form.type === 'agent'
     actionsElement.append(saveButton, createButton({ label: 'Ver mis hooks', icon: 'hook', variant: 'ghost', size: 'large', onClick: handlers.onOpenLibrary }))
     return actionsElement
   }
 
-  render({ form, limits, skills, models, isSaving, error, handlers }) {
+  render({ form, limits, skills, models, isSaving, isEditing, isLoadingHook, error, handlers }) {
+    const headerElement = createPageHeader({
+      title: isEditing ? editTitle : pageTitle,
+      description: isEditing ? editDescription : pageDescription
+    })
+    if (isLoadingHook) {
+      this.pageElement.replaceChildren(headerElement, createLoader({ label: 'Cargando el hook…' }))
+      return
+    }
     const formElement = document.createElement('form')
     formElement.className = 'hook-form'
     formElement.noValidate = true
@@ -171,13 +187,13 @@ export class HookFormView {
       errorElement.append(createNoticeBanner({ variant: 'error', text: error }))
     }
     formElement.append(
-      this.buildNameField({ form, limits, handlers }),
-      this.buildTypeSelector({ form, handlers }),
+      this.buildNameField({ form, limits, handlers, isEditing }),
+      ...(isEditing ? [] : [this.buildTypeSelector({ form, handlers })]),
       this.buildTypeFields({ form, limits, skills, models, handlers }),
       errorElement,
-      this.buildActions({ form, isSaving, handlers })
+      this.buildActions({ form, isSaving, isEditing, handlers })
     )
-    this.pageElement.replaceChildren(createPageHeader({ title: pageTitle, description: pageDescription }), formElement)
+    this.pageElement.replaceChildren(headerElement, formElement)
   }
 
   focusName() {

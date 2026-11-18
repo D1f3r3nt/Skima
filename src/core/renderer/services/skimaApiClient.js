@@ -508,6 +508,14 @@ export class SkimaApiClient {
     return this.unwrap(this.bridge.createHook(request))
   }
 
+  updateHook(name, request) {
+    return this.unwrap(this.bridge.updateHook(name, request))
+  }
+
+  deleteHook(name) {
+    return this.unwrap(this.bridge.deleteHook(name))
+  }
+
   getProjectHooks(projectId) {
     return this.unwrap(this.bridge.getProjectHooks(projectId))
   }

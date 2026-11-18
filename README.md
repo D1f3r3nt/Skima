@@ -27,6 +27,8 @@ npm install
 npm run start
 ```
 
+`npm run launch` hace lo mismo que `npm run start`.
+
 ```bash
 npm test
 ```

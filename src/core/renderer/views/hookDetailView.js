@@ -2,6 +2,7 @@ import { createButton } from '../../../components/atoms/button.js'
 import { createBadge } from '../../../components/atoms/badge.js'
 import { createIcon } from '../../../components/atoms/icon.js'
 import { createLoader } from '../../../components/atoms/loader.js'
+import { createOverflowMenu } from '../../../components/molecules/overflowMenu.js'
 import { createMetadataList } from '../../../components/molecules/metadataList.js'
 import { createEmptyState } from '../../../components/organisms/emptyState.js'
 import { describeHookType } from '../config/hookTypes.js'
@@ -52,7 +53,17 @@ export class HookDetailView {
     }))
   }
 
-  buildHeader(hook) {
+  buildActions({ onEdit, onDelete, hookName }) {
+    const actionsElement = document.createElement('div')
+    actionsElement.className = 'item-detail__actions item-detail__actions--compact'
+    actionsElement.append(
+      createButton({ label: 'Editar', icon: 'editor', size: 'medium', className: 'item-detail__primary', onClick: onEdit }),
+      createOverflowMenu({ items: [{ label: 'Eliminar', icon: 'trash', variant: 'danger', onClick: onDelete }], ariaLabel: `Más acciones de ${hookName}` }).element
+    )
+    return actionsElement
+  }
+
+  buildHeader(hook, actions) {
     const type = describeHookType(hook.type)
     const headerElement = document.createElement('header')
     headerElement.className = `item-detail__header artifact-type--${hook.type}`
@@ -72,7 +83,7 @@ export class HookDetailView {
     const descriptionElement = document.createElement('p')
     descriptionElement.className = 'item-detail__description'
     descriptionElement.textContent = describeHookSummary(hook)
-    headingElement.append(titleElement, subtitleElement, descriptionElement)
+    headingElement.append(titleElement, subtitleElement, descriptionElement, this.buildActions({ ...actions, hookName: hook.name }))
 
     headerElement.append(iconElement, headingElement)
     return headerElement
@@ -145,7 +156,7 @@ export class HookDetailView {
     return sectionElement
   }
 
-  render({ details, backLabel, onBack, onOpenProject }) {
+  render({ details, backLabel, onBack, onOpenProject, onEdit, onDelete }) {
     const { hook, script, usage } = details
     const bodyElement = document.createElement('div')
     bodyElement.className = 'item-detail__body'
@@ -159,6 +170,6 @@ export class HookDetailView {
     sideElement.append(createMetadataList({ title: 'Detalles', entries: buildHookMetadataEntries(hook) }), this.buildUsage({ usage, onOpenProject }))
 
     bodyElement.append(mainElement, sideElement)
-    this.pageElement.replaceChildren(this.createBackButton({ backLabel, onBack }), this.buildHeader(hook), bodyElement)
+    this.pageElement.replaceChildren(this.createBackButton({ backLabel, onBack }), this.buildHeader(hook, { onEdit, onDelete }), bodyElement)
   }
 }

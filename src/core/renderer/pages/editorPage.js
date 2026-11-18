@@ -15,7 +15,7 @@ bootstrapPage({
   activeSubPageId: isHookView ? 'hook' : 'skill',
   createPage: ({ apiClient, contentElement }) => {
     if (isHookView) {
-      new HookFormController({ apiClient, view: new HookFormView(contentElement) }).init()
+      new HookFormController({ apiClient, view: new HookFormView(contentElement), editName: params.edit ?? null }).init()
       return
     }
     if (params.edit) {

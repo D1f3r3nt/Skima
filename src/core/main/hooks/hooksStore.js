@@ -92,7 +92,7 @@ class HooksStore {
     return scriptPath
   }
 
-  async buildHook(request) {
+  async buildHook(request, existing = null) {
     const type = String(request?.type ?? '')
     if (!implementedHookTypes.includes(type)) {
       throw new Error(type === 'agent' ? 'Los hooks de tipo Agent todavía no están disponibles.' : 'El tipo de hook no es válido.')
@@ -102,10 +102,14 @@ class HooksStore {
       type,
       timeout: normalizeTimeout(request.timeout),
       statusMessage: normalizeStatusMessage(request.statusMessage),
-      createdAt: this.now().toISOString()
+      createdAt: existing?.createdAt ?? this.now().toISOString()
     }
     if (type === 'prompt') {
       return { hook: { ...base, skillName: normalizeSkillName(request.skillName), model: normalizeModel(request.model) }, scriptSource: null }
+    }
+    const keepsExistingScript = existing?.type === 'command' && !String(request.scriptPath ?? '').trim()
+    if (keepsExistingScript) {
+      return { hook: { ...base, async: request.async === true, scriptOriginalName: existing.scriptOriginalName }, scriptSource: null }
     }
     const scriptSource = await this.assertScriptSource(request.scriptPath)
     return {
@@ -127,6 +131,37 @@ class HooksStore {
       }
       await this.storage.write([...hooks, hook])
       return this.describe(hook)
+    })
+  }
+
+  update(rawName, request) {
+    return this.enqueue(async () => {
+      const hooks = await this.readAll()
+      const existing = hooks.find((hook) => hook.name === String(rawName ?? ''))
+      if (!existing) {
+        throw new Error('El hook no existe en Skima.')
+      }
+      const { hook, scriptSource } = await this.buildHook({ ...request, name: existing.name }, existing)
+      if (scriptSource) {
+        await fs.mkdir(this.scriptsDirectory, { recursive: true })
+        await fs.copyFile(scriptSource, this.getScriptPath(hook.name))
+      } else if (existing.type === 'command' && hook.type !== 'command') {
+        await fs.rm(this.getScriptPath(hook.name), { force: true })
+      }
+      await this.storage.write(hooks.map((candidate) => (candidate.name === existing.name ? hook : candidate)))
+      return this.describe(hook)
+    })
+  }
+
+  delete(rawName) {
+    return this.enqueue(async () => {
+      const hooks = await this.readAll()
+      const existing = hooks.find((hook) => hook.name === String(rawName ?? ''))
+      if (!existing) {
+        throw new Error('El hook no existe en Skima.')
+      }
+      await this.storage.write(hooks.filter((hook) => hook.name !== existing.name))
+      await fs.rm(this.getScriptPath(existing.name), { force: true })
     })
   }
 }

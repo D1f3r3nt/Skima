@@ -12,6 +12,7 @@ const createEmptyForm = () => ({
   skillName: '',
   model: '',
   scriptPath: '',
+  scriptDisplayName: '',
   async: false,
   timeout: '',
   statusMessage: ''
@@ -20,11 +21,14 @@ const createEmptyForm = () => ({
 const toModelName = (model) => (typeof model === 'string' ? model : model?.id ?? model?.value ?? '')
 
 export class HookFormController {
-  constructor({ apiClient, view }) {
+  constructor({ apiClient, view, editName = null }) {
     this.apiClient = apiClient
     this.view = view
+    this.editName = editName
     this.state = {
       form: createEmptyForm(),
+      isEditing: Boolean(editName),
+      isLoadingHook: Boolean(editName),
       skills: { isLoading: true, options: [], error: null },
       models: [...fallbackModels],
       isSaving: false,
@@ -39,10 +43,34 @@ export class HookFormController {
     }
   }
 
-  init() {
+  async init() {
     this.render()
     this.loadSkills()
     this.loadModels()
+    if (this.editName) {
+      await this.loadHookForEditing()
+    }
+  }
+
+  async loadHookForEditing() {
+    try {
+      const { hook } = await this.apiClient.getHook(this.editName)
+      const form = {
+        name: hook.name,
+        type: hook.type,
+        skillName: hook.skillName ?? '',
+        model: hook.model ?? '',
+        scriptPath: '',
+        scriptDisplayName: hook.scriptOriginalName ?? '',
+        async: hook.async === true,
+        timeout: hook.timeout ? String(hook.timeout) : '',
+        statusMessage: hook.statusMessage ?? ''
+      }
+      this.state = { ...this.state, form, isLoadingHook: false }
+    } catch (error) {
+      this.state = { ...this.state, isLoadingHook: false, error: error.message }
+    }
+    this.render()
   }
 
   render() {
@@ -104,7 +132,7 @@ export class HookFormController {
       if (!scriptPath) {
         return
       }
-      this.state = { ...this.state, form: { ...this.state.form, scriptPath }, error: null }
+      this.state = { ...this.state, form: { ...this.state.form, scriptPath, scriptDisplayName: '' }, error: null }
       this.render()
     } catch (error) {
       showToast({ message: error.message, variant: 'error' })
@@ -132,14 +160,17 @@ export class HookFormController {
   }
 
   async submit() {
-    if (this.state.isSaving || this.state.form.type === 'agent' || !this.validateName()) {
+    if (this.state.isSaving || this.state.isLoadingHook || this.state.form.type === 'agent' || !this.validateName()) {
       return
     }
     this.state = { ...this.state, isSaving: true, error: null }
     this.render()
     try {
-      const hook = await this.apiClient.createHook(this.buildRequest())
-      showToast({ message: `Hook «${hook.name}» guardado en Skima.`, variant: 'success' })
+      const request = this.buildRequest()
+      const hook = this.editName
+        ? await this.apiClient.updateHook(this.editName, request)
+        : await this.apiClient.createHook(request)
+      showToast({ message: this.editName ? `Hook «${hook.name}» actualizado.` : `Hook «${hook.name}» guardado en Skima.`, variant: 'success' })
       navigateTo(buildPageUrl('hook', { name: hook.name, from: 'editor' }))
     } catch (error) {
       this.state = { ...this.state, isSaving: false, error: error.message }

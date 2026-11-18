@@ -17,6 +17,43 @@ class HooksIpcController {
     return { hook, script, usage }
   }
 
+  async detachFromProjects(name) {
+    const usage = await this.projectHooksService.findUsage(name)
+    for (const entry of usage) {
+      for (const hookEvent of entry.events) {
+        await this.projectHooksService.removeHook(entry.projectId, hookEvent, name)
+      }
+    }
+    return usage
+  }
+
+  async reattachToProjects(name, usage) {
+    for (const entry of usage) {
+      for (const hookEvent of entry.events) {
+        await this.projectHooksService.addHook(entry.projectId, hookEvent, name)
+      }
+    }
+  }
+
+  async updateHook(name, request) {
+    const usage = await this.detachFromProjects(name)
+    let hook
+    try {
+      hook = await this.hooksStore.update(name, request)
+    } catch (error) {
+      await this.reattachToProjects(name, usage).catch(() => {})
+      throw error
+    }
+    await this.reattachToProjects(name, usage)
+    return hook
+  }
+
+  async deleteHook(name) {
+    await this.detachFromProjects(name)
+    await this.hooksStore.delete(name)
+    return true
+  }
+
   register() {
     this.ipcMain.handle(ipcChannels.listHooks, () =>
       executeSafely(() => this.hooksStore.list())
@@ -26,6 +63,12 @@ class HooksIpcController {
     )
     this.ipcMain.handle(ipcChannels.createHook, (event, request) =>
       executeSafely(() => this.hooksStore.create(request ?? {}))
+    )
+    this.ipcMain.handle(ipcChannels.updateHook, (event, name, request) =>
+      executeSafely(() => this.updateHook(String(name ?? ''), request ?? {}))
+    )
+    this.ipcMain.handle(ipcChannels.deleteHook, (event, name) =>
+      executeSafely(() => this.deleteHook(String(name ?? '')))
     )
     this.ipcMain.handle(ipcChannels.getProjectHooks, (event, projectId) =>
       executeSafely(() => this.projectHooksService.getProjectHooks(projectId))

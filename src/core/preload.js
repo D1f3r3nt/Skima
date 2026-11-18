@@ -159,6 +159,8 @@ contextBridge.exposeInMainWorld('skimaApi', {
   listHooks: () => ipcRenderer.invoke('hooks:list'),
   getHook: (name) => ipcRenderer.invoke('hooks:get', name),
   createHook: (request) => ipcRenderer.invoke('hooks:create', request),
+  updateHook: (name, request) => ipcRenderer.invoke('hooks:update', name, request),
+  deleteHook: (name) => ipcRenderer.invoke('hooks:delete', name),
   getProjectHooks: (projectId) => ipcRenderer.invoke('hooks:get-project', projectId),
   addProjectHook: (projectId, hookEvent, hookName) => ipcRenderer.invoke('hooks:add-to-project', projectId, hookEvent, hookName),
   removeProjectHook: (projectId, hookEvent, hookName) => ipcRenderer.invoke('hooks:remove-from-project', projectId, hookEvent, hookName),

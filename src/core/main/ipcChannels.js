@@ -125,6 +125,8 @@ const ipcChannels = Object.freeze({
   listHooks: 'hooks:list',
   getHook: 'hooks:get',
   createHook: 'hooks:create',
+  updateHook: 'hooks:update',
+  deleteHook: 'hooks:delete',
   getProjectHooks: 'hooks:get-project',
   addProjectHook: 'hooks:add-to-project',
   removeProjectHook: 'hooks:remove-from-project',
