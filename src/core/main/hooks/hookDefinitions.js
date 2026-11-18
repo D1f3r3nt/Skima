@@ -20,7 +20,13 @@ const buildScriptFileName = (hookName) => `${hookName}.sh`
 
 const buildCommandPath = (hookName) => `${projectDirectoryVariable}/.claude/hooks/${buildScriptFileName(hookName)}`
 
-const buildPromptText = (skillName) => `Use ${skillName} with this info $ARGUMENTS`
+const recursionGuardVariable = 'SKIMA_HOOK_ACTIVE'
+
+const buildSkillCommand = ({ skillName, model }) => {
+  const modelFlag = model ? ` --model "${model}"` : ''
+  const invocation = `claude -p "Usa la skill ${skillName} con la informacion recibida por stdin"${modelFlag} --permission-mode acceptEdits --allowedTools "Bash(git diff:*),Bash(git status:*),Bash(git log:*)"`
+  return `[ -n "$${recursionGuardVariable}" ] || ${recursionGuardVariable}=1 ${invocation}`
+}
 
 const buildHookEntry = (hook) => {
   const optional = {
@@ -36,9 +42,9 @@ const buildHookEntry = (hook) => {
     }
   }
   return {
-    type: 'prompt',
-    prompt: buildPromptText(hook.skillName),
-    ...(hook.model ? { model: hook.model } : {}),
+    type: 'command',
+    async: true,
+    command: buildSkillCommand(hook),
     ...optional
   }
 }

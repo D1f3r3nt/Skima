@@ -30,11 +30,19 @@ const createScript = () => {
   return scriptPath
 }
 
-test('genera la entrada de un hook prompt sin campos opcionales vacíos', () => {
-  assert.deepEqual(buildHookEntry({ type: 'prompt', name: 'revisar', skillName: 'reviewer', model: null, timeout: null, statusMessage: null }), {
-    type: 'prompt',
-    prompt: 'Use reviewer with this info $ARGUMENTS'
-  })
+test('genera un hook de usar skill como command con claude -p y protección contra bucles', () => {
+  const entry = buildHookEntry({ type: 'prompt', name: 'revisar', skillName: 'reviewer', model: 'haiku', timeout: null, statusMessage: null })
+  assert.deepEqual(Object.keys(entry), ['type', 'async', 'command'])
+  assert.equal(entry.type, 'command')
+  assert.equal(entry.async, true)
+  assert.match(entry.command, /^\[ -n "\$SKIMA_HOOK_ACTIVE" \] \|\| SKIMA_HOOK_ACTIVE=1 claude -p "Usa la skill reviewer /)
+  assert.match(entry.command, /--model "haiku"/)
+  assert.match(entry.command, /--permission-mode acceptEdits/)
+})
+
+test('un hook de usar skill sin modelo no pasa --model', () => {
+  const entry = buildHookEntry({ type: 'prompt', name: 'revisar', skillName: 'reviewer', model: null })
+  assert.doesNotMatch(entry.command, /--model/)
 })
 
 test('genera la entrada de un hook command con la ruta del proyecto', () => {

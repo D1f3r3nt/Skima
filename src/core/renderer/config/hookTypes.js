@@ -1,5 +1,5 @@
 export const hookTypeOptions = Object.freeze([
-  { value: 'prompt', label: 'Prompt', icon: 'message', description: 'Pide a un modelo que use una de tus skills.' },
+  { value: 'prompt', label: 'Usar skill', icon: 'message', description: 'Lanza claude -p con el modelo elegido para que use una de tus skills.' },
   { value: 'agent', label: 'Agent', icon: 'subagent', description: 'Lanza un subagente con herramientas.' },
   { value: 'command', label: 'Command', icon: 'command', description: 'Ejecuta un script .sh en el proyecto.' }
 ])

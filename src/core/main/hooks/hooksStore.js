@@ -105,7 +105,7 @@ class HooksStore {
       createdAt: existing?.createdAt ?? this.now().toISOString()
     }
     if (type === 'prompt') {
-      return { hook: { ...base, skillName: normalizeSkillName(request.skillName), model: normalizeModel(request.model) }, scriptSource: null }
+      return { hook: { ...base, async: true, skillName: normalizeSkillName(request.skillName), model: normalizeModel(request.model) }, scriptSource: null }
     }
     const keepsExistingScript = existing?.type === 'command' && !String(request.scriptPath ?? '').trim()
     if (keepsExistingScript) {
