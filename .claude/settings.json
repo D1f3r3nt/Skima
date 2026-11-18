@@ -33,6 +33,18 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Use readme-checker with this info $ARGUMENTS",
+            "model": "haiku",
+            "statusMessage": "Actualizando README"
+          }
+        ]
+      }
     ]
   }
 }
