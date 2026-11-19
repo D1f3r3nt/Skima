@@ -101,7 +101,7 @@ const sanitizeGraphify = (value) => {
   }
 }
 
-const createDefaultPreferences = () => ({ theme: defaultThemeId, favoriteSkills: [] })
+const createDefaultPreferences = () => ({ theme: defaultThemeId, favoriteSkills: [], analyticsEnabled: true })
 
 const sanitizePreferences = (value) => {
   const source = isPlainObject(value) ? value : {}
@@ -110,7 +110,8 @@ const sanitizePreferences = (value) => {
     : []
   return {
     theme: asEnum(source.theme, themeIds, defaultThemeId),
-    favoriteSkills
+    favoriteSkills,
+    analyticsEnabled: asBoolean(source.analyticsEnabled, true)
   }
 }
 

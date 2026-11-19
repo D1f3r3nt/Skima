@@ -4,6 +4,7 @@ import { createPromptLaunchSettingsSection } from '../settings/promptLaunchSetti
 import { createPromptOverridesSettingsSection } from '../settings/promptOverridesSettingsSection.js'
 import { createGraphifySettingsSection } from '../settings/graphifySettingsSection.js'
 import { createThemesSettingsSection } from '../settings/themesSettingsSection.js'
+import { createPrivacySettingsSection } from '../settings/privacySettingsSection.js'
 import { settingsSectionIds } from './settingsSectionIds.js'
 
 export const settingsSections = Object.freeze([
@@ -12,5 +13,6 @@ export const settingsSections = Object.freeze([
   { id: settingsSectionIds.aiProvider, label: 'Proveedor de IA', icon: 'command', create: createPromptLaunchSettingsSection },
   { id: settingsSectionIds.promptOverrides, label: 'Ajustes por prompt', icon: 'editor', create: createPromptOverridesSettingsSection },
   { id: settingsSectionIds.graphify, label: 'Graphify', icon: 'fork', create: createGraphifySettingsSection },
-  { id: settingsSectionIds.themes, label: 'Temas', icon: 'palette', create: createThemesSettingsSection }
+  { id: settingsSectionIds.themes, label: 'Temas', icon: 'palette', create: createThemesSettingsSection },
+  { id: settingsSectionIds.privacy, label: 'Privacidad', icon: 'eye', create: createPrivacySettingsSection }
 ])

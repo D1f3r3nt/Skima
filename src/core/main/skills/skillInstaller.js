@@ -278,7 +278,9 @@ class SkillInstaller {
       this.onChanged()
       return {
         results: results.map(({ destination, ...rest }) => ({ ...rest, displayDestination: destination ? this.platformPaths.toDisplayPath(destination) : null })),
-        ok: results.every((result) => result.status !== 'error')
+        ok: results.every((result) => result.status !== 'error'),
+        source: planEntry.source,
+        scope: planEntry.scope
       }
     } finally {
       await this.discard(planId)

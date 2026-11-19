@@ -4,5 +4,6 @@ export const settingsSectionIds = Object.freeze({
   aiProvider: 'ai-provider',
   promptOverrides: 'prompt-overrides',
   graphify: 'graphify',
-  themes: 'themes'
+  themes: 'themes',
+  privacy: 'privacy'
 })

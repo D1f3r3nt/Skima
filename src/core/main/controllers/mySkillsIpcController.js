@@ -1,6 +1,8 @@
 const path = require('node:path')
 const { ipcChannels } = require('../ipcChannels')
 const { executeSafely } = require('./ipcResponse')
+const { analyticsEvents } = require('../analytics/analyticsEvents')
+const { disabledAnalytics } = require('../analytics/analyticsService')
 const { splitFrontmatter, validateSkillName } = require('../skills/skillManifest')
 const { validatePortableName } = require('../platform/portableNames')
 const { skillSpecConstants } = require('../skills/skillSpecConstants')
@@ -18,8 +20,9 @@ const executeWithCode = (action) => executeSafely(async () => {
 })
 
 class MySkillsIpcController {
-  constructor({ ipcMain, mySkillsStore, markdownRenderer, dialog, BrowserWindow, skillCreator = null, scanner = null }) {
+  constructor({ ipcMain, mySkillsStore, markdownRenderer, dialog, BrowserWindow, skillCreator = null, scanner = null, analyticsService = disabledAnalytics }) {
     this.ipcMain = ipcMain
+    this.analyticsService = analyticsService
     this.mySkillsStore = mySkillsStore
     this.markdownRenderer = markdownRenderer
     this.dialog = dialog
@@ -78,6 +81,7 @@ class MySkillsIpcController {
         }
         const created = await this.skillCreator.create({ form: request?.form ?? {}, runId: typeof request?.runId === 'string' ? request.runId : undefined })
         this.scanner?.invalidate()
+        this.analyticsService.track(analyticsEvents.skillCreated)
         return { ...created, path: undefined }
       })
     )

@@ -27,6 +27,7 @@ contextBridge.exposeInMainWorld('skimaApi', {
   getPreferences: () => ipcRenderer.invoke('preferences:get'),
   setTheme: (themeId) => ipcRenderer.invoke('preferences:set-theme', themeId),
   setFavoriteSkill: (skillKey, isFavorite) => ipcRenderer.invoke('preferences:set-favorite-skill', skillKey, isFavorite),
+  setAnalyticsEnabled: (isEnabled) => ipcRenderer.invoke('preferences:set-analytics-enabled', isEnabled),
   listLibraryArtifacts: () => ipcRenderer.invoke('library:list'),
   listCatalog: () => ipcRenderer.invoke('catalog:list'),
   refreshCatalog: (options) => ipcRenderer.invoke('catalog:refresh', options),

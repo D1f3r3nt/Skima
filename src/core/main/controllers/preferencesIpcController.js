@@ -14,6 +14,9 @@ class PreferencesIpcController {
     this.ipcMain.handle(ipcChannels.setTheme, (event, themeId) =>
       executeSafely(() => this.preferencesService.setTheme(String(themeId ?? '')))
     )
+    this.ipcMain.handle(ipcChannels.setAnalyticsEnabled, (event, isEnabled) =>
+      executeSafely(() => this.preferencesService.setAnalyticsEnabled(isEnabled === true))
+    )
     this.ipcMain.handle(ipcChannels.setFavoriteSkill, (event, skillKey, isFavorite) =>
       executeSafely(() => this.preferencesService.setFavoriteSkill(String(skillKey ?? ''), isFavorite === true))
     )

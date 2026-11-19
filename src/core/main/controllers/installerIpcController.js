@@ -1,8 +1,11 @@
 const { ipcChannels } = require('../ipcChannels')
 const { executeSafely } = require('./ipcResponse')
+const { analyticsEvents, downloadSources } = require('../analytics/analyticsEvents')
+const { disabledAnalytics } = require('../analytics/analyticsService')
 
 const repositoryPattern = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/
 const scopes = ['global', 'project']
+const downloadSourceTypes = { github: downloadSources.github, imported: downloadSources.imported }
 
 const validateSource = (source) => {
   if (!source || typeof source !== 'object') {
@@ -31,12 +34,27 @@ const validateSource = (source) => {
 }
 
 class InstallerIpcController {
-  constructor({ ipcMain, skillInstaller, settingsStore, projectModel, registry }) {
+  constructor({ ipcMain, skillInstaller, settingsStore, projectModel, registry, analyticsService = disabledAnalytics }) {
     this.ipcMain = ipcMain
+    this.analyticsService = analyticsService
     this.skillInstaller = skillInstaller
     this.settingsStore = settingsStore
     this.projectModel = projectModel
     this.registry = registry
+  }
+
+  trackDownloads({ results, source, scope }) {
+    const downloadSource = downloadSourceTypes[source.type]
+    if (!downloadSource) {
+      return
+    }
+    const skillNames = new Set(results.filter((result) => result.status === 'installed').map((result) => result.skillName))
+    skillNames.forEach((skillName) => this.analyticsService.track(analyticsEvents.skillDownloaded, {
+      skill_name: skillName,
+      skill_repository: source.repository,
+      download_source: downloadSource,
+      install_scope: scope
+    }))
   }
 
   register() {
@@ -66,7 +84,11 @@ class InstallerIpcController {
       })
     )
     this.ipcMain.handle(ipcChannels.executeSkillInstall, (event, planId, decisions) =>
-      executeSafely(() => this.skillInstaller.execute({ planId: String(planId), decisions: decisions && typeof decisions === 'object' ? decisions : {} }))
+      executeSafely(async () => {
+        const { source, scope, ...outcome } = await this.skillInstaller.execute({ planId: String(planId), decisions: decisions && typeof decisions === 'object' ? decisions : {} })
+        this.trackDownloads({ results: outcome.results, source, scope })
+        return outcome
+      })
     )
     this.ipcMain.handle(ipcChannels.discardSkillInstall, (event, planId) =>
       executeSafely(() => this.skillInstaller.discard(String(planId)))

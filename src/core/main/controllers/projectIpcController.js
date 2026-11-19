@@ -1,10 +1,13 @@
 const { ipcChannels } = require('../ipcChannels')
 const { executeSafely } = require('./ipcResponse')
+const { analyticsEvents } = require('../analytics/analyticsEvents')
+const { disabledAnalytics } = require('../analytics/analyticsService')
 const { sanitizeModelRestriction } = require('../projects/projectConfigSchema')
 
 class ProjectIpcController {
-  constructor({ ipcMain, projectModel, projectDataStore }) {
+  constructor({ ipcMain, projectModel, projectDataStore, analyticsService = disabledAnalytics }) {
     this.ipcMain = ipcMain
+    this.analyticsService = analyticsService
     this.projectModel = projectModel
     this.projectDataStore = projectDataStore
   }
@@ -25,7 +28,11 @@ class ProjectIpcController {
       executeSafely(() => this.projectModel.getById(projectId))
     )
     this.ipcMain.handle(ipcChannels.addProject, (event, project) =>
-      executeSafely(() => this.projectModel.add(project))
+      executeSafely(async () => {
+        const projects = await this.projectModel.add(project)
+        this.analyticsService.track(analyticsEvents.projectAdded)
+        return projects
+      })
     )
     this.ipcMain.handle(ipcChannels.removeProject, (event, projectId) =>
       executeSafely(() => this.projectModel.remove(projectId))

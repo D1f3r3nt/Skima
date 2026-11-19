@@ -1,10 +1,13 @@
 const { themeIds } = require('../settings/settingsSchema')
+const { analyticsEvents } = require('../analytics/analyticsEvents')
+const { disabledAnalytics } = require('../analytics/analyticsService')
 
 const maximumSkillKeyLength = 255
 
 class PreferencesService {
-  constructor({ settingsStore }) {
+  constructor({ settingsStore, analyticsService = disabledAnalytics }) {
     this.settingsStore = settingsStore
+    this.analyticsService = analyticsService
   }
 
   async get() {
@@ -18,6 +21,14 @@ class PreferencesService {
     }
     const settings = await this.settingsStore.update((draft) => {
       draft.preferences.theme = themeId
+    })
+    this.analyticsService.track(analyticsEvents.themeChanged, { theme_id: themeId })
+    return settings.preferences
+  }
+
+  async setAnalyticsEnabled(isEnabled) {
+    const settings = await this.settingsStore.update((draft) => {
+      draft.preferences.analyticsEnabled = isEnabled
     })
     return settings.preferences
   }

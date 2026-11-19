@@ -1,9 +1,12 @@
 const { ipcChannels } = require('../ipcChannels')
 const { executeSafely } = require('./ipcResponse')
+const { analyticsEvents } = require('../analytics/analyticsEvents')
+const { disabledAnalytics } = require('../analytics/analyticsService')
 
 class HooksIpcController {
-  constructor({ ipcMain, hooksStore, projectHooksService }) {
+  constructor({ ipcMain, hooksStore, projectHooksService, analyticsService = disabledAnalytics }) {
     this.ipcMain = ipcMain
+    this.analyticsService = analyticsService
     this.hooksStore = hooksStore
     this.projectHooksService = projectHooksService
   }
@@ -63,7 +66,11 @@ class HooksIpcController {
       executeSafely(() => this.getHookDetails(String(name ?? '')))
     )
     this.ipcMain.handle(ipcChannels.createHook, (event, request) =>
-      executeSafely(() => this.hooksStore.create(request ?? {}))
+      executeSafely(async () => {
+        const hook = await this.hooksStore.create(request ?? {})
+        this.analyticsService.track(analyticsEvents.hookCreated, { hook_type: hook.type })
+        return hook
+      })
     )
     this.ipcMain.handle(ipcChannels.updateHook, (event, name, request) =>
       executeSafely(() => this.updateHook(String(name ?? ''), request ?? {}))

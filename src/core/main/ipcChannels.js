@@ -25,6 +25,7 @@ const ipcChannels = Object.freeze({
   getPreferences: 'preferences:get',
   setTheme: 'preferences:set-theme',
   setFavoriteSkill: 'preferences:set-favorite-skill',
+  setAnalyticsEnabled: 'preferences:set-analytics-enabled',
   listLibraryArtifacts: 'library:list',
   listCatalog: 'catalog:list',
   refreshCatalog: 'catalog:refresh',

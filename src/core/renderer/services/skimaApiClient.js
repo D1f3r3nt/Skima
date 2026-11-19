@@ -123,6 +123,10 @@ export class SkimaApiClient {
     return this.unwrap(this.bridge.setTheme(themeId))
   }
 
+  setAnalyticsEnabled(isEnabled) {
+    return this.unwrap(this.bridge.setAnalyticsEnabled(isEnabled))
+  }
+
   setFavoriteSkill(skillKey, isFavorite) {
     return this.unwrap(this.bridge.setFavoriteSkill(skillKey, isFavorite))
   }

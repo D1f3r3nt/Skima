@@ -1,9 +1,12 @@
 const { ipcChannels } = require('../ipcChannels')
 const { executeSafely } = require('./ipcResponse')
+const { analyticsEvents } = require('../analytics/analyticsEvents')
+const { disabledAnalytics } = require('../analytics/analyticsService')
 
 class MemoriesIpcController {
-  constructor({ ipcMain, memoriesService, memoryMemorizer }) {
+  constructor({ ipcMain, memoriesService, memoryMemorizer, analyticsService = disabledAnalytics }) {
     this.ipcMain = ipcMain
+    this.analyticsService = analyticsService
     this.memoriesService = memoriesService
     this.memoryMemorizer = memoryMemorizer
   }
@@ -19,7 +22,11 @@ class MemoriesIpcController {
       executeSafely(() => this.memoriesService.previewTarget(request ?? {}))
     )
     this.ipcMain.handle(ipcChannels.createMemory, (event, request) =>
-      executeSafely(() => this.memoriesService.create(request ?? {}))
+      executeSafely(async () => {
+        const memory = await this.memoriesService.create(request ?? {})
+        this.analyticsService.track(analyticsEvents.memoryCreated)
+        return memory
+      })
     )
     this.ipcMain.handle(ipcChannels.removeMemory, (event, memoryId) =>
       executeSafely(() => this.memoriesService.remove(String(memoryId ?? '')))

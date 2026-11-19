@@ -133,10 +133,32 @@ En la carpeta de datos de la app (`app.getPath('userData')`):
 | `my-skills-data/<nombre>.json` | Respuestas originales del asistente y datos de la optimización. Están aparte para que no se copien al instalar. |
 | `backups/mcp/` | Copias de los archivos MCP antes de modificarlos. |
 | `memories/memories.json` | Registro de memorias (id, nombre y ruta). Cada memoria vive en su propia carpeta, fuera de userData. |
+| `analytics.json` | Identificador anónimo (`client_id`) para las estadísticas de uso. |
 
 El nombre de un proyecto es solo de Skima: no se renombra la carpeta. El contexto todavía se guarda en `settings.json`; pasará al `AGENTS.md` del proyecto (ver `docs/plan-pendiente.md`).
 
 Skima no usa ningún token para la API de GitHub. La versión 2 del esquema de ajustes borra el antiguo campo `github.token` de los archivos ya guardados. Si GitHub limita las consultas, la Biblioteca sigue con lo que hay en caché y lo dice con un aviso neutro.
+
+## Estadísticas de uso (Google Analytics)
+
+Skima envía eventos a GA4 (proyecto de Firebase `skima-133e2`, Measurement ID `G-F9T3C6DQL4`) desde el proceso main con el **Measurement Protocol** (`src/core/main/analytics/`). El SDK web de Firebase no sirve aquí: las páginas se cargan con `file://` y `getAnalytics` queda desactivado.
+
+- **Cuándo se envía**: solo en la app empaquetada (o en desarrollo con `SKIMA_ANALYTICS_DEBUG=1`), con el *API secret* del Measurement Protocol en `measurementProtocolApiSecret` (`src/core/main/analytics/analyticsConfig.js`; en desarrollo se puede pasar con `SKIMA_ANALYTICS_API_SECRET`), y con *Configuración › Privacidad* activado (por defecto sí; se guarda en `preferences.analyticsEnabled`). Para probar en desarrollo: `SKIMA_ANALYTICS_DEBUG=1` envía los eventos con `debug_mode` y aparecen en DebugView.
+- **Propiedades de usuario** en todos los eventos: `operating_system`, `app_version`, `app_theme`.
+- **Eventos**:
+
+| Evento | Parámetros | Cuándo |
+|---|---|---|
+| `app_launched` | `operating_system`, `os_version`, `app_version`, `app_theme`, `installed_skill_count`, `configured_project_count`, `ai_provider_count` | Al arrancar |
+| `ai_provider_in_use` | `provider_id` | Al arrancar, uno por agente activado |
+| `skill_created` | — | Al crear una skill propia |
+| `skill_downloaded` | `skill_name`, `skill_repository`, `download_source` (`github`, `imported`, `skills_sh`), `install_scope` | Por cada skill instalada desde la Biblioteca, un repositorio importado o skills.sh |
+| `project_added` | — | Al añadir un proyecto |
+| `memory_created` | — | Al crear una memoria |
+| `hook_created` | `hook_type` | Al crear un hook |
+| `theme_changed` | `theme_id` | Al cambiar de tema |
+
+Para verlos en los informes, registra en GA4 (*Administrar › Definiciones personalizadas*) los parámetros como dimensiones de evento (`provider_id`, `skill_name`, `skill_repository`, `download_source`, `install_scope`, `hook_type`, `theme_id`, `os_version`), los contadores como métricas (`installed_skill_count`, `configured_project_count`, `ai_provider_count`) y `operating_system` y `app_theme` como dimensiones de usuario.
 
 ## Pantalla de Proyecto
 

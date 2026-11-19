@@ -1,4 +1,5 @@
 const path = require('node:path')
+const os = require('node:os')
 const fs = require('node:fs/promises')
 const { JsonFileStorage } = require('./storage/jsonFileStorage')
 const { FileSystemService } = require('./services/fileSystemService')
@@ -92,6 +93,11 @@ const { MemoriesService } = require('./memories/memoriesService')
 const { MemorySkillLocator } = require('./memories/memorySkillLocator')
 const { MemoryMemorizer } = require('./memories/memoryMemorizer')
 const { MemoriesIpcController } = require('./controllers/memoriesIpcController')
+const { analyticsConfig } = require('./analytics/analyticsConfig')
+const { MeasurementProtocolClient } = require('./analytics/measurementProtocolClient')
+const { UsageSnapshotCollector } = require('./analytics/usageSnapshotCollector')
+const { AnalyticsService } = require('./analytics/analyticsService')
+const { describeAnalyticsEnvironment } = require('./analytics/analyticsEnvironment')
 
 const { ipcChannels } = require('./ipcChannels')
 
@@ -99,7 +105,8 @@ const fileNames = Object.freeze({
   settings: 'settings.json',
   legacyProjects: 'proyectos.json',
   cacheDirectory: 'cache',
-  githubResponses: 'github-responses'
+  githubResponses: 'github-responses',
+  analyticsIdentity: 'analytics.json'
 })
 
 const createAppContainer = async ({ electron, appRootDirectory }) => {
@@ -317,6 +324,17 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     })
   }
 
+  const isAnalyticsDebug = process.env.SKIMA_ANALYTICS_DEBUG === '1'
+  const analyticsService = new AnalyticsService({
+    client: new MeasurementProtocolClient({ ...analyticsConfig, fetchImplementation: (url, options) => net.fetch(url, options) }),
+    identityStorage: new JsonFileStorage(path.join(userDataDirectory, fileNames.analyticsIdentity), null),
+    settingsStore,
+    snapshotCollector: new UsageSnapshotCollector({ settingsStore, projectModel, scanner, registry: providerRegistry }),
+    environment: describeAnalyticsEnvironment({ platform: process.platform, osRelease: os.release(), appVersion: app.getVersion() }),
+    isActive: app.isPackaged || isAnalyticsDebug,
+    debugMode: isAnalyticsDebug
+  })
+
   const skillsShInstaller = new SkillsShInstaller({
     registry: providerRegistry,
     settingsStore,
@@ -328,15 +346,15 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
   })
 
   const registerControllers = () => {
-    new ProjectIpcController({ ipcMain, projectModel, projectDataStore }).register()
+    new ProjectIpcController({ ipcMain, projectModel, projectDataStore, analyticsService }).register()
     new EnvironmentIpcController({ ipcMain, projectModel, envFileService }).register()
     new LibraryIpcController({ ipcMain, libraryModel }).register()
     new CatalogIpcController({ ipcMain, catalogService, repositoryDetailsService, importedDetailsService, skimaRepositorySource, broadcast }).register()
     new ImportIpcController({ ipcMain, importer: repositoryImporter, broadcast }).register()
     new SettingsIpcController({ ipcMain, agentSettingsService, promptLaunchSettingsService, agentBridge }).register()
-    new PreferencesIpcController({ ipcMain, preferencesService: new PreferencesService({ settingsStore }) }).register()
+    new PreferencesIpcController({ ipcMain, preferencesService: new PreferencesService({ settingsStore, analyticsService }) }).register()
     new AiIpcController({ ipcMain, askAi, agentBridge }).register()
-    new InstallerIpcController({ ipcMain, skillInstaller, settingsStore, projectModel, registry: providerRegistry }).register()
+    new InstallerIpcController({ ipcMain, skillInstaller, settingsStore, projectModel, registry: providerRegistry, analyticsService }).register()
     new McpIpcController({ ipcMain, mcpInstaller }).register()
     new AgentFileIpcController({ ipcMain, agentFileInstaller }).register()
     new ProfileIpcController({ ipcMain, gitSessionService }).register()
@@ -344,15 +362,16 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     new GraphifyIpcController({ ipcMain, graphifyService, graphifyInstaller, graphifyIntegrationService, graphifySettingsService }).register()
     graphifyInstaller.ensureInstalled().catch(() => {})
     new CliInstallIpcController({ ipcMain, cliInstaller }).register()
-    new SkillsSiteIpcController({ ipcMain, skillsShInstaller }).register()
+    new SkillsSiteIpcController({ ipcMain, skillsShInstaller, analyticsService }).register()
     new PublishIpcController({ ipcMain, skillPublisher, externalLinkService: new ExternalLinkService({ shell }) }).register()
-    new MySkillsIpcController({ ipcMain, mySkillsStore, markdownRenderer, dialog, BrowserWindow, scanner, skillCreator }).register()
-    new HooksIpcController({ ipcMain, hooksStore, projectHooksService }).register()
-    new MemoriesIpcController({ ipcMain, memoriesService, memoryMemorizer }).register()
+    new MySkillsIpcController({ ipcMain, mySkillsStore, markdownRenderer, dialog, BrowserWindow, scanner, skillCreator, analyticsService }).register()
+    new HooksIpcController({ ipcMain, hooksStore, projectHooksService, analyticsService }).register()
+    new MemoriesIpcController({ ipcMain, memoriesService, memoryMemorizer, analyticsService }).register()
     new InstalledIpcController({ ipcMain, scanner, installedDetailsService, uninstaller, shell, platformPaths, projectModel, installationLocator }).register()
     new DialogIpcController({ ipcMain, folderDialogService: new FolderDialogService({ dialog, BrowserWindow }) }).register()
     new LinkIpcController({ ipcMain, externalLinkService: new ExternalLinkService({ shell }) }).register()
     new WindowIpcController({ ipcMain, BrowserWindow }).register()
+    analyticsService.trackAppLaunch().catch(() => {})
   }
 
   const dispose = () => {
@@ -400,6 +419,7 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     memoriesService,
     scanner,
     uninstaller,
+    analyticsService,
     registerControllers,
     dispose
   }
