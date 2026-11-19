@@ -1,4 +1,5 @@
 const fs = require('node:fs/promises')
+const { isProtectedSkill } = require('../memories/memoryConstants')
 
 class SkillUninstaller {
   constructor({ scanner, platformPaths, settingsStore, trashItem }) {
@@ -14,6 +15,9 @@ class SkillUninstaller {
       return { path: candidate, ok: false, reason: 'La ruta no es absoluta.' }
     }
     const normalized = this.platformPaths.path.resolve(candidate)
+    if (isProtectedSkill(this.platformPaths.path.basename(normalized))) {
+      return { path: normalized, ok: false, reason: 'La necesitan las memorias de Skima; no se puede desinstalar.' }
+    }
     const parentDirectory = this.platformPaths.path.dirname(normalized)
     const knownParent = knownDirectories.find((directory) => this.platformPaths.isSamePath(directory, parentDirectory))
     if (!knownParent) {

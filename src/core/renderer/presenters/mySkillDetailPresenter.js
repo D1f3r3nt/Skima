@@ -1,9 +1,11 @@
 import { formatDate } from '../services/formatters.js'
 import { presentInstallations } from './installedDetailPresenter.js'
+import { isProtectedSkillName, protectedSkillNotice } from '../config/protectedArtifacts.js'
 
 export const presentMySkillDetail = (skill, { installations, handlers }) => {
   const outdated = installations.items.filter((installation) => installation.contentHash && installation.contentHash !== skill.contentHash)
   const generation = skill.generation ?? {}
+  const isProtected = isProtectedSkillName(skill.name)
   return {
     variant: 'mySkill',
     typeId: 'skill',
@@ -12,22 +14,25 @@ export const presentMySkillDetail = (skill, { installations, handlers }) => {
     title: skill.name,
     author: null,
     description: skill.description ?? '',
-    badges: [{ label: 'Creada por ti', variant: 'accent' }],
+    badges: [{ label: 'Creada por ti', variant: 'accent' }, ...(isProtected ? [{ label: 'Memorias', variant: 'warning' }] : [])],
     compactActions: true,
     primaryAction: { label: 'Instalar', icon: 'download', onClick: handlers.onInstall },
     secondaryActions: [],
     menuActions: [
       { label: 'Editar', icon: 'editor', onClick: handlers.onEdit },
-      { label: 'Eliminar', icon: 'trash', variant: 'danger', onClick: handlers.onRemove }
+      ...(isProtected ? [] : [{ label: 'Eliminar', icon: 'trash', variant: 'danger', onClick: handlers.onRemove }])
     ],
-    notices: outdated.length > 0
-      ? [{
-        variant: 'warning',
-        text: `Has cambiado esta skill y ${outdated.length === 1 ? 'una copia instalada no se ha actualizado' : `${outdated.length} copias instaladas no se han actualizado`}: las copias no se actualizan solas.`,
-        actionLabel: 'Reinstalar',
-        onAction: handlers.onReinstall
-      }]
-      : [],
+    notices: [
+      ...(isProtected ? [{ variant: 'info', text: protectedSkillNotice }] : []),
+      ...(outdated.length > 0
+        ? [{
+          variant: 'warning',
+          text: `Has cambiado esta skill y ${outdated.length === 1 ? 'una copia instalada no se ha actualizado' : `${outdated.length} copias instaladas no se han actualizado`}: las copias no se actualizan solas.`,
+          actionLabel: 'Reinstalar',
+          onAction: handlers.onReinstall
+        }]
+        : [])
+    ],
     score: null,
     documents: [{ id: 'skill', label: 'SKILL.md', html: skill.html }],
     fileTree: { filePaths: skill.files, isTruncated: false },

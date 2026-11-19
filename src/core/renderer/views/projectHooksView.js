@@ -4,6 +4,7 @@ import { createNoticeBanner } from '../../../components/molecules/noticeBanner.j
 import { createLoader } from '../../../components/atoms/loader.js'
 import { hookEvents, hookEventSides } from '../config/hookEvents.js'
 import { describeHookType } from '../config/hookTypes.js'
+import { protectedHookNotice } from '../config/protectedArtifacts.js'
 
 export class ProjectHooksView {
   constructor() {
@@ -27,7 +28,7 @@ export class ProjectHooksView {
       ]
     }
     const assignedNames = new Set(assigned.map((hook) => hook.name))
-    const available = hooks.filter((hook) => !assignedNames.has(hook.name))
+    const available = hooks.filter((hook) => !assignedNames.has(hook.name) && !hook.isProtected)
     if (available.length === 0) {
       return [{ label: 'Ya están todos los hooks', icon: 'check', disabled: true }]
     }
@@ -54,6 +55,8 @@ export class ProjectHooksView {
         typeClass: hook.type,
         removeLabel: `Quitar ${hook.name} de ${event.title}`,
         disabled: isBusy,
+        isRemovable: !hook.isProtected,
+        lockedLabel: protectedHookNotice,
         onOpen: () => handlers.onOpen(hook.name),
         onRemove: () => handlers.onRemove(event.id, hook.name)
       }))

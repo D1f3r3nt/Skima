@@ -21,7 +21,7 @@ class HooksIpcController {
     const usage = await this.projectHooksService.findUsage(name)
     for (const entry of usage) {
       for (const hookEvent of entry.events) {
-        await this.projectHooksService.removeHook(entry.projectId, hookEvent, name)
+        await this.projectHooksService.removeHook(entry.projectId, hookEvent, name, { allowProtected: true })
       }
     }
     return usage
@@ -30,7 +30,7 @@ class HooksIpcController {
   async reattachToProjects(name, usage) {
     for (const entry of usage) {
       for (const hookEvent of entry.events) {
-        await this.projectHooksService.addHook(entry.projectId, hookEvent, name)
+        await this.projectHooksService.addHook(entry.projectId, hookEvent, name, { allowProtected: true })
       }
     }
   }
@@ -49,6 +49,7 @@ class HooksIpcController {
   }
 
   async deleteHook(name) {
+    this.hooksStore.assertDeletable(name)
     await this.detachFromProjects(name)
     await this.hooksStore.delete(name)
     return true

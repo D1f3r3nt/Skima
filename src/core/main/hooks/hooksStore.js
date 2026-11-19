@@ -12,6 +12,7 @@ const {
   normalizeModel,
   normalizeSkillName
 } = require('./hookDefinitions')
+const { isProtectedHook, isReservedHookName } = require('../memories/memoryConstants')
 
 const libraryFileName = 'hooks.json'
 const scriptsFolderName = 'scripts'
@@ -58,7 +59,34 @@ class HooksStore {
   }
 
   describe(hook) {
-    return { ...hook, entry: buildHookEntry(hook) }
+    return { ...hook, isProtected: isProtectedHook(hook.name), entry: buildHookEntry(hook) }
+  }
+
+  assertNameAvailable(name) {
+    if (isReservedHookName(name)) {
+      throw new Error(`El nombre «${name}» lo reserva Skima para las memorias.`)
+    }
+  }
+
+  assertProtectedShape(existing, hook) {
+    if (isProtectedHook(existing.name) && (hook.type !== existing.type || hook.skillName !== existing.skillName)) {
+      throw new Error(`El hook «${existing.name}» lo usan las memorias: no se puede cambiar su tipo ni su skill.`)
+    }
+  }
+
+  ensureSystemHook(definition) {
+    return this.enqueue(async () => {
+      const hooks = await this.readAll()
+      const existing = hooks.find((hook) => hook.name === definition.name)
+      const isValid = existing && existing.type === definition.type && existing.skillName === definition.skillName
+      if (isValid) {
+        return this.describe(existing)
+      }
+      const hook = { ...definition, createdAt: existing?.createdAt ?? this.now().toISOString() }
+      const others = hooks.filter((candidate) => candidate.name !== definition.name)
+      await this.storage.write([...others, hook])
+      return this.describe(hook)
+    })
   }
 
   getScriptPath(hookName) {
@@ -121,6 +149,7 @@ class HooksStore {
   create(request) {
     return this.enqueue(async () => {
       const { hook, scriptSource } = await this.buildHook(request)
+      this.assertNameAvailable(hook.name)
       const hooks = await this.readAll()
       if (hooks.some((existing) => existing.name === hook.name)) {
         throw new Error('Ya tienes un hook con ese nombre en Skima.')
@@ -142,6 +171,7 @@ class HooksStore {
         throw new Error('El hook no existe en Skima.')
       }
       const { hook, scriptSource } = await this.buildHook({ ...request, name: existing.name }, existing)
+      this.assertProtectedShape(existing, hook)
       if (scriptSource) {
         await fs.mkdir(this.scriptsDirectory, { recursive: true })
         await fs.copyFile(scriptSource, this.getScriptPath(hook.name))
@@ -153,6 +183,12 @@ class HooksStore {
     })
   }
 
+  assertDeletable(name) {
+    if (isProtectedHook(name)) {
+      throw new Error(`El hook «${name}» lo necesitan las memorias de Skima y no se puede eliminar.`)
+    }
+  }
+
   delete(rawName) {
     return this.enqueue(async () => {
       const hooks = await this.readAll()
@@ -160,6 +196,7 @@ class HooksStore {
       if (!existing) {
         throw new Error('El hook no existe en Skima.')
       }
+      this.assertDeletable(existing.name)
       await this.storage.write(hooks.filter((hook) => hook.name !== existing.name))
       await fs.rm(this.getScriptPath(existing.name), { force: true })
     })

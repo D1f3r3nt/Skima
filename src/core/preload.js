@@ -164,6 +164,24 @@ contextBridge.exposeInMainWorld('skimaApi', {
   getProjectHooks: (projectId) => ipcRenderer.invoke('hooks:get-project', projectId),
   addProjectHook: (projectId, hookEvent, hookName) => ipcRenderer.invoke('hooks:add-to-project', projectId, hookEvent, hookName),
   removeProjectHook: (projectId, hookEvent, hookName) => ipcRenderer.invoke('hooks:remove-from-project', projectId, hookEvent, hookName),
+  listMemories: () => ipcRenderer.invoke('memories:list'),
+  getMemory: (memoryId) => ipcRenderer.invoke('memories:get', memoryId),
+  previewMemoryTarget: (request) => ipcRenderer.invoke('memories:preview-target', request),
+  createMemory: (request) => ipcRenderer.invoke('memories:create', request),
+  removeMemory: (memoryId) => ipcRenderer.invoke('memories:remove', memoryId),
+  getMemoryDocument: (memoryId, relativePath) => ipcRenderer.invoke('memories:get-document', memoryId, relativePath),
+  linkMemoryProject: (memoryId, projectId) => ipcRenderer.invoke('memories:link-project', memoryId, projectId),
+  unlinkMemoryProject: (memoryId, projectId) => ipcRenderer.invoke('memories:unlink-project', memoryId, projectId),
+  repairMemoryProject: (memoryId, projectId) => ipcRenderer.invoke('memories:repair-project', memoryId, projectId),
+  getProjectMemory: (projectId) => ipcRenderer.invoke('memories:get-project-memory', projectId),
+  startMemorize: (memoryId) => ipcRenderer.invoke('memories:memorize', memoryId),
+  cancelMemorize: (memoryId) => ipcRenderer.invoke('memories:cancel-memorize', memoryId),
+  getMemorizeStatus: (memoryId) => ipcRenderer.invoke('memories:memorize-status', memoryId),
+  onMemorizeEvent: (callback) => {
+    const listener = (event, payload) => callback(payload)
+    ipcRenderer.on('memories:memorize-event', listener)
+    return () => ipcRenderer.removeListener('memories:memorize-event', listener)
+  },
   openExternalLink: (url) => ipcRenderer.invoke('links:open-external', url),
   minimizeWindow: () => ipcRenderer.invoke('window:minimize'),
   toggleMaximizeWindow: () => ipcRenderer.invoke('window:toggle-maximize'),

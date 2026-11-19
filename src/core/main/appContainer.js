@@ -86,6 +86,12 @@ const { PreferencesIpcController } = require('./controllers/preferencesIpcContro
 const { HooksStore } = require('./hooks/hooksStore')
 const { ProjectHooksService } = require('./hooks/projectHooksService')
 const { HooksIpcController } = require('./controllers/hooksIpcController')
+const { MemoriesStore } = require('./memories/memoriesStore')
+const { MemoryProjectInstaller } = require('./memories/memoryProjectInstaller')
+const { MemoriesService } = require('./memories/memoriesService')
+const { MemorySkillLocator } = require('./memories/memorySkillLocator')
+const { MemoryMemorizer } = require('./memories/memoryMemorizer')
+const { MemoriesIpcController } = require('./controllers/memoriesIpcController')
 
 const { ipcChannels } = require('./ipcChannels')
 
@@ -282,6 +288,26 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
 
   const hooksStore = new HooksStore({ directory: path.join(userDataDirectory, 'hooks') })
   const projectHooksService = new ProjectHooksService({ projectModel, hooksStore, platformPaths })
+  const memoriesService = new MemoriesService({
+    memoriesStore: new MemoriesStore({ storage: new JsonFileStorage(path.join(userDataDirectory, 'memories', 'memories.json'), []) }),
+    projectModel,
+    installer: new MemoryProjectInstaller({
+      projectHooksService,
+      hooksStore,
+      platformPaths,
+      loaderScriptSource: path.join(appRootDirectory, 'src', 'core', 'main', 'memories', 'scripts', 'getMemory.sh')
+    }),
+    markdownRenderer,
+    platformPaths,
+    skillLocator: new MemorySkillLocator({ registry: providerRegistry, pathResolver, settingsStore, platformPaths }),
+    trashItem: (itemPath) => shell.trashItem(itemPath)
+  })
+  const memoryMemorizer = new MemoryMemorizer({
+    memoriesService,
+    askAi,
+    platformPaths,
+    broadcast: (payload) => broadcast(ipcChannels.memorizeEvent, payload)
+  })
 
   const broadcast = (channel, payload) => {
     BrowserWindow.getAllWindows().forEach((window) => {
@@ -322,6 +348,7 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     new PublishIpcController({ ipcMain, skillPublisher, externalLinkService: new ExternalLinkService({ shell }) }).register()
     new MySkillsIpcController({ ipcMain, mySkillsStore, markdownRenderer, dialog, BrowserWindow, scanner, skillCreator }).register()
     new HooksIpcController({ ipcMain, hooksStore, projectHooksService }).register()
+    new MemoriesIpcController({ ipcMain, memoriesService, memoryMemorizer }).register()
     new InstalledIpcController({ ipcMain, scanner, installedDetailsService, uninstaller, shell, platformPaths, projectModel, installationLocator }).register()
     new DialogIpcController({ ipcMain, folderDialogService: new FolderDialogService({ dialog, BrowserWindow }) }).register()
     new LinkIpcController({ ipcMain, externalLinkService: new ExternalLinkService({ shell }) }).register()
@@ -370,6 +397,7 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     mySkillsStore,
     hooksStore,
     projectHooksService,
+    memoriesService,
     scanner,
     uninstaller,
     registerControllers,

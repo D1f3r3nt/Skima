@@ -1,4 +1,5 @@
 import { formatDate } from '../services/formatters.js'
+import { isProtectedSkillName, protectedSkillNotice } from '../config/protectedArtifacts.js'
 
 export const presentInstallations = (installations, { onOpenFolder }) => installations.map((installation) => ({
   scope: installation.scope,
@@ -13,6 +14,7 @@ export const presentInstalledDetail = (details, { isInstalledGlobally, onInstall
   const scopeLabel = scope === 'global' ? 'Global' : `Proyecto: ${project?.name ?? ''}`
   const origin = row.origin
   const canUpdate = origin.type === 'github'
+  const canUninstall = !isProtectedSkillName(row.folderName) && !isProtectedSkillName(row.name)
 
   return {
     variant: 'installed',
@@ -29,12 +31,13 @@ export const presentInstalledDetail = (details, { isInstalledGlobally, onInstall
     ],
     compactActions: true,
     primaryAction: isInstalledGlobally ? null : { label: 'Instalar', icon: 'download', onClick: onInstallElsewhere },
-    secondaryActions: isInstalledGlobally ? [{ label: 'Desinstalar', icon: 'trash', variant: 'danger', onClick: onUninstall }] : [],
+    secondaryActions: isInstalledGlobally && canUninstall ? [{ label: 'Desinstalar', icon: 'trash', variant: 'danger', onClick: onUninstall }] : [],
     menuActions: [
       ...(canUpdate ? [{ label: 'Buscar actualización', icon: 'refresh', onClick: onUpdate }] : []),
-      ...(isInstalledGlobally ? [] : [{ label: 'Desinstalar', icon: 'trash', variant: 'danger', onClick: onUninstall }])
+      ...(isInstalledGlobally || !canUninstall ? [] : [{ label: 'Desinstalar', icon: 'trash', variant: 'danger', onClick: onUninstall }])
     ],
     notices: [
+      ...(canUninstall ? [] : [{ variant: 'info', text: protectedSkillNotice }]),
       ...row.issues.map((issue) => ({ variant: issue.severity === 'error' ? 'warning' : 'info', text: issue.message })),
       ...(row.differentVersions ? [{ variant: 'warning', text: 'Esta skill tiene contenido distinto según el agente. Reinstálala para dejar la misma versión en todos.' }] : []),
       ...(row.matchesMySkill && origin.type !== 'mySkill' ? [{ variant: 'info', text: `Tiene el mismo nombre que tu skill «${row.matchesMySkill}» de Mis skills.` }] : [])    ],

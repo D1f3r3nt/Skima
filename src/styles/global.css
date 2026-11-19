@@ -2350,3 +2350,123 @@ div.agent-row__summary {
         animation-duration: 2400ms;
     }
 }
+
+.tooltip {
+    position: relative;
+    display: inline-flex;
+}
+
+.tooltip__bubble {
+    position: absolute;
+    top: calc(100% + 8px);
+    z-index: 20;
+    width: 280px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-popover);
+    font-size: 12px;
+    line-height: 1.45;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 120ms ease, transform 120ms ease, visibility 120ms;
+    pointer-events: none;
+}
+
+.tooltip__bubble--end {
+    right: 0;
+}
+
+.tooltip__bubble--start {
+    left: 0;
+}
+
+.tooltip__bubble strong {
+    color: var(--color-text-strong);
+    font-size: 12.5px;
+}
+
+.tooltip__bubble p {
+    margin: 0;
+}
+
+.tooltip:hover .tooltip__bubble,
+.tooltip:focus-within .tooltip__bubble {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.run-log {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-left: 3px solid var(--run-log-color, var(--color-accent));
+    border-radius: var(--radius-medium);
+}
+
+.run-log--success {
+    --run-log-color: var(--color-tool);
+}
+
+.run-log--error {
+    --run-log-color: var(--color-danger);
+}
+
+.run-log--info {
+    --run-log-color: var(--color-skill);
+}
+
+.run-log__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.run-log__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--color-text-strong);
+}
+
+.run-log__title > .icon {
+    color: var(--run-log-color, var(--color-accent));
+}
+
+.run-log__spinner {
+    animation: loader-spin 1s linear infinite;
+}
+
+.run-log__text {
+    color: var(--color-text);
+    user-select: text;
+}
+
+.run-log__lines {
+    max-height: 180px;
+    margin: 0;
+    padding: 8px 10px;
+    overflow: auto;
+    background: var(--color-surface-sunken);
+    border-radius: var(--radius-small);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    user-select: text;
+}

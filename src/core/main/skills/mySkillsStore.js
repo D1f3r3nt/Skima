@@ -7,6 +7,7 @@ const { skillSpecConstants } = require('./skillSpecConstants')
 const { parseSkillManifest } = require('./skillManifest')
 const { skillFileFolders, withSkillName } = require('./skillForm')
 const { hashSkillFolder, listFiles } = require('./skillFolderHash')
+const { isProtectedSkill } = require('../memories/memoryConstants')
 
 const draftFileName = '_draft.json'
 const fileLimits = Object.freeze({ maximumFiles: 50, maximumFileBytes: 5 * 1024 * 1024 })
@@ -202,6 +203,9 @@ class MySkillsStore {
   }
 
   async remove(name) {
+    if (isProtectedSkill(name)) {
+      throw createStoreError('PROTECTED_SKILL', `La skill «${name}» la necesitan las memorias de Skima y no se puede eliminar.`)
+    }
     const skillPath = this.skillPath(name)
     await this.trashItem(skillPath)
     await fs.rm(this.dataPath(name), { force: true })

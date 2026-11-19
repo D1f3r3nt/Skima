@@ -410,6 +410,28 @@
     color: var(--color-text-strong);
 }
 
+.file-tree__label--button {
+    width: 100%;
+    padding: 2px 6px;
+    margin-left: -6px;
+    background: none;
+    border: none;
+    border-radius: var(--radius-small, 4px);
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.file-tree__label--button:hover {
+    background: var(--color-surface-hover);
+}
+
+.file-tree__label--selected {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-text);
+}
+
 .file-tree__note {
     margin-top: 6px;
     color: var(--color-text-muted);

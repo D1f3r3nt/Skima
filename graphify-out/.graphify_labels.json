@@ -1,7 +1,5 @@
 {
   "0": "Catalog Service",
-  "16": "CLI Install Recipes",
-  "22": "Git Session Service",
   "23": "IPC Controllers (AGENTS, AI, Catalog)",
   "27": "with Group",
   "28": "package.json Group",
@@ -31,9 +29,7 @@
   "95": "graphify command Group",
   "99": "CLAUDE.md Group",
   "103": "agentFileIpcController.js Group",
-  "104": "installedIpcController.js Group",
   "105": "publishIpcController.js Group",
-  "106": "SkillUninstaller Group",
   "107": "Prompt injection attack forms Group",
   "108": "AgentsMdIpcController Group",
   "111": "AGENTS.md format Group",

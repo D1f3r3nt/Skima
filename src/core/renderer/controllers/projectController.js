@@ -3,6 +3,7 @@ import { createNoticeBanner } from '../../../components/molecules/noticeBanner.j
 import { createButton } from '../../../components/atoms/button.js'
 import { createTabs } from '../../../components/molecules/tabs.js'
 import { createOverflowMenu } from '../../../components/molecules/overflowMenu.js'
+import { createIcon } from '../../../components/atoms/icon.js'
 import { createEmptyState } from '../../../components/organisms/emptyState.js'
 import { typedConfirmDialog } from '../../../components/organisms/typedConfirmDialog.js'
 import { showToast } from '../../../components/molecules/toast.js'
@@ -115,7 +116,29 @@ export class ProjectController {
     pathElement.textContent = this.project.displayPath
     pathElement.title = 'El nombre es solo de Skima: la carpeta del disco no cambia.'
     lineElement.append(pathElement)
+    this.loadMemoryLink(lineElement)
     return lineElement
+  }
+
+  async loadMemoryLink(lineElement) {
+    const membership = await this.apiClient.getProjectMemory(this.project.id).catch(() => null)
+    if (!membership) {
+      return
+    }
+    const linkElement = document.createElement('button')
+    linkElement.type = 'button'
+    linkElement.className = 'project-page__memory-link'
+    const label = membership.name ? `Memoria: ${membership.name}` : 'Memoria no registrada en Skima'
+    linkElement.title = `Vinculado a la memoria de ${membership.displayPath}`
+    const textElement = document.createElement('span')
+    textElement.textContent = label
+    linkElement.append(createIcon('memory', { size: 13 }), textElement)
+    if (membership.memoryId) {
+      linkElement.addEventListener('click', () => navigateTo(buildPageUrl('memories', { id: membership.memoryId })))
+    } else {
+      linkElement.disabled = true
+    }
+    lineElement.append(linkElement)
   }
 
   createGraphAction() {

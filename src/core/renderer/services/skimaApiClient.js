@@ -528,6 +528,62 @@ export class SkimaApiClient {
     return this.unwrap(this.bridge.removeProjectHook(projectId, hookEvent, hookName))
   }
 
+  listMemories() {
+    return this.unwrap(this.bridge.listMemories())
+  }
+
+  getMemory(memoryId) {
+    return this.unwrap(this.bridge.getMemory(memoryId))
+  }
+
+  previewMemoryTarget(request) {
+    return this.unwrap(this.bridge.previewMemoryTarget(request))
+  }
+
+  createMemory(request) {
+    return this.unwrap(this.bridge.createMemory(request))
+  }
+
+  removeMemory(memoryId) {
+    return this.unwrap(this.bridge.removeMemory(memoryId))
+  }
+
+  getMemoryDocument(memoryId, relativePath) {
+    return this.unwrap(this.bridge.getMemoryDocument(memoryId, relativePath))
+  }
+
+  linkMemoryProject(memoryId, projectId) {
+    return this.unwrap(this.bridge.linkMemoryProject(memoryId, projectId))
+  }
+
+  unlinkMemoryProject(memoryId, projectId) {
+    return this.unwrap(this.bridge.unlinkMemoryProject(memoryId, projectId))
+  }
+
+  repairMemoryProject(memoryId, projectId) {
+    return this.unwrap(this.bridge.repairMemoryProject(memoryId, projectId))
+  }
+
+  getProjectMemory(projectId) {
+    return this.unwrap(this.bridge.getProjectMemory(projectId))
+  }
+
+  startMemorize(memoryId) {
+    return this.unwrap(this.bridge.startMemorize(memoryId))
+  }
+
+  cancelMemorize(memoryId) {
+    return this.unwrap(this.bridge.cancelMemorize(memoryId))
+  }
+
+  getMemorizeStatus(memoryId) {
+    return this.unwrap(this.bridge.getMemorizeStatus(memoryId))
+  }
+
+  onMemorizeEvent(callback) {
+    return this.bridge.onMemorizeEvent(callback)
+  }
+
   openExternalLink(url) {
     return this.unwrap(this.bridge.openExternalLink(url))
   }

@@ -1,6 +1,7 @@
 const fs = require('node:fs/promises')
 const { writeFileAtomic, readTextIfExists } = require('../platform/atomicFileSystem')
 const { hookEvents, buildHookEntry, buildCommandPath, buildScriptFileName, assertHookEvent } = require('./hookDefinitions')
+const { isProtectedHook } = require('../memories/memoryConstants')
 
 const claudeFolderName = '.claude'
 const settingsFileName = 'settings.json'
@@ -95,7 +96,7 @@ class ProjectHooksService {
           return
         }
         if (!assigned.some((existing) => existing.name === hook.name)) {
-          assigned.push({ name: hook.name, type: hook.type })
+          assigned.push({ name: hook.name, type: hook.type, isProtected: isProtectedHook(hook.name) })
         }
       })
       return [event, assigned]
@@ -110,11 +111,19 @@ class ProjectHooksService {
     return this.describeAssignments(settings, this.createMatcher(hooks))
   }
 
-  addHook(projectId, event, hookName) {
+  assertManageable(hookName, allowProtected) {
+    if (isProtectedHook(hookName) && !allowProtected) {
+      throw new Error(`El hook «${hookName}» lo gestionan las memorias: se añade o se quita al meter o sacar el proyecto de una memoria.`)
+    }
+  }
+
+  async addHook(projectId, event, hookName, { allowProtected = false } = {}) {
+    this.assertManageable(hookName, allowProtected)
     return this.updateEvent(projectId, assertHookEvent(event), (names) => (names.includes(hookName) ? names : [...names, hookName]), hookName)
   }
 
-  removeHook(projectId, event, hookName) {
+  async removeHook(projectId, event, hookName, { allowProtected = false } = {}) {
+    this.assertManageable(hookName, allowProtected)
     return this.updateEvent(projectId, assertHookEvent(event), (names) => names.filter((name) => name !== hookName), null)
   }
 

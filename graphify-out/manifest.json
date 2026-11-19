@@ -1,8 +1,8 @@
 {
   ".claude/settings.json": {
-    "mtime": 1795013979.4881787,
-    "seen": 1795014497.806175,
-    "ast_hash": "317099b510b9cae85638bac41bb0f1b6",
+    "mtime": 1795014643.1544392,
+    "seen": 1795104476.681521,
+    "ast_hash": "562e4cf88f6dd24e29656beafde571c2",
     "semantic_hash": ""
   },
   ".github/workflows/ci.yml": {
@@ -126,10 +126,10 @@
     "semantic_hash": "de9b1ca9e3bf3a05a79cb9551b2cf6d1"
   },
   "src/components/molecules/fileTree.js": {
-    "mtime": 1794244579.5969265,
-    "seen": 1794303652.1122725,
-    "ast_hash": "b54835ed0d2f5c56bfe67495c1ed47ae",
-    "semantic_hash": "b54835ed0d2f5c56bfe67495c1ed47ae"
+    "mtime": 1795104295.664793,
+    "seen": 1795104476.681521,
+    "ast_hash": "e724b36edb5b429b5fe4762fbb879dca",
+    "semantic_hash": ""
   },
   "src/components/molecules/folderInput.js": {
     "mtime": 1795005207.3075788,
@@ -414,9 +414,9 @@
     "semantic_hash": "d46fb531fbb210761682a2f6a3988634"
   },
   "src/core/main/appContainer.js": {
-    "mtime": 1795013238.5492094,
-    "seen": 1795014497.806175,
-    "ast_hash": "94c64b775818aff64098dd16051a8879",
+    "mtime": 1795105976.7080042,
+    "seen": 1795106153.3541603,
+    "ast_hash": "6be5f3289f1ea181b390c6a853856878",
     "semantic_hash": ""
   },
   "src/core/main/artifacts/agentFileAdapters.js": {
@@ -714,9 +714,9 @@
     "semantic_hash": "581d08fd067b002547023bc90c76cd11"
   },
   "src/core/main/ipcChannels.js": {
-    "mtime": 1795012218.8341568,
-    "seen": 1795014497.806175,
-    "ast_hash": "135025eed0996c39b291f5009f7f6589",
+    "mtime": 1795105976.662149,
+    "seen": 1795106153.3541603,
+    "ast_hash": "5a0b7ba20039e85d0ae3a89c23ba8944",
     "semantic_hash": ""
   },
   "src/core/main/markdown/markdownRenderer.js": {
@@ -858,9 +858,9 @@
     "semantic_hash": "026687afea8a4620be653eae788c09a9"
   },
   "src/core/main/prompts/promptRegistry.js": {
-    "mtime": 1794940313.47388,
-    "seen": 1794940799.408418,
-    "ast_hash": "81e21515c8478a6890046774e737234a",
+    "mtime": 1795104204.7005634,
+    "seen": 1795104476.681521,
+    "ast_hash": "7f3c08c0655d235a3a8d3783b532da0b",
     "semantic_hash": ""
   },
   "src/core/main/prompts/promptRegistryChecks.js": {
@@ -1032,9 +1032,9 @@
     "semantic_hash": "fe0af590a7a8a6d13551f7bb5d492434"
   },
   "src/core/main/skills/mySkillsStore.js": {
-    "mtime": 1794933925.2260191,
-    "seen": 1794934073.457382,
-    "ast_hash": "f7d5c0b71b5aff5f1294842cb0fae6b5",
+    "mtime": 1795104204.7005634,
+    "seen": 1795104476.681521,
+    "ast_hash": "03ab0a16662e3adbcb0bab059f5ec3bf",
     "semantic_hash": ""
   },
   "src/core/main/skills/skillFolderHash.js": {
@@ -1068,10 +1068,10 @@
     "semantic_hash": "ffab0bb3e14fba9b012b2efcbbbbfbd6"
   },
   "src/core/main/skills/skillUninstaller.js": {
-    "mtime": 1794246975.1808014,
-    "seen": 1794303652.1132734,
-    "ast_hash": "26217a23fd3c26f49af2c72c9261c9d5",
-    "semantic_hash": "26217a23fd3c26f49af2c72c9261c9d5"
+    "mtime": 1795104204.701807,
+    "seen": 1795104476.681521,
+    "ast_hash": "85e0b607d5666294669c97cba39b426c",
+    "semantic_hash": ""
   },
   "src/core/main/skima/skimaRepositoryConfig.js": {
     "mtime": 1794299570.8584406,
@@ -1116,9 +1116,9 @@
     "semantic_hash": ""
   },
   "src/core/preload.js": {
-    "mtime": 1795012218.8341568,
-    "seen": 1795014497.806175,
-    "ast_hash": "5e3d337f72c04eaf23a9f6a5b774ced4",
+    "mtime": 1795105976.6631484,
+    "seen": 1795106153.3541603,
+    "ast_hash": "2acc7e4c22d251c2d0d6410978b13f50",
     "semantic_hash": ""
   },
   "src/core/renderer/bootstrapPage.js": {
@@ -1200,9 +1200,9 @@
     "semantic_hash": ""
   },
   "src/core/renderer/controllers/projectController.js": {
-    "mtime": 1794959726.2454658,
-    "seen": 1794960344.764942,
-    "ast_hash": "a0aa479df8e5ebe8d36d7b36ee06e74f",
+    "mtime": 1795104446.1549048,
+    "seen": 1795104476.681521,
+    "ast_hash": "f4973aabded67fb000c8f0f08376067c",
     "semantic_hash": ""
   },
   "src/core/renderer/controllers/projectsController.js": {
@@ -1284,15 +1284,15 @@
     "semantic_hash": "20a78cfafdd1717d73df3b15d70e439a"
   },
   "src/core/renderer/presenters/installedDetailPresenter.js": {
-    "mtime": 1795010928.5619457,
-    "seen": 1795014497.806175,
-    "ast_hash": "8e609c0255cf9d604726d8f8251d59e4",
+    "mtime": 1795104273.3405714,
+    "seen": 1795104476.681521,
+    "ast_hash": "64325f6f8c69db78274a72c02ab420d6",
     "semantic_hash": ""
   },
   "src/core/renderer/presenters/mySkillDetailPresenter.js": {
-    "mtime": 1794959839.0929322,
-    "seen": 1794960344.764942,
-    "ast_hash": "e564bcfcdb0acf0a17af6cf708ee465e",
+    "mtime": 1795104279.0541487,
+    "seen": 1795104476.681521,
+    "ast_hash": "1aa66b45a8f09b86dafd13b8ddef36cc",
     "semantic_hash": ""
   },
   "src/core/renderer/projectTabs/contextTab.js": {
@@ -1374,9 +1374,9 @@
     "semantic_hash": "5b51a0cc3f17e5386c4db4843a0a82ff"
   },
   "src/core/renderer/services/skimaApiClient.js": {
-    "mtime": 1795012218.8362103,
-    "seen": 1795014497.8071792,
-    "ast_hash": "d4c4d3d38be5a86c9ea95622259d02eb",
+    "mtime": 1795105976.6631484,
+    "seen": 1795106153.3541603,
+    "ast_hash": "2af5f3d61cc62db11635d3092685eca1",
     "semantic_hash": ""
   },
   "src/core/renderer/services/wizardEngine.js": {
@@ -1716,9 +1716,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1795014375.2110107,
-    "seen": 1795014497.8071792,
-    "ast_hash": "90127ebeeaa4d25894eb4f60a6b095c3",
+    "mtime": 1795106130.6219573,
+    "seen": 1795106153.3551617,
+    "ast_hash": "b91de4ad2e200083d6b040720916075b",
     "semantic_hash": ""
   },
   "catalog/verification-report.md": {
@@ -2448,9 +2448,9 @@
     "semantic_hash": ""
   },
   "src/core/renderer/pages/memoriesPage.js": {
-    "mtime": 1794957703.946733,
-    "seen": 1794958183.085589,
-    "ast_hash": "a2b1e0d4d37a6e6c0c7762ad0885bf81",
+    "mtime": 1795104415.8171315,
+    "seen": 1795104476.681521,
+    "ast_hash": "026037d5626a73439265fe06ad04b504",
     "semantic_hash": ""
   },
   "src/core/renderer/pages/myPcPage.js": {
@@ -2538,9 +2538,9 @@
     "semantic_hash": ""
   },
   "src/pages/memories.html": {
-    "mtime": 1794957703.9227366,
-    "seen": 1794958183.085589,
-    "ast_hash": "60789a13ce4669655c9317d3b1dc9b68",
+    "mtime": 1795104436.3135478,
+    "seen": 1795104476.681521,
+    "ast_hash": "446d1d1f9494259a3b554115aca4d0a6",
     "semantic_hash": ""
   },
   "src/pages/myPc.html": {
@@ -2604,9 +2604,9 @@
     "semantic_hash": ""
   },
   "src/components/molecules/hookChip.js": {
-    "mtime": 1795004963.4217215,
-    "seen": 1795005358.139876,
-    "ast_hash": "f2e266ffbbb087c8fe2a88f83bfd03da",
+    "mtime": 1795104273.135593,
+    "seen": 1795104476.681521,
+    "ast_hash": "72eadc9b76f329f0c0ca2fd5b9260fa6",
     "semantic_hash": ""
   },
   "src/components/molecules/hookRow.js": {
@@ -2622,9 +2622,9 @@
     "semantic_hash": ""
   },
   "src/core/main/controllers/hooksIpcController.js": {
-    "mtime": 1795012218.8336418,
-    "seen": 1795014497.806175,
-    "ast_hash": "91540c5b37c796d38fa472a95a5a3652",
+    "mtime": 1795104204.699394,
+    "seen": 1795104476.681521,
+    "ast_hash": "1c4546824e1f346aa9b42274678e0145",
     "semantic_hash": ""
   },
   "src/core/main/hooks/hookDefinitions.js": {
@@ -2634,15 +2634,15 @@
     "semantic_hash": ""
   },
   "src/core/main/hooks/hooksStore.js": {
-    "mtime": 1795014137.7536767,
-    "seen": 1795014497.806175,
-    "ast_hash": "1e6e83ae365b5964f1130eb6db067420",
+    "mtime": 1795104204.699394,
+    "seen": 1795104476.681521,
+    "ast_hash": "bd33f87432e2c55393ce98b7ce35f2e0",
     "semantic_hash": ""
   },
   "src/core/main/hooks/projectHooksService.js": {
-    "mtime": 1795004764.3296106,
-    "seen": 1795005358.139876,
-    "ast_hash": "a8e809fe501a4f45d6aa0ac041035fe0",
+    "mtime": 1795104204.699394,
+    "seen": 1795104476.681521,
+    "ast_hash": "1cea37dd55b9bc369672250f71c3c489",
     "semantic_hash": ""
   },
   "src/core/renderer/config/globalTabs.js": {
@@ -2706,9 +2706,9 @@
     "semantic_hash": ""
   },
   "src/core/renderer/views/hookDetailView.js": {
-    "mtime": 1795012218.8362103,
-    "seen": 1795014497.8071792,
-    "ast_hash": "b97c25f14ead38d31e61b399113a3858",
+    "mtime": 1795104708.6951168,
+    "seen": 1795104829.703463,
+    "ast_hash": "53db0d25743315c800204ae7ded65871",
     "semantic_hash": ""
   },
   "src/core/renderer/views/hookFormView.js": {
@@ -2718,9 +2718,9 @@
     "semantic_hash": ""
   },
   "src/core/renderer/views/projectHooksView.js": {
-    "mtime": 1795004963.883153,
-    "seen": 1795005358.139876,
-    "ast_hash": "da5946b107f3d0bb812fdecee248be7d",
+    "mtime": 1795104273.1631072,
+    "seen": 1795104476.681521,
+    "ast_hash": "c1a23ce39395d0ddb1d80d0ccface8b4",
     "semantic_hash": ""
   },
   "test/hooks/hooks.test.js": {
@@ -2739,6 +2739,150 @@
     "mtime": 1795005115.0668557,
     "seen": 1795005358.139876,
     "ast_hash": "94c159a0188f00409e4f07722e0372f8",
+    "semantic_hash": ""
+  },
+  "src/components/molecules/memoryCard.js": {
+    "mtime": 1795104337.8552244,
+    "seen": 1795104476.681521,
+    "ast_hash": "217c779c23d6479fd3a226bdf9d5f170",
+    "semantic_hash": ""
+  },
+  "src/components/molecules/memoryProjectRow.js": {
+    "mtime": 1795104337.9524183,
+    "seen": 1795104476.681521,
+    "ast_hash": "62c171f06ee43bcee9f76e1c8b4cc705",
+    "semantic_hash": ""
+  },
+  "src/components/molecules/tooltip.js": {
+    "mtime": 1795104296.0070355,
+    "seen": 1795104476.681521,
+    "ast_hash": "4dc34bdd77c116c7869f8e59089878eb",
+    "semantic_hash": ""
+  },
+  "src/components/organisms/memoryFormModal.js": {
+    "mtime": 1795104323.2971747,
+    "seen": 1795104476.681521,
+    "ast_hash": "377d6b7ed6a4823d440fabecb0a38e33",
+    "semantic_hash": ""
+  },
+  "src/core/main/controllers/memoriesIpcController.js": {
+    "mtime": 1795105976.6763759,
+    "seen": 1795106153.3541603,
+    "ast_hash": "80fc4dd3cf1d1f94cc00bd9ffe2ac1f0",
+    "semantic_hash": ""
+  },
+  "src/core/main/memories/memoriesService.js": {
+    "mtime": 1795105975.5805545,
+    "seen": 1795106153.3541603,
+    "ast_hash": "8f63fe1d9f0d5e4378827fa6056aab5a",
+    "semantic_hash": ""
+  },
+  "src/core/main/memories/memoriesStore.js": {
+    "mtime": 1795103988.6482768,
+    "seen": 1795104476.681521,
+    "ast_hash": "b0f17247fdf0227527675de827092495",
+    "semantic_hash": ""
+  },
+  "src/core/main/memories/memoryConstants.js": {
+    "mtime": 1795103897.1059675,
+    "seen": 1795104476.681521,
+    "ast_hash": "1234c1b83299c33eff1edaedb086885b",
+    "semantic_hash": ""
+  },
+  "src/core/main/memories/memoryFile.js": {
+    "mtime": 1795103902.5106235,
+    "seen": 1795104476.681521,
+    "ast_hash": "03ef6048e9d063d1482f67bd7884bf2a",
+    "semantic_hash": ""
+  },
+  "src/core/main/memories/memoryProjectInstaller.js": {
+    "mtime": 1795104169.2084644,
+    "seen": 1795104476.681521,
+    "ast_hash": "2fa284bcff152f0211f4c825da2c9281",
+    "semantic_hash": ""
+  },
+  "src/core/main/memories/memoryTemplate.js": {
+    "mtime": 1795103919.2591896,
+    "seen": 1795104476.681521,
+    "ast_hash": "391a030c17ebe5f9bc8c5e0d1f3077f0",
+    "semantic_hash": ""
+  },
+  "src/core/main/memories/scripts/getMemory.sh": {
+    "mtime": 1795103959.3422964,
+    "seen": 1795104476.681521,
+    "ast_hash": "667ffb5d056b9dbfec116055fec9cf77",
+    "semantic_hash": ""
+  },
+  "src/core/main/prompts/definitions/memoriesUpdate.js": {
+    "mtime": 1795104105.2647488,
+    "seen": 1795104476.681521,
+    "ast_hash": "7032e316d45440ab0f711123eb977534",
+    "semantic_hash": ""
+  },
+  "src/core/renderer/config/protectedArtifacts.js": {
+    "mtime": 1795104273.0622823,
+    "seen": 1795104476.681521,
+    "ast_hash": "1d0a40e6286991a505c9640e90867806",
+    "semantic_hash": ""
+  },
+  "src/core/renderer/controllers/memoriesController.js": {
+    "mtime": 1795104363.1819282,
+    "seen": 1795104476.681521,
+    "ast_hash": "3367385e569c42a0be4f86601346c9bf",
+    "semantic_hash": ""
+  },
+  "src/core/renderer/controllers/memoryDetailController.js": {
+    "mtime": 1795106034.487695,
+    "seen": 1795106153.3541603,
+    "ast_hash": "4855c0dd2b8329d4d425e785c71aa7a8",
+    "semantic_hash": ""
+  },
+  "src/core/renderer/services/memoryNaming.js": {
+    "mtime": 1795104545.3851826,
+    "seen": 1795104829.703463,
+    "ast_hash": "4e8b012f35745a35199a055a24e2a1b3",
+    "semantic_hash": ""
+  },
+  "src/core/renderer/views/memoriesView.js": {
+    "mtime": 1795104362.9664516,
+    "seen": 1795104476.681521,
+    "ast_hash": "91d1041c44b74fd2c8cac686eada9e9c",
+    "semantic_hash": ""
+  },
+  "src/core/renderer/views/memoryDetailView.js": {
+    "mtime": 1795106017.8609881,
+    "seen": 1795106153.3541603,
+    "ast_hash": "55f10365f3fffad27192130e7687beb5",
+    "semantic_hash": ""
+  },
+  "test/memories/memories.test.js": {
+    "mtime": 1795106057.3513443,
+    "seen": 1795106153.3551617,
+    "ast_hash": "b742b1410ab195ffaee55dad4e80a3cd",
+    "semantic_hash": ""
+  },
+  "prompts/09_memories.md": {
+    "mtime": 1795103701.106825,
+    "seen": 1795104476.681521,
+    "ast_hash": "1a472cef5679b94c1427574bb3674b87",
+    "semantic_hash": ""
+  },
+  "src/core/main/memories/memorySkillLocator.js": {
+    "mtime": 1795104633.599013,
+    "seen": 1795104829.703463,
+    "ast_hash": "f65b8e77306a296c6891d1e63c341913",
+    "semantic_hash": ""
+  },
+  "src/components/molecules/runLog.js": {
+    "mtime": 1795105991.776356,
+    "seen": 1795106153.3541603,
+    "ast_hash": "b7befe0fe71798d4f219cabc6117c758",
+    "semantic_hash": ""
+  },
+  "src/core/main/memories/memoryMemorizer.js": {
+    "mtime": 1795105959.4943326,
+    "seen": 1795106153.3541603,
+    "ast_hash": "fa0fa1d63602bd04c638966fa5b76b0d",
     "semantic_hash": ""
   },
   "package-lock.json": {

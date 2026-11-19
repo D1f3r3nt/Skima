@@ -1,6 +1,6 @@
 import { createIcon } from '../atoms/icon.js'
 
-export function createHookChip({ label, icon, typeClass, removeLabel, onOpen, onRemove, disabled = false }) {
+export function createHookChip({ label, icon, typeClass, removeLabel, onOpen, onRemove, disabled = false, isRemovable = true, lockedLabel = '' }) {
   const chipElement = document.createElement('li')
   chipElement.className = `hook-chip artifact-type--${typeClass}`
 
@@ -13,6 +13,15 @@ export function createHookChip({ label, icon, typeClass, removeLabel, onOpen, on
   textElement.textContent = label
   openButton.append(createIcon(icon, { size: 14, className: 'hook-chip__icon' }), textElement)
   openButton.addEventListener('click', onOpen)
+
+  if (!isRemovable) {
+    chipElement.classList.add('hook-chip--locked')
+    if (lockedLabel) {
+      openButton.title = lockedLabel
+    }
+    chipElement.append(openButton)
+    return chipElement
+  }
 
   const removeButton = document.createElement('button')
   removeButton.type = 'button'

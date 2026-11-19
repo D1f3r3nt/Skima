@@ -8,6 +8,7 @@ import { createEmptyState } from '../../../components/organisms/emptyState.js'
 import { describeHookType } from '../config/hookTypes.js'
 import { describeHookEvent } from '../config/hookEvents.js'
 import { buildHookMetadataEntries, describeHookSummary } from '../presenters/hookPresenter.js'
+import { protectedHookNotice } from '../config/protectedArtifacts.js'
 
 const createSectionTitle = (text) => {
   const titleElement = document.createElement('h2')
@@ -53,13 +54,13 @@ export class HookDetailView {
     }))
   }
 
-  buildActions({ onEdit, onDelete, hookName }) {
+  buildActions({ onEdit, onDelete, hookName, isProtected }) {
     const actionsElement = document.createElement('div')
     actionsElement.className = 'item-detail__actions item-detail__actions--compact'
-    actionsElement.append(
-      createButton({ label: 'Editar', icon: 'editor', size: 'medium', className: 'item-detail__primary', onClick: onEdit }),
-      createOverflowMenu({ items: [{ label: 'Eliminar', icon: 'trash', variant: 'danger', onClick: onDelete }], ariaLabel: `Más acciones de ${hookName}` }).element
-    )
+    actionsElement.append(createButton({ label: 'Editar', icon: 'editor', size: 'medium', className: 'item-detail__primary', onClick: onEdit }))
+    if (!isProtected) {
+      actionsElement.append(createOverflowMenu({ items: [{ label: 'Eliminar', icon: 'trash', variant: 'danger', onClick: onDelete }], ariaLabel: `Más acciones de ${hookName}` }).element)
+    }
     return actionsElement
   }
 
@@ -79,11 +80,11 @@ export class HookDetailView {
     titleElement.textContent = hook.name
     const subtitleElement = document.createElement('div')
     subtitleElement.className = 'item-detail__subtitle'
-    subtitleElement.append(createBadge({ label: `Hook · ${type.label}`, variant: 'accent' }))
+    subtitleElement.append(createBadge({ label: `Hook · ${type.label}`, variant: 'accent' }), ...(hook.isProtected ? [createBadge({ label: 'Memorias', variant: 'warning' })] : []))
     const descriptionElement = document.createElement('p')
     descriptionElement.className = 'item-detail__description'
-    descriptionElement.textContent = describeHookSummary(hook)
-    headingElement.append(titleElement, subtitleElement, descriptionElement, this.buildActions({ ...actions, hookName: hook.name }))
+    descriptionElement.textContent = hook.isProtected ? `${describeHookSummary(hook)}. ${protectedHookNotice}` : describeHookSummary(hook)
+    headingElement.append(titleElement, subtitleElement, descriptionElement, this.buildActions({ ...actions, hookName: hook.name, isProtected: Boolean(hook.isProtected) }))
 
     headerElement.append(iconElement, headingElement)
     return headerElement

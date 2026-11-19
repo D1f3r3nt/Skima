@@ -1,17 +1,17 @@
-# Graph Report - Skima  (2026-11-18)
+# Graph Report - Skima  (2026-11-19)
 
 ## Corpus Check
-- 444 files · ~342,046 words
+- 468 files · ~353,353 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 53 file(s) not represented in the graph (top: .csv 37, .css 10, (none) 3)
+- Unclassified: 54 file(s) not represented in the graph (top: .csv 37, .css 11, (none) 3)
 
 ## Summary
-- 4005 nodes · 9302 edges · 213 communities (159 shown, 54 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 374 edges (avg confidence: 0.85)
+- 4244 nodes · 9961 edges · 215 communities (155 shown, 60 thin omitted)
+- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 387 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5fda9968`
+- Built from commit: `4fba4a52`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -22,24 +22,24 @@
 - skillPublisher.test.js
 - repositoryScore.js
 - agentsMd.test.js
-- MemoryStorage
+- ref_node_assert
 - ProviderPathResolver
-- .unwrap
-- RepositoryImporter
-- createIcon
-- showToast
-- graphifyIntegration.test.js
-- importedDetailsService.js
-- providerRegistry.js
-- CLI Install Recipes
-- envFileService.js
-- hooks.test.js
-- navigateTo
-- skillForm.js
-- appContainer.js
-- Git Session Service
+- SkimaApiClient
+- createButton
+- ProjectController
+- createSelectInput
+- graphifyService.js
+- ref_node_fs
+- geminiCliAdapter.js
+- agentFileInstaller.test.js
+- createPlatformPaths
+- hooksStore.js
+- graphifyInstaller.test.js
+- mySkills.test.js
+- memoryProjectInstaller.js
+- GitSessionService
 - IPC Controllers (AGENTS, AI, Catalog)
-- bootstrapPage.js
+- navigateTo
 - createNoticeBanner
 - agentsMdService.js
 - with Group
@@ -50,47 +50,47 @@
 - agentsMdOptimizer.js
 - safeArchiveExtractor.js
 - validate_data.py
-- settingsSections.test.js
-- settingsSchema.js
+- memoryProjectInstaller.js
+- AgentBridge
 - executableLocator.js Group
 - projectConfigSchema.js
-- SkillPublisher
+- providerRegistry.js
 - catalogMaintenance.js Group
-- createContextTab
+- contextTab.js
 - DetailController
-- skillInstaller.js
-- createButton
+- mySkillsStore.js
+- SkillFormView
 - PlatformPaths Group
 - promptRegistry.js Group
 - CliInstaller Group
 - libraryDocument.test.js
 - shellView.js Group
-- agentsSettingsSection.js
+- design_system.py
 - modelSelector.test.js
 - graphifyIntegrationService.js
-- hookDetailView.js
-- design_system.py
+- MemoryDetailView
+- MemoriesService
 - readTextIfExists
 - MySkillsStore Group
 - fakeAgentEnvironment.js
 - build Group
-- fakeGitTools.js
+- HooksStore
 - preview.py
 - test_design_system_mode.py
 - search_stack
-- format_ascii_box
+- envFileService.js
 - search
 - AskAi Group
-- repositoryDetailsService.test.js
+- globalHooksController.js
 - mainWindow.js
 - generate_design_system
 - docs/plan-pendiente.md Group
 - README.md Group
-- mcpInstaller.js
-- graphifyRuntime.js
+- memories.test.js
+- GraphifyRuntime
 - markdownRenderer.js
-- InstalledScanner
-- createLoader
+- platformPaths.js
+- createIcon
 - scripts Group
 - HookFormView
 - ProjectHooksView
@@ -111,27 +111,27 @@
 - SkillFormController
 - Headless mode Group
 - graphify command Group
-- sourceOfTruthDocument.js
+- ProjectHooksService
 - GitToolchain
 - BM25
 - CLAUDE.md Group
-- agentsMdTemplate.js
+- cliInstaller.test.js
 - skillInstaller.test.js
 - themeService.js
 - agentFileIpcController.js Group
-- installedIpcController.js Group
+- format_ascii_box
 - publishIpcController.js Group
-- SkillUninstaller Group
+- SkillUninstaller
 - Prompt injection attack forms Group
 - AgentsMdIpcController Group
-- sourceOfTruth.test.js
+- settingsSchema.js
 - InstalledScanner
 - AGENTS.md format Group
 - Eight-section AGENTS.md template Group
 - Skill security severity rubric Group
 - Skill publishing flow with gh and git Group
 - SettingsStore
-- mcpDefinitionDetector.js
+- mcpInstall.test.js
 - fakeGraphify.js
 - AGENTS.md Group
 - Condensing and translating rules Group
@@ -141,14 +141,14 @@
 - Skill quality rubric Group
 - Skill frontmatter fields Group
 - Skima SKILL.md template Group
-- ref_node_crypto
+- isPlainObject
 - CliInstallIpcController Group
 - ProjectStore
 - 03_editor_skills.md
 - mcpIpcController.js
 - InstallerIpcController Group
-- skillsSiteView.js
-- detect_domain
+- showToast
+- mcpDefinitionDetector.js
 - EnvironmentIpcController
 - npm package claude-code Group
 - OpenCode version package name split Group
@@ -171,73 +171,75 @@
 - mismatch SKILL.md fixture (name other-name, folder mismatch Group
 - no-manifest README.md fixture (no manifest Group
 - pdf SKILL.md fixture (valid skill Group
-- mySkills.test.js
+- memoriesService.js
 - GraphifyInstaller
 - WindowIpcController
 - Navegador lateral
-- importedRepositoryAnalyzer.js
-- mcpInstall.test.js
+- modelRestriction.js
+- graphifyIntegration.test.js
 - AllSkillsController
-- agentsMdService.js
+- 09_memories.md
 - httpResponseCache.js
 - skillsSitePreload.js
-- McpInstaller
+- repositoryDetailsService.test.js
 - Editor
 - test_relevance_evaluator.py
 - UI/UX Pro Max - Design Intelligence
-- _domain_keywords
+- RepositoryImporter
 - CatalogRefreshTest
 - 05_graphify.md
 - publishedSkillsStore.js
-- SourceOfTruth
-- sourceOfTruthTasks.js
+- sourceOfTruth.test.js
+- hooks.test.js
 - 04_add_vercel_skills.md
-- repositoryImporter.js
-- mcpEntryBuilders.js
-- MarkdownRenderer
-- commandsAcrossSystems.test.js
+- MemoryDetailController
+- PreferencesService
+- AgentSettingsService
+- ImportIpcController
 - Pre-Delivery Checklist (canonical — the only one)
 - Quick Reference
-- platformPaths.js
-- repositoryUrl.js
-- sourceOfTruth.js
+- detect_domain
+- ref_node_crypto
+- getMemory.sh
 - 07_new_ui_2.md
-- graphify.test.js
-- test_skill_script_paths.py
-- importer.test.js
-- CatalogSummaryLineEndingsTest
+- graphifyIntegrationService.js
+- pathlib
+- GraphifyIpcController
+- McpInstaller
 - TokenCliTest
 - envRowsDraft.js
-- mac
+- agentsMdTemplate.js
 - TestStackFlagWithDesignSystem
-- RtlCliTest
+- InstalledSkillsController
 - modelRestrictionDraft.js
-- electron
-- promptRegistry.js
-- AgentFileInstallFlow
-- createAppContainer
-- _search_csv_detailed
+- repositoryImporter.js
+- _normalize
+- PromptLaunchSettingsService
+- appContainer.js
+- skillsSiteView.js
 - HooksIpcController
 - SkillsSiteIpcController
-- split_values
-- read_rows
-- cliInstaller.js
-- TestTextLayoutDataContracts
-- _flatten_tokens
-- ProjectIpcController
-- InstalledDetailsService
+- importer.test.js
+- repositoryUrl.js
+- AgentFileInstallFlow
+- _row_identities
+- RtlCliTest
+- LibraryModel
+- InstallationLocator
+- TestImeGuidance
+- fileSystemService.js
 
 ## God Nodes (most connected - your core abstractions)
-1. `SkimaApiClient` - 143 edges
-2. `createButton()` - 99 edges
-3. `createAppContainer()` - 98 edges
-4. `createIcon()` - 59 edges
-5. `createNoticeBanner()` - 56 edges
-6. `showToast()` - 54 edges
-7. `search()` - 54 edges
-8. `createLoader()` - 49 edges
-9. `executeSafely()` - 49 edges
-10. `createPlatformPaths()` - 47 edges
+1. `SkimaApiClient` - 157 edges
+2. `createButton()` - 111 edges
+3. `createAppContainer()` - 104 edges
+4. `createIcon()` - 70 edges
+5. `showToast()` - 62 edges
+6. `createNoticeBanner()` - 60 edges
+7. `createLoader()` - 54 edges
+8. `search()` - 54 edges
+9. `executeSafely()` - 51 edges
+10. `createPlatformPaths()` - 50 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `createAskAi()` --calls--> `AskAi`  [EXTRACTED]
@@ -246,10 +248,10 @@
   docs/plan-pendiente.md → README.md
 - `Artifact card grid, 10 per type` --conceptually_related_to--> `Biblioteca library`  [INFERRED]
   prompts/01_adaptacion_ui.md → README.md
-- `createScannerSetup()` --calls--> `InstalledScanner`  [EXTRACTED]
-  test/skills/installedScanner.test.js → src/core/main/skills/installedScanner.js
-- `createEnvironment()` --calls--> `createPlatformPaths()`  [EXTRACTED]
-  test/hooks/hooks.test.js → src/core/main/platform/platformPaths.js
+- `createEnvironment()` --calls--> `MemoriesService`  [EXTRACTED]
+  test/memories/memories.test.js → src/core/main/memories/memoriesService.js
+- `createEnvironment()` --calls--> `HooksStore`  [EXTRACTED]
+  test/memories/memories.test.js → src/core/main/hooks/hooksStore.js
 
 ## Import Cycles
 - 4-file cycle: `src/core/renderer/config/settingsSections.js -> src/core/renderer/settings/graphifySettingsSection.js -> src/core/renderer/controllers/mcpInstallFlow.js -> src/core/renderer/services/settingsModalService.js -> src/core/renderer/config/settingsSections.js`
@@ -262,7 +264,7 @@
 - **Untrusted input defences** — source_of_truth_untrusted_content_and_prompt_injection_delimit_untrusted_data, source_of_truth_untrusted_content_and_prompt_injection_delimiter_neutralisation, source_of_truth_untrusted_content_and_prompt_injection_least_privilege_execution, source_of_truth_untrusted_content_and_prompt_injection_output_validation_rule, source_of_truth_untrusted_content_and_prompt_injection_fail_open_fallback [INFERRED 0.75]
 - **AI skill optimization pipeline** — readme_skill_optimization, readme_agent_bridge, prompts_02_fases_9_10_11_skill_optimize_en, prompts_02_fases_9_10_11_skill_optimization_validation, docs_decisiones_optimization_integrity, readme_source_of_truth [INFERRED 0.85]
 
-## Communities (213 total, 54 thin omitted)
+## Communities (215 total, 60 thin omitted)
 
 ### Community 0 - "Catalog Service"
 Cohesion: 0.06
@@ -274,251 +276,251 @@ Nodes (11): createDefaultProjectConfig(), sanitizeProjectConfig(), fs, ProjectDa
 
 ### Community 2 - "catalogTasks.js"
 Cohesion: 0.05
-Nodes (42): buildReport(), candidatesPath, catalogDirectory, commands, discardsPath, fs, fsPromises, libraryPath (+34 more)
+Nodes (39): buildReport(), candidatesPath, catalogDirectory, commands, discardsPath, fs, fsPromises, libraryPath (+31 more)
 
 ### Community 3 - "skillPublisher.test.js"
-Cohesion: 0.06
-Nodes (44): allowedExtensions, buildPullRequestBody(), checkFile(), collectFiles(), forbiddenNamePatterns, fs, inspectSkillFolder(), isHiddenSegment() (+36 more)
+Cohesion: 0.07
+Nodes (32): allowedExtensions, buildPullRequestBody(), checkFile(), collectFiles(), forbiddenNamePatterns, fs, inspectSkillFolder(), isHiddenSegment() (+24 more)
 
 ### Community 4 - "repositoryScore.js"
 Cohesion: 0.19
 Nodes (16): clamp(), computeRepositoryScore(), logarithmicRatio(), permissiveOrKnownLicenses, roundOne(), scoreActivity(), scoreForks(), scoreIssues() (+8 more)
 
 ### Community 5 - "agentsMd.test.js"
-Cohesion: 0.12
-Nodes (17): agentsMdConstants, answerKeys, createEmptyAnswers(), listEnglishHeadings(), importantSectionLabels, validateAgentsMd(), secretRules, answers (+9 more)
+Cohesion: 0.11
+Nodes (17): agentsMdConstants, answerKeys, createEmptyAnswers(), AgentsMdOptimizer, importantSectionLabels, secretRules, answers, assert (+9 more)
 
-### Community 6 - "MemoryStorage"
-Cohesion: 0.10
-Nodes (16): createPlatformPaths(), MemoryStorage, assert, createModel(), test, assert, createService(), fs (+8 more)
+### Community 6 - "ref_node_assert"
+Cohesion: 0.09
+Nodes (16): assert, simulatedSystems, test, assert, test, assert, fs, os (+8 more)
 
 ### Community 7 - "ProviderPathResolver"
 Cohesion: 0.11
-Nodes (16): ProviderPathResolver, findProvider(), assert, createFixture(), fs, githubSource, os, path (+8 more)
+Nodes (15): ProviderPathResolver, findProvider(), assert, fs, githubSource, os, path, test (+7 more)
 
-### Community 10 - "RepositoryImporter"
-Cohesion: 0.21
-Nodes (3): createImportError(), getDirectorySize(), RepositoryImporter
+### Community 10 - "createButton"
+Cohesion: 0.09
+Nodes (24): createButton(), createTextInput(), createFolderInput(), createFormField(), createPageHeader(), createPathSettingField(), createSearchField(), createEmptyState() (+16 more)
 
-### Community 11 - "createIcon"
-Cohesion: 0.07
-Nodes (27): createIcon(), iconPaths, createVerifiedBadge(), createChoiceCardGroup(), createHookChip(), createInlineEditableTitle(), createFavoriteButton(), createInstalledSkillRow() (+19 more)
-
-### Community 12 - "showToast"
+### Community 11 - "ProjectController"
 Cohesion: 0.10
-Nodes (35): createSelectInput(), variantIcons, createRadioGroup(), createSettingsModal(), createSteppedModal(), settingsSectionIds, resultLabels, statusLabels (+27 more)
+Nodes (15): createVerifiedBadge(), createInlineEditableTitle(), missingFolderTabReason, projectTabs, createGraphifyActions(), createHealthBadge(), createTooltipButton(), describeGraph() (+7 more)
 
-### Community 13 - "graphifyIntegration.test.js"
-Cohesion: 0.08
-Nodes (23): escapeForCmdArgument(), escapeForCmdCommand(), fs, nodePath, ProcessRunner, scriptExtensions, { spawn }, windowsShimExtensions (+15 more)
+### Community 12 - "createSelectInput"
+Cohesion: 0.15
+Nodes (20): createSelectInput(), createRadioGroup(), createCheckboxList(), createParagraph(), SkillInstallFlow, createPromptLaunchSettingsSection(), permissionOptions, workingDirectoryOptions (+12 more)
 
-### Community 14 - "importedDetailsService.js"
-Cohesion: 0.27
-Nodes (5): fs, ImportedDetailsService, path, readmeNames, toMcpCandidate()
+### Community 13 - "graphifyService.js"
+Cohesion: 0.10
+Nodes (21): createInstallerError(), fs, fs, graphifyCommands, graphifyPackage, outputFiles, crypto, diffSnapshots() (+13 more)
 
-### Community 15 - "providerRegistry.js"
-Cohesion: 0.05
-Nodes (44): extractJsonFromText(), firstLine(), matchesAuthError(), parseJsonLines(), parseJsonSafely(), parseVersion(), authErrorPatterns, claudeCodeCli (+36 more)
-
-### Community 16 - "CLI Install Recipes"
-Cohesion: 0.14
-Nodes (9): brewRequirement, claudeCodeInstall, codexInstall, geminiCliInstall, githubCliInstall, installRecipes, npmRequirement, openCodeInstall (+1 more)
-
-### Community 17 - "envFileService.js"
-Cohesion: 0.09
-Nodes (32): applyEnvChanges(), buildEntryLine(), dotenv, findLineEnd(), isBareSafe(), isWhitespace(), listEntries(), listKeysOnly() (+24 more)
-
-### Community 18 - "hooks.test.js"
-Cohesion: 0.07
-Nodes (31): assertHookEvent(), buildCommandPath(), buildHookEntry(), buildScriptFileName(), buildSkillCommand(), hookEvents, hookLimits, hookTypes (+23 more)
-
-### Community 19 - "navigateTo"
-Cohesion: 0.09
-Nodes (23): confirmDialog(), createModal(), backLabels, HookDetailController, SkillTextEditorController, params, activePages, params (+15 more)
-
-### Community 20 - "skillForm.js"
+### Community 14 - "ref_node_fs"
 Cohesion: 0.06
-Nodes (48): executeWithCode(), MySkillsIpcController, path, findCaseInsensitiveCollision(), getReservedBaseName(), hasControlCharacter(), isPortableName(), pathLengthLimits (+40 more)
+Nodes (36): folderLimits, fs, path, path, fs, ImportedDetailsService, path, readmeNames (+28 more)
 
-### Community 21 - "appContainer.js"
-Cohesion: 0.08
-Nodes (12): fileNames, fs, path, CatalogIpcController, artifactTypes, LibraryModel, allowedProtocols, ExternalLinkService (+4 more)
+### Community 15 - "geminiCliAdapter.js"
+Cohesion: 0.09
+Nodes (23): firstLine(), matchesAuthError(), parseJsonLines(), parseJsonSafely(), parseVersion(), authErrorPatterns, outputFormats, permissionArguments (+15 more)
 
-### Community 22 - "Git Session Service"
+### Community 16 - "agentFileInstaller.test.js"
+Cohesion: 0.15
+Nodes (8): AgentFileInstaller, createInstallError(), artifactTypeDefinitions, findArtifactTypeDefinition(), listAgentsSupportingType(), fs, path, createFixture()
+
+### Community 17 - "createPlatformPaths"
+Cohesion: 0.11
+Nodes (14): createPlatformPaths(), providerRegistry, assert, test, MemoryStorage, assert, createModel(), test (+6 more)
+
+### Community 18 - "hooksStore.js"
+Cohesion: 0.17
+Nodes (18): buildCommandPath(), buildHookEntry(), buildScriptFileName(), buildSkillCommand(), hookEvents, hookLimits, hookTypes, implementedHookTypes (+10 more)
+
+### Community 19 - "graphifyInstaller.test.js"
+Cohesion: 0.25
+Nodes (8): assert, createFixture(), createUvExecutable(), fakeScript, fs, os, path, test
+
+### Community 20 - "mySkills.test.js"
+Cohesion: 0.09
+Nodes (31): executeWithCode(), MySkillsIpcController, path, errorMessages, SkillCreator, buildFormResponse(), buildFrontmatter(), createFormError() (+23 more)
+
+### Community 21 - "memoryProjectInstaller.js"
+Cohesion: 0.14
+Nodes (12): defaultMaintainMemoryHook, isReservedHookName(), protectedHookNames, protectedSkillNames, reservedHookNames, fs, hasLoaderEntry(), isLoaderEntry() (+4 more)
+
+### Community 22 - "GitSessionService"
 Cohesion: 0.14
 Nodes (9): createSessionError(), GitSessionService, parseCredentialOutput(), parseScopes(), publishScopes, tokenPatterns, assert, createService() (+1 more)
 
 ### Community 23 - "IPC Controllers (AGENTS, AI, Catalog)"
-Cohesion: 0.19
-Nodes (9): recoverableCodes, recoverableCodes, recoverableCodes, recoverableCodes, scopes, executeSafely(), executeWithFieldErrors(), SettingsIpcController (+1 more)
+Cohesion: 0.14
+Nodes (14): scopes, types, recoverableCodes, crypto, rendererAllowedFields, recoverableCodes, recoverableCodes, recoverableCodes (+6 more)
 
-### Community 24 - "bootstrapPage.js"
-Cohesion: 0.08
-Nodes (24): Skima app icon (skima.png), Skima brand identity (S-mark logo), bootstrapPage(), globalTabs, settingsSections, GlobalController, readLastTab(), writeLastTab() (+16 more)
+### Community 24 - "navigateTo"
+Cohesion: 0.05
+Nodes (38): Skima app icon (skima.png), Skima brand identity (S-mark logo), confirmDialog(), bootstrapPage(), settingsSections, backLabels, HookDetailController, MemoriesController (+30 more)
 
 ### Community 25 - "createNoticeBanner"
-Cohesion: 0.20
-Nodes (7): createNoticeBanner(), createLabeledField(), createParagraph(), PublishFlow, createCheckboxList(), createParagraph(), SkillInstallFlow
+Cohesion: 0.10
+Nodes (28): createLoader(), createToggleSwitch(), createNoticeBanner(), createToggleRow(), CliInstallFlow, createCodeBlock(), createParagraph(), unwrap() (+20 more)
+
+### Community 26 - "agentsMdService.js"
+Cohesion: 0.14
+Nodes (11): hasAnyAnswer(), AgentsMdService, createError(), crypto, fs, hashText(), path, missingImportantSections() (+3 more)
 
 ### Community 27 - "with Group"
 Cohesion: 0.07
 Nodes (26): name, runs-on, steps, strategy, CSC_IDENTITY_AUTO_DISCOVERY, jobs, build, os (+18 more)
 
 ### Community 28 - "package.json Group"
-Cohesion: 0.10
-Nodes (26): author, dependencies, ajv@8.20.0, dotenv@16.6.1, fflate@0.7.5, highlight.js@11.12.0, marked@18.1.1, marked-highlight@2.2.4 (+18 more)
+Cohesion: 0.08
+Nodes (31): author, dependencies, ajv@8.20.0, dotenv@16.6.1, fflate@0.7.5, highlight.js@11.12.0, jsonc-parser@3.3.1, marked@18.1.1 (+23 more)
 
 ### Community 29 - "graphifyService.js"
 Cohesion: 0.16
-Nodes (11): outputFiles, crypto, fs, path, { pathToFileURL }, toPublicRuntime(), assertHttpsUrl(), createSettingsError() (+3 more)
+Nodes (10): toPublicRuntime(), assertHttpsUrl(), createSettingsError(), GraphifySettingsService, agentsMdOptimizePrompt, agentsMdOptimizeSchema, stringList, graphifyGeneratePrompt (+2 more)
 
 ### Community 30 - "skimaRepositorySource.test.js"
-Cohesion: 0.13
-Nodes (9): getSkimaRepositoryConfig(), productionRepository, isSafeTreeEntry(), SkimaRepositorySource, assert, commitA, commitB, createHarness() (+1 more)
+Cohesion: 0.11
+Nodes (11): catalogCategories, getSkimaRepositoryConfig(), productionRepository, isSafeTreeEntry(), path, SkimaRepositorySource, assert, commitA (+3 more)
 
 ### Community 31 - "DesignSystemGenerator"
-Cohesion: 0.07
-Nodes (10): DesignSystemGenerator, _resolve_dial(), apply_decision_rules(), _object_without_duplicates(), parse_decision_rules(), _validate_action(), TestReasoningMatch, read_rows() (+2 more)
+Cohesion: 0.06
+Nodes (14): DesignSystemGenerator, apply_decision_rules(), _object_without_duplicates(), parse_decision_rules(), _validate_action(), TestReasoningMatch, read_rows(), split_values() (+6 more)
 
 ### Community 32 - "agentsMdOptimizer.js"
-Cohesion: 0.16
-Nodes (15): sanitizeAnswers(), AgentsMdOptimizer, boundaryFields, buildPayload(), dataTags, fallbackReasons, isStringArray(), languageInstructions (+7 more)
+Cohesion: 0.15
+Nodes (21): extractJsonFromText(), sanitizeAnswers(), boundaryFields, buildPayload(), dataTags, fallbackReasons, isStringArray(), languageInstructions (+13 more)
 
 ### Community 33 - "safeArchiveExtractor.js"
-Cohesion: 0.10
-Nodes (18): ArchiveLimitError, assertNoEscapingLinks(), defaultLimits, extractSafely(), fs, isUnsafeRelativePath(), matchesPrefixes(), normalizeEntryPath() (+10 more)
+Cohesion: 0.11
+Nodes (17): listFolder(), validateSkillFolder(), fs, path, ArchiveLimitError, assertNoEscapingLinks(), defaultLimits, extractSafely() (+9 more)
 
 ### Community 34 - "validate_data.py"
-Cohesion: 0.06
-Nodes (44): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons, TestCurrentReactGuidance, TestSemanticColors, TestGeneratedCatalogContract, _catalog_date(), _check_app_interface_contract() (+36 more)
+Cohesion: 0.07
+Nodes (43): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons, TestCurrentReactGuidance, TestSemanticColors, TestGeneratedCatalogContract, _catalog_date(), _check_app_interface_contract() (+35 more)
 
-### Community 35 - "settingsSections.test.js"
-Cohesion: 0.22
-Nodes (6): assert, fs, listSourceFiles(), path, rootDirectory, test
-
-### Community 36 - "settingsSchema.js"
-Cohesion: 0.06
-Nodes (42): AgentBridge, buildSchemaInstruction(), createBridgeError(), crypto, fs, outputFormats, RunQueue, crypto (+34 more)
+### Community 36 - "AgentBridge"
+Cohesion: 0.13
+Nodes (7): AgentBridge, buildSchemaInstruction(), createBridgeError(), crypto, fs, outputFormats, RunQueue
 
 ### Community 37 - "executableLocator.js Group"
-Cohesion: 0.11
-Nodes (12): defaultFileSystem, defaultWindowsExtensions, ExecutableLocator, expandWindowsVariables(), fs, nodeVersionManagerRoots, queryWindowsRegistryValue(), readWindowsRegistryPathDefault() (+4 more)
+Cohesion: 0.06
+Nodes (29): defaultFileSystem, defaultWindowsExtensions, ExecutableLocator, expandWindowsVariables(), fs, nodeVersionManagerRoots, queryWindowsRegistryValue(), readWindowsRegistryPathDefault() (+21 more)
 
 ### Community 38 - "projectConfigSchema.js"
-Cohesion: 0.12
-Nodes (26): createDefaultModelRestriction(), createRestrictionError(), describeRestriction(), isListed(), isModelAllowed(), pickAllowedModel(), restrictionModes, toModelKey() (+18 more)
+Cohesion: 0.22
+Nodes (17): createDefaultModelRestriction(), asIsoDate(), asShortText(), graphifyDecisions, isPlainObject(), migrateProjectConfig(), projectConfigLimits, projectConfigMigrations (+9 more)
+
+### Community 39 - "providerRegistry.js"
+Cohesion: 0.13
+Nodes (13): claudeCodeCli, codexCli, geminiCliAdapter, claudeCode, codex, cursor, geminiCli, githubCopilot (+5 more)
 
 ### Community 40 - "catalogMaintenance.js Group"
 Cohesion: 0.10
 Nodes (30): buildItem(), buildMcpDefinition(), crypto, downloadSnapshot(), fetchRepositoryMetadata(), fs, fsSync, getJson() (+22 more)
 
-### Community 41 - "createContextTab"
+### Community 41 - "contextTab.js"
 Cohesion: 0.19
 Nodes (16): createField(), createQuestionStep(), agentsMdQuestions, answerKeys, createContextTab(), createEmptyAnswers(), createParagraph(), languageOptions (+8 more)
 
 ### Community 42 - "DetailController"
-Cohesion: 0.10
-Nodes (16): artifactTypes, findArtifactType(), DetailController, describeManifestIssues(), presentCatalogDetail(), requirementLabels, presentInstallations(), presentInstalledDetail() (+8 more)
+Cohesion: 0.08
+Nodes (20): artifactTypes, findArtifactType(), isProtectedSkillName(), protectedHookNames, protectedSkillNames, protectedSkillNotice, DetailController, describeManifestIssues() (+12 more)
 
-### Community 43 - "skillInstaller.js"
-Cohesion: 0.21
-Nodes (6): hashSkillFolder(), crypto, fs, renameWithRetry(), SkillInstaller, sleep()
+### Community 43 - "mySkillsStore.js"
+Cohesion: 0.08
+Nodes (28): findCaseInsensitiveCollision(), getReservedBaseName(), hasControlCharacter(), isPortableName(), pathLengthLimits, toCaseInsensitiveKey(), validatePathLength(), validatePortableName() (+20 more)
 
-### Community 44 - "createButton"
-Cohesion: 0.07
-Nodes (24): createAvatar(), getInitials(), getToneIndex(), createButton(), createTextInput(), createFolderInput(), createFormField(), createPageHeader() (+16 more)
+### Community 44 - "SkillFormView"
+Cohesion: 0.19
+Nodes (4): createCounter(), createField(), createTextArea(), SkillFormView
 
 ### Community 46 - "promptRegistry.js Group"
-Cohesion: 0.18
-Nodes (14): Read-only mode for Claude Code, Third-party skill review procedure, Phase 10: AI skill optimization, Optimization response validation rules, skill-optimize-en prompt, Agent bridge (runAgent and askAi), Cheap model selection, Project model restriction (+6 more)
+Cohesion: 0.16
+Nodes (15): Read-only mode for Claude Code, Third-party skill review procedure, Phase 10: AI skill optimization, Optimization response validation rules, skill-optimize-en prompt, Agent bridge (runAgent and askAi), Cheap model selection, Editor skill creation assistant (+7 more)
 
 ### Community 47 - "CliInstaller Group"
-Cohesion: 0.27
-Nodes (3): CliInstaller, createInstallerError(), describeStep()
+Cohesion: 0.18
+Nodes (8): CliInstaller, createInstallerError(), crypto, describeStep(), fs, interpreterInvocations, parseMajor(), path
 
 ### Community 48 - "libraryDocument.test.js"
 Cohesion: 0.08
-Nodes (29): verifyFileItem(), adaptAgentFile(), buildMarkdown(), formatAdapters, pick(), YAML, AgentFileInstaller, createInstallError() (+21 more)
+Nodes (38): yaml@2.9.1, yaml, verifyFileItem(), adaptAgentFile(), buildMarkdown(), formatAdapters, pick(), YAML (+30 more)
 
 ### Community 49 - "shellView.js Group"
-Cohesion: 0.15
-Nodes (13): createAppLogo(), createNavItem(), createNavSubItem(), createControlButton(), createWindowControls(), createExpandedNavItem(), createNavEntry(), createNavGroup() (+5 more)
+Cohesion: 0.16
+Nodes (11): createAppLogo(), createNavItem(), createNavSubItem(), createExpandedNavItem(), createNavEntry(), createNavGroup(), createSidebar(), createTitleBar() (+3 more)
 
-### Community 50 - "agentsSettingsSection.js"
-Cohesion: 0.18
-Nodes (16): createToggleSwitch(), createToggleRow(), allowedAgentBadges, describeAgentRow(), describeCliMessage(), createAgentsSettingsSection(), createBlockTitle(), createParagraph() (+8 more)
+### Community 50 - "design_system.py"
+Cohesion: 0.07
+Nodes (13): _css_font_family(), _detect_page_type(), _flatten_tokens(), format_page_override_md(), _generate_intelligent_overrides(), _resolve_dial(), _resolve_token_reference(), safe_slug() (+5 more)
 
 ### Community 51 - "modelSelector.test.js"
 Cohesion: 0.13
 Nodes (14): formatPrice(), ModelSelector, classifyModel(), localProviderIds, normalizeCost(), parseJsonBlock(), parseVerboseModels(), perThousandKeys (+6 more)
 
 ### Community 52 - "graphifyIntegrationService.js"
-Cohesion: 0.16
-Nodes (12): createIntegrationError(), crypto, fs, GraphifyIntegrationService, hashText(), ignoredHomePrefixes, integrationVariants, path (+4 more)
+Cohesion: 0.35
+Nodes (3): createIntegrationError(), GraphifyIntegrationService, readRegularFile()
 
-### Community 53 - "hookDetailView.js"
+### Community 53 - "MemoryDetailView"
 Cohesion: 0.13
-Nodes (11): describeHookEvent(), hookEvents, hookEventSides, describeHookType(), hookTypeOptions, GlobalHooksController, buildHookMetadataEntries(), describeHookSummary() (+3 more)
-
-### Community 54 - "design_system.py"
-Cohesion: 0.08
-Nodes (8): _detect_page_type(), format_page_override_md(), _generate_intelligent_overrides(), _write_persisted_file(), format_output(), _node_available(), read_rows(), read_rows()
+Nodes (5): attachLinkHandling(), createMarkdownBody(), GraphViewerController, onThemeChange(), MemoryDetailView
 
 ### Community 55 - "readTextIfExists"
-Cohesion: 0.15
-Nodes (18): createTemporarySiblingPath(), crypto, detectLineEnding(), fs, path, readTextIfExists(), appendPattern(), assertRegularFileOrMissing() (+10 more)
+Cohesion: 0.19
+Nodes (16): createTemporarySiblingPath(), crypto, detectLineEnding(), fs, path, readTextIfExists(), appendPattern(), assertRegularFileOrMissing() (+8 more)
 
 ### Community 56 - "MySkillsStore Group"
-Cohesion: 0.16
-Nodes (8): writeFileAtomic(), createStoreError(), crypto, fileLimits, fs, MySkillsStore, { zipSync }, listFiles()
+Cohesion: 0.17
+Nodes (7): isProtectedSkill(), writeFileAtomic(), createStoreError(), MySkillsStore, fs, saveDirectly(), skillMarkdown()
 
 ### Community 57 - "fakeAgentEnvironment.js"
-Cohesion: 0.06
-Nodes (31): providerRegistry, assert, test, withSetup(), assert, test, assert, createAskAi() (+23 more)
+Cohesion: 0.08
+Nodes (26): escapeForCmdArgument(), escapeForCmdCommand(), fs, nodePath, ProcessRunner, scriptExtensions, { spawn }, windowsShimExtensions (+18 more)
 
 ### Community 58 - "build Group"
-Cohesion: 0.10
-Nodes (20): build, appId, asar, directories, extraResources, files, linux, nsis (+12 more)
+Cohesion: 0.08
+Nodes (25): build, appId, asar, directories, extraResources, files, linux, mac (+17 more)
 
-### Community 59 - "fakeGitTools.js"
-Cohesion: 0.16
-Nodes (17): args, copyDirectory(), delegateToRealGit(), fs, handleGh(), handleGhExtended(), handleGit(), mapRemote() (+9 more)
+### Community 59 - "HooksStore"
+Cohesion: 0.20
+Nodes (3): HooksStore, isProtectedHook(), JsonFileStorage
 
 ### Community 60 - "preview.py"
-Cohesion: 0.05
-Nodes (25): _button_outline_text_color(), _contrast_ratio(), format_master_md(), safe_slug(), _attr(), _css_color(), _css_font(), format_preview_html() (+17 more)
+Cohesion: 0.06
+Nodes (22): _button_outline_text_color(), _contrast_ratio(), format_master_md(), _attr(), _css_color(), _css_font(), format_preview_html(), _format_ratio() (+14 more)
 
 ### Community 61 - "test_design_system_mode.py"
-Cohesion: 0.07
-Nodes (13): _derive_dark_palette(), _filter_anti_patterns_for_mode(), _palette_is_dark(), _query_wants_dark(), _relative_luminance(), _resolve_color_mode(), _select_palette_for_mode(), _style_is_dark_primary() (+5 more)
+Cohesion: 0.08
+Nodes (12): _derive_dark_palette(), _filter_anti_patterns_for_mode(), _palette_is_dark(), _query_wants_dark(), _relative_luminance(), _resolve_color_mode(), _select_palette_for_mode(), _style_is_dark_primary() (+4 more)
 
 ### Community 62 - "search_stack"
-Cohesion: 0.09
-Nodes (7): search_stack(), TestDiagnosticsContracts, _rows(), TestNativeDesktopStackFreshness, TestTextLayoutRetrieval, _rows(), TestWebStackFreshness
+Cohesion: 0.08
+Nodes (8): _exact_stack_identifier(), search_stack(), TestDiagnosticsContracts, _rows(), TestNativeDesktopStackFreshness, TestTextLayoutRetrieval, _rows(), TestWebStackFreshness
 
-### Community 63 - "format_ascii_box"
-Cohesion: 0.13
-Nodes (9): ansi_ljust(), format_ascii_box(), add_wrapped(), wrap_text(), format_markdown(), hex_to_ansi(), _mode_support_labels(), section_header() (+1 more)
+### Community 63 - "envFileService.js"
+Cohesion: 0.09
+Nodes (32): applyEnvChanges(), buildEntryLine(), dotenv, findLineEnd(), isBareSafe(), isWhitespace(), listEntries(), listKeysOnly() (+24 more)
 
 ### Community 64 - "search"
-Cohesion: 0.09
-Nodes (5): search(), TestSearchDomains, TestImeGuidance, RtlFilterTest, TestStyleTaxonomy
+Cohesion: 0.08
+Nodes (7): _normalize_rtl_level(), _rtl_row_filter(), search(), _style_search_destination(), TestSearchDomains, RtlFilterTest, TestStyleTaxonomy
 
 ### Community 65 - "AskAi Group"
 Cohesion: 0.19
 Nodes (7): AskAi, createAskError(), fs, referenceTags, findPrompt(), neutralizeDelimiters(), renderPromptTemplate()
 
-### Community 66 - "repositoryDetailsService.test.js"
-Cohesion: 0.18
-Nodes (10): findReadme(), findSkillManifests(), isMarkdownFile(), path, RepositoryDetailsService, assert, files, repository (+2 more)
+### Community 66 - "globalHooksController.js"
+Cohesion: 0.10
+Nodes (12): globalTabs, describeHookType(), hookTypeOptions, GlobalController, readLastTab(), writeLastTab(), GlobalHooksController, buildHookMetadataEntries() (+4 more)
 
 ### Community 67 - "mainWindow.js"
 Cohesion: 0.05
 Nodes (38): electron, path, allowedRemotePrefixes, GraphViewerRegistry, graphViewerRegistry, hardenGraphViewerWebview(), isGraphViewerGuest(), normalizeFileUrl() (+30 more)
 
 ### Community 68 - "generate_design_system"
-Cohesion: 0.07
-Nodes (14): build_design_tokens(), _css_font_family(), format_tokens_css(), format_tokens_dtcg(), generate_design_system(), persist_design_system(), _root_block(), _token_color_entries() (+6 more)
+Cohesion: 0.09
+Nodes (13): build_design_tokens(), format_tokens_css(), format_tokens_dtcg(), generate_design_system(), persist_design_system(), _root_block(), TestPersistence, DarkModeTokenTest (+5 more)
 
 ### Community 69 - "docs/plan-pendiente.md Group"
 Cohesion: 0.18
@@ -526,27 +528,27 @@ Nodes (11): Scale catalog to about 100 per type, gh CLI flags not verified, Phas
 
 ### Community 70 - "README.md Group"
 Cohesion: 0.14
-Nodes (14): Skip duplicate copy when agents share a folder, Uninstall moves skills to trash, Reusable wizard engine, mySkill installer source, Phase 9: skill wizard and Mis skills, contextBridge preload, Editor skill creation assistant, Install skills and MCP servers to enabled agents (+6 more)
+Nodes (14): Skip duplicate copy when agents share a folder, Uninstall moves skills to trash, JetBrains-style project selector, Left sidebar navigation menu, AGENTS.md project context tab, contextBridge preload, Global and Project views, Install skills and MCP servers to enabled agents (+6 more)
 
-### Community 71 - "mcpInstaller.js"
-Cohesion: 0.17
-Nodes (12): configContainsServer(), detectOpenCodeVersion(), jsonc, jsonConfigWriter, parseJsonText(), readPath(), serverContainerPaths, TOML (+4 more)
+### Community 71 - "memories.test.js"
+Cohesion: 0.09
+Nodes (18): fs, ignoredEntryNames, previewableExtensions, summarize(), buildMemoryFileContent(), parseMemoryFileContent(), toMemorySlug(), validateMemoryName() (+10 more)
 
-### Community 72 - "graphifyRuntime.js"
-Cohesion: 0.20
-Nodes (7): buildGraphifyEnvironment(), fs, createStatus(), fs, graphifyPackage, GraphifyRuntime, resolveExecutableRelativePath()
+### Community 72 - "GraphifyRuntime"
+Cohesion: 0.29
+Nodes (3): createStatus(), GraphifyRuntime, resolveExecutableRelativePath()
 
 ### Community 73 - "markdownRenderer.js"
-Cohesion: 0.18
-Nodes (14): allowedLinkSchemes, convertGitHubBlobToRaw(), createSanitizeOptions(), createSlugger(), encodePath(), hljs, isAbsoluteUrl(), { Marked } (+6 more)
+Cohesion: 0.11
+Nodes (22): allowedLinkSchemes, convertGitHubBlobToRaw(), createMarked(), createSanitizeOptions(), createSlugger(), encodePath(), hljs, isAbsoluteUrl() (+14 more)
 
-### Community 74 - "InstalledScanner"
-Cohesion: 0.21
-Nodes (6): validatePathLength(), AgentSettingsService, createFieldError(), editablePathFields, fs, mcpExtensionsByFormat
+### Community 74 - "platformPaths.js"
+Cohesion: 0.11
+Nodes (16): nodePath, os, supportedPlatforms, createExecutable(), createFakeGitSetup(), { execFileSync }, fakeScript, findRealGit() (+8 more)
 
-### Community 75 - "createLoader"
-Cohesion: 0.10
-Nodes (27): createBadge(), createLoader(), buildTree(), createFileTree(), renderNode(), sortNodes(), createHookRow(), createMetadataList() (+19 more)
+### Community 75 - "createIcon"
+Cohesion: 0.08
+Nodes (44): createAvatar(), getInitials(), getToneIndex(), createBadge(), createIcon(), iconPaths, createChoiceCardGroup(), buildTree() (+36 more)
 
 ### Community 76 - "scripts Group"
 Cohesion: 0.13
@@ -556,29 +558,21 @@ Nodes (15): scripts, catalog:refresh, catalog:validate, catalog:verify, dist, di
 Cohesion: 0.21
 Nodes (3): createField(), createHint(), HookFormView
 
-### Community 78 - "ProjectHooksView"
-Cohesion: 0.11
-Nodes (7): missingFolderTabReason, projectTabs, InstalledSkillsController, ProjectHooksController, createHooksTab(), createSkillsTab(), ProjectHooksView
-
 ### Community 79 - "prompts/02_fases_9_10_11.md Group"
 Cohesion: 0.17
 Nodes (5): electron-builder 26.18.0 choice, WSL not supported, Phase 11: packaging, CI and documentation, GitHub API without token, Skima desktop app
 
 ### Community 80 - "Phase 9: skill wizard and Mis skills Group"
-Cohesion: 0.33
-Nodes (5): Native folder picker popup with name and path fields, Initial dark first screen with add-project button, proyectos.json project storage file, proyectos.json legacy format, Saved settings and data in userData
+Cohesion: 0.18
+Nodes (10): Reusable wizard engine, Native folder picker popup with name and path fields, Initial dark first screen with add-project button, proyectos.json project storage file, mySkill installer source, Phase 9: skill wizard and Mis skills, Mis skills (my skills), proyectos.json legacy format (+2 more)
 
 ### Community 82 - "fetchUv.js"
 Cohesion: 0.17
 Nodes (14): crypto, download(), extractFromTarball(), extractFromZip(), fs, fsPromises, main(), os (+6 more)
 
 ### Community 83 - "cliInstaller.test.js"
-Cohesion: 0.13
-Nodes (14): findInstallTarget(), allSystems, assert, emptyAllowed, fakeScript, firstPackageManagerMethod(), fs, hostMethods() (+6 more)
-
-### Community 84 - "GraphifyService Group"
-Cohesion: 0.21
-Nodes (5): createGraphifyError(), diffSnapshots(), GraphifyService, parseGodNodes(), snapshotTopLevel()
+Cohesion: 0.09
+Nodes (17): brewRequirement, claudeCodeInstall, codexInstall, geminiCliInstall, githubCliInstall, githubCliTool, installRecipes, npmRequirement (+9 more)
 
 ### Community 86 - "Unverified or low-confidence provider registry rows Group"
 Cohesion: 0.17
@@ -601,8 +595,8 @@ Cohesion: 0.18
 Nodes (8): buildScrollbarCss(), mixColors(), readThemeColors(), buildGraphViewerThemeCss(), alphaScale, buildSkillsSiteThemeCss(), grayScale, SkillsSiteView
 
 ### Community 91 - "core.py"
-Cohesion: 0.07
-Nodes (19): _contains_phrase(), _exact_match_diagnostic(), _exact_row_identity(), _exact_stack_identifier(), _legacy_successor_guidance(), _normalize(), _normalize_rtl_level(), _passes_threshold() (+11 more)
+Cohesion: 0.11
+Nodes (15): _contains_phrase(), _domain_keywords(), _file_signature(), _load_csv(), _load_csv_snapshot(), _load_product_keywords(), _load_rows_or_empty(), _passes_threshold() (+7 more)
 
 ### Community 92 - "opencodeModelsVerbose.txt fixture (model catalog dump Group"
 Cohesion: 0.24
@@ -620,21 +614,21 @@ Nodes (7): Claude Code CLI, Codex CLI, Gemini CLI, Headless mode, OpenCode CLI, 
 Cohesion: 0.29
 Nodes (7): Code-only mode, graphify command, graphify-out folder, graphifyRuntime, graphifyService, graphifyy PyPI package, Pinned graphify version 0.9.105
 
-### Community 96 - "sourceOfTruthDocument.js"
-Cohesion: 0.26
-Nodes (11): audiences, confidences, countSentences(), documentLimits, parseSourceOfTruthDocument(), splitSections(), toDateString(), validateBody() (+3 more)
+### Community 96 - "ProjectHooksService"
+Cohesion: 0.24
+Nodes (3): assertHookEvent(), isPlainObject(), ProjectHooksService
 
 ### Community 98 - "BM25"
-Cohesion: 0.16
+Cohesion: 0.14
 Nodes (5): BM25, _get_bm25(), _suggest_identities(), TestBm25CoreBehavior, TestTokenizer
 
 ### Community 99 - "CLAUDE.md Group"
-Cohesion: 0.17
-Nodes (10): Run graphify update after code changes, Graphify knowledge graph in graphify-out, Graphify phases 17 to 19, JetBrains-style project selector, Left sidebar navigation menu, AGENTS.md project context tab, Global and Project views, Graphify integration (partial) (+2 more)
+Cohesion: 0.33
+Nodes (4): Run graphify update after code changes, Graphify knowledge graph in graphify-out, Graphify phases 17 to 19, Graphify integration (partial)
 
-### Community 100 - "agentsMdTemplate.js"
-Cohesion: 0.32
-Nodes (11): boundaryHeadings, closeOpenFences(), escapeLeadingHeadings(), fence, missingImportantSections(), normalizeText(), renderAgentsMd(), renderCodeBlock() (+3 more)
+### Community 100 - "cliInstaller.test.js"
+Cohesion: 0.13
+Nodes (14): findInstallTarget(), allSystems, assert, emptyAllowed, fakeScript, firstPackageManagerMethod(), fs, hostMethods() (+6 more)
 
 ### Community 101 - "skillInstaller.test.js"
 Cohesion: 0.17
@@ -644,16 +638,12 @@ Nodes (13): buildTarGz(), createHeader(), writeOctal(), writeString(), zlib, ass
 Cohesion: 0.28
 Nodes (12): defaultThemeId, themes, themeStorageKey, applyTheme(), getActiveThemeId(), isKnownTheme(), syncThemeFromPreferences(), themeListeners (+4 more)
 
-### Community 103 - "agentFileIpcController.js Group"
-Cohesion: 0.33
-Nodes (4): AgentFileIpcController, scopes, types, validateSource()
-
-### Community 104 - "installedIpcController.js Group"
-Cohesion: 0.38
-Nodes (3): InstalledIpcController, readScope(), scopes
+### Community 104 - "format_ascii_box"
+Cohesion: 0.13
+Nodes (9): ansi_ljust(), format_ascii_box(), add_wrapped(), wrap_text(), format_markdown(), hex_to_ansi(), _mode_support_labels(), section_header() (+1 more)
 
 ### Community 105 - "publishIpcController.js Group"
-Cohesion: 0.43
+Cohesion: 0.36
 Nodes (4): describeError(), PublishIpcController, text(), isGithubUrl()
 
 ### Community 107 - "Prompt injection attack forms Group"
@@ -664,9 +654,9 @@ Nodes (5): Prompt injection attack forms, Delimit untrusted data, Neutralise del
 Cohesion: 0.40
 Nodes (3): AgentsMdIpcController, describeError(), optimizationFrom()
 
-### Community 109 - "sourceOfTruth.test.js"
-Cohesion: 0.21
-Nodes (11): checkPromptRegistry(), findWebInstructions(), splitSentences(), assert, directory, fs, minimumDocumentIds, os (+3 more)
+### Community 109 - "settingsSchema.js"
+Cohesion: 0.16
+Nodes (15): crypto, fs, createDefaultGraphify(), createDefaultPreferences(), createDefaultPromptLaunch(), createDefaultSettings(), effortLevels, installKinds (+7 more)
 
 ### Community 111 - "AGENTS.md format Group"
 Cohesion: 0.40
@@ -685,12 +675,12 @@ Cohesion: 0.40
 Nodes (3): Skill publishing flow with gh and git, Publishing limits, Skima shared-skills repository
 
 ### Community 115 - "SettingsStore"
-Cohesion: 0.13
-Nodes (14): convertLegacyProject(), migrateSettings(), readSchemaVersion(), settingsMigrations, crypto, isDeepEqual(), SettingsStore, createSelector() (+6 more)
+Cohesion: 0.09
+Nodes (19): convertLegacyProject(), migrateSettings(), readSchemaVersion(), settingsMigrations, crypto, isDeepEqual(), SettingsStore, createSelector() (+11 more)
 
-### Community 116 - "mcpDefinitionDetector.js"
-Cohesion: 0.27
-Nodes (17): dedupeCandidates(), detectMcpDefinitions(), extractCodeBlocks(), fromClaudeAddCommand(), fromConfigObject(), fromPackageJson(), fromPyproject(), fromReadme() (+9 more)
+### Community 116 - "mcpInstall.test.js"
+Cohesion: 0.09
+Nodes (29): configContainsServer(), detectOpenCodeVersion(), jsonc, jsonConfigWriter, parseJsonText(), readPath(), serverContainerPaths, TOML (+21 more)
 
 ### Community 117 - "fakeGraphify.js"
 Cohesion: 0.26
@@ -728,17 +718,21 @@ Nodes (4): Skill description limits, Skill frontmatter fields, Skill name rules,
 Cohesion: 0.50
 Nodes (3): Always and Never rule lists, Skima SKILL.md template, Template slot contract
 
-### Community 126 - "ref_node_crypto"
-Cohesion: 0.16
-Nodes (6): AiIpcController, crypto, rendererAllowedFields, crypto, describeError(), ImportIpcController
+### Community 126 - "isPlainObject"
+Cohesion: 0.26
+Nodes (19): asBoolean(), asEnum(), asHttpsUrl(), asInteger(), asIsoDate(), asText(), asTrimmedString(), isPlainObject() (+11 more)
 
 ### Community 129 - "03_editor_skills.md"
 Cohesion: 0.25
 Nodes (7): Accion, Boton de generar, Editar, Form Response, Instalar, Si no hay una IA configurada, UI
 
-### Community 132 - "skillsSiteView.js"
-Cohesion: 0.15
-Nodes (8): describeBlockedNavigation(), skillsSite, createOutputBlock(), createParagraph(), describeFailure(), SkillsShInstallFlow, isInstallRequest(), SkillsSiteController
+### Community 132 - "showToast"
+Cohesion: 0.09
+Nodes (30): variantIcons, showToast(), variantIcons, createSteppedModal(), settingsSectionIds, resultLabels, statusLabels, typeNames (+22 more)
+
+### Community 133 - "mcpDefinitionDetector.js"
+Cohesion: 0.27
+Nodes (17): dedupeCandidates(), detectMcpDefinitions(), extractCodeBlocks(), fromClaudeAddCommand(), fromConfigObject(), fromPackageJson(), fromPyproject(), fromReadme() (+9 more)
 
 ### Community 136 - "OpenCode version package name split Group"
 Cohesion: 0.67
@@ -748,53 +742,57 @@ Nodes (3): npm package @opencode/cli, OpenCode v2 install methods, OpenCode vers
 Cohesion: 0.67
 Nodes (3): Description checklist, Skill description field, Use when clause
 
-### Community 156 - "mySkills.test.js"
-Cohesion: 0.18
-Nodes (11): SkillCreator, assert, createStore(), fs, os, path, saveDirectly(), skillMarkdown() (+3 more)
+### Community 156 - "memoriesService.js"
+Cohesion: 0.48
+Nodes (6): buildContextFile(), buildInstructions(), buildMemoryTemplate(), buildReadme(), buildTechSolutionsIndex(), memoryDirectories
 
 ### Community 159 - "Navegador lateral"
 Cohesion: 0.10
 Nodes (19): Accion, Ajustes por prompt, Configuracion, Configuracion de temas, Editor, Global, Marketplace, Memorias (+11 more)
 
-### Community 160 - "importedRepositoryAnalyzer.js"
-Cohesion: 0.13
-Nodes (19): scanFiles(), folderLimits, fs, listFolder(), path, validateSkillFolder(), analyzeAgentFiles(), analyzeMcp() (+11 more)
+### Community 160 - "modelRestriction.js"
+Cohesion: 0.25
+Nodes (9): createRestrictionError(), describeRestriction(), isListed(), isModelAllowed(), pickAllowedModel(), restrictionModes, toModelKey(), ProjectModelPolicy (+1 more)
 
-### Community 161 - "mcpInstall.test.js"
-Cohesion: 0.15
-Nodes (12): jsonc-parser@3.3.1, smol-toml@1.9.1, jsonc-parser, smol-toml, assert, definition, fs, jsonc (+4 more)
+### Community 161 - "graphifyIntegration.test.js"
+Cohesion: 0.20
+Nodes (10): assert, createFixture(), fs, os, path, test, createFakeGraphifyExecutable(), fakeScript (+2 more)
 
 ### Community 162 - "AllSkillsController"
 Cohesion: 0.11
 Nodes (12): hookFormLimits, hookNamePattern, AllSkillsController, createEmptyForm(), fallbackModels, HookFormController, toModelName(), collectHashes() (+4 more)
 
-### Community 163 - "agentsMdService.js"
-Cohesion: 0.24
-Nodes (7): hasAnyAnswer(), crypto, fs, hashText(), path, appendGraphifySection(), extractGraphifySection()
+### Community 163 - "09_memories.md"
+Cohesion: 0.18
+Nodes (10): Accion, Actualizar, Cargar memory, Comprobacion, Estructura, Estructura MEMORY.md, La idea, MEMORY.md (+2 more)
 
 ### Community 164 - "httpResponseCache.js"
 Cohesion: 0.24
 Nodes (5): crypto, fs, hashKey(), HttpResponseCache, path
 
 ### Community 165 - "skillsSitePreload.js"
-Cohesion: 0.33
-Nodes (10): applyLayout(), clearPreviousChanges(), createInstallCard(), ensureStyles(), findInstallCommand(), hideRelatedSections(), { ipcRenderer }, placeInstallCard() (+2 more)
+Cohesion: 0.21
+Nodes (13): electron@^45.0.0, electron, { contextBridge, ipcRenderer }, applyLayout(), clearPreviousChanges(), createInstallCard(), ensureStyles(), findInstallCommand() (+5 more)
+
+### Community 166 - "repositoryDetailsService.test.js"
+Cohesion: 0.18
+Nodes (9): findReadme(), findSkillManifests(), isMarkdownFile(), RepositoryDetailsService, assert, files, repository, test (+1 more)
 
 ### Community 167 - "Editor"
 Cohesion: 0.18
 Nodes (10): Accion, Agent, Command, Como funcionan, Editor, Global, Internamente, Prompt (+2 more)
 
 ### Community 168 - "test_relevance_evaluator.py"
-Cohesion: 0.12
-Nodes (3): TestFixtureValidation, TestMetricMath, TestThresholdGate
+Cohesion: 0.09
+Nodes (5): CatalogSummaryLineEndingsTest, _load_generator(), TestFixtureValidation, TestMetricMath, TestThresholdGate
 
 ### Community 169 - "UI/UX Pro Max - Design Intelligence"
 Cohesion: 0.11
 Nodes (18): Before Delivering App UI, Example Workflow, If a search returns 0 results, Output Formats, Query Contract, Rule Categories by Priority, Running the search tool, Step 1: Analyze User Requirements (+10 more)
 
-### Community 170 - "_domain_keywords"
-Cohesion: 0.22
-Nodes (6): _domain_keywords(), _file_signature(), _load_csv(), _load_csv_snapshot(), _load_product_keywords(), _load_rows_or_empty()
+### Community 170 - "RepositoryImporter"
+Cohesion: 0.21
+Nodes (3): createImportError(), getDirectorySize(), RepositoryImporter
 
 ### Community 172 - "05_graphify.md"
 Cohesion: 0.22
@@ -804,33 +802,25 @@ Nodes (8): Accion, Botones "Abrir...", Configuracion, Deteccion de graphify, Gen
 Cohesion: 0.24
 Nodes (7): asDate(), asText(), isRecord(), phases, PublishedSkillsStore, sanitizeEntry(), states
 
-### Community 174 - "SourceOfTruth"
-Cohesion: 0.25
-Nodes (4): documentOpening(), SourceOfTruth, SourceOfTruthError, estimateDocumentTokens()
+### Community 174 - "sourceOfTruth.test.js"
+Cohesion: 0.06
+Nodes (45): check(), fs, listStale(), path, readDocuments(), sourceOfTruthDirectory, tasks, writeIndex() (+37 more)
 
-### Community 175 - "sourceOfTruthTasks.js"
-Cohesion: 0.27
-Nodes (12): check(), fs, listStale(), path, readDocuments(), sourceOfTruthDirectory, tasks, writeIndex() (+4 more)
+### Community 175 - "hooks.test.js"
+Cohesion: 0.28
+Nodes (8): assert, createEnvironment(), createScript(), createTemporaryDirectory(), fs, os, path, test
 
 ### Community 176 - "04_add_vercel_skills.md"
 Cohesion: 0.50
 Nodes (3): Accion, Instalar, UI
 
-### Community 177 - "repositoryImporter.js"
-Cohesion: 0.22
-Nodes (7): crypto, fs, path, redactUrls(), retryRename(), sanitizeForItemId(), today()
+### Community 177 - "MemoryDetailController"
+Cohesion: 0.27
+Nodes (3): MemoryDetailController, readLastTab(), writeLastTab()
 
-### Community 178 - "mcpEntryBuilders.js"
-Cohesion: 0.29
-Nodes (9): buildEnvironmentObject(), buildServerEntry(), dangerousPatterns, findDangerousPatterns(), maskSecrets(), validateDefinition(), windowsShimCommands, withOptional() (+1 more)
-
-### Community 179 - "MarkdownRenderer"
-Cohesion: 0.22
-Nodes (8): createMarked(), MarkdownRenderer, assert, context, render(), test, createService(), createFixture()
-
-### Community 181 - "commandsAcrossSystems.test.js"
-Cohesion: 0.22
-Nodes (8): githubCliTool, assert, fs, listJavaScriptFiles(), path, rootDirectory, shellSpawnPatterns, test
+### Community 179 - "AgentSettingsService"
+Cohesion: 0.23
+Nodes (5): AgentSettingsService, createFieldError(), editablePathFields, fs, mcpExtensionsByFormat
 
 ### Community 182 - "Pre-Delivery Checklist (canonical — the only one)"
 Cohesion: 0.15
@@ -840,65 +830,61 @@ Nodes (12): Accessibility, Common Rules for Professional UI + Pre-Delivery Check
 Cohesion: 0.15
 Nodes (12): 10. Charts & Data (LOW), 1. Accessibility (CRITICAL), 2. Touch & Interaction (CRITICAL), 3. Performance (HIGH), 4. Style Selection (HIGH), 5. Layout & Responsive (HIGH), 6. Typography & Color (MEDIUM), 7. Animation (MEDIUM) (+4 more)
 
-### Community 184 - "platformPaths.js"
-Cohesion: 0.11
-Nodes (16): nodePath, os, supportedPlatforms, createExecutable(), createFakeGitSetup(), { execFileSync }, fakeScript, findRealGit() (+8 more)
-
-### Community 185 - "repositoryUrl.js"
-Cohesion: 0.57
-Nodes (7): cleanSegments(), failure(), parseHttps(), parseRepositoryUrl(), parseSsh(), stoppingSegments, validateSegments()
-
-### Community 186 - "sourceOfTruth.js"
-Cohesion: 0.32
-Nodes (6): nodePath, resolveBundledResourceDirectory(), fs, path, resolveSourceOfTruthDirectory(), indexFileNames
+### Community 185 - "ref_node_crypto"
+Cohesion: 0.12
+Nodes (7): crypto, MemoriesStore, createMemorizeError(), crypto, MemoryMemorizer, memoriesUpdatePrompt, createMemorizer()
 
 ### Community 187 - "07_new_ui_2.md"
 Cohesion: 0.17
 Nodes (11): Accion, Aplicar skill de ui-ux-pro-max, Barra de scroll, Botones objetibo, Dropdowns, Estandares, Marketplace, Mensajes de cargando (+3 more)
 
-### Community 188 - "graphify.test.js"
-Cohesion: 0.22
-Nodes (9): graphifyCommands, assert, createExecutable(), createFixture(), fakeScript, fs, os, path (+1 more)
+### Community 188 - "graphifyIntegrationService.js"
+Cohesion: 0.18
+Nodes (10): buildGraphifyEnvironment(), crypto, fs, hashText(), ignoredHomePrefixes, integrationVariants, path, summarizeDiff() (+2 more)
 
-### Community 189 - "test_skill_script_paths.py"
-Cohesion: 0.38
-Nodes (3): resolve(), shipped_invocations(), SkillScriptPathsTest
-
-### Community 190 - "importer.test.js"
-Cohesion: 0.25
-Nodes (8): assert, createFixture(), createSourceRepository(), fs, os, path, schemaDirectory, test
+### Community 189 - "pathlib"
+Cohesion: 0.08
+Nodes (8): read_rows(), RtlDataContractTest, resolve(), shipped_invocations(), SkillScriptPathsTest, read_rows(), read_rows(), TestTextLayoutDataContracts
 
 ### Community 193 - "envRowsDraft.js"
 Cohesion: 0.36
 Nodes (5): buildChanges(), createEmptyRow(), createRowId(), createRowsFromEntries(), isRowDirty()
 
-### Community 194 - "mac"
-Cohesion: 0.40
-Nodes (5): mac, category, icon, identity, target
+### Community 194 - "agentsMdTemplate.js"
+Cohesion: 0.30
+Nodes (11): boundaryHeadings, closeOpenFences(), escapeLeadingHeadings(), fence, listEnglishHeadings(), normalizeText(), renderAgentsMd(), renderCodeBlock() (+3 more)
 
 ### Community 197 - "modelRestrictionDraft.js"
 Cohesion: 0.46
 Nodes (6): buildModelGroups(), getActiveListName(), isEntrySelected(), restrictionModeOptions, toggleEntry(), toKey()
 
-### Community 198 - "electron"
-Cohesion: 0.29
-Nodes (6): devDependencies, electron@^45.0.0, electron-builder@26.18.0, electron, electron-builder, { contextBridge, ipcRenderer }
+### Community 198 - "repositoryImporter.js"
+Cohesion: 0.22
+Nodes (7): crypto, fs, path, redactUrls(), retryRename(), sanitizeForItemId(), today()
 
-### Community 199 - "promptRegistry.js"
-Cohesion: 0.32
-Nodes (5): agentsMdOptimizePrompt, agentsMdOptimizeSchema, stringList, skillCreatePrompt, promptRegistry
+### Community 199 - "_normalize"
+Cohesion: 0.22
+Nodes (5): _exact_match_diagnostic(), _legacy_successor_guidance(), _normalize(), _stack_query_requests_legacy(), _stack_row_filter()
 
-### Community 201 - "createAppContainer"
-Cohesion: 0.06
-Nodes (12): createAppContainer(), resolveCatalogDirectory(), DialogIpcController, GraphifyIpcController, LibraryIpcController, LinkIpcController, PreferencesIpcController, ProfileIpcController (+4 more)
+### Community 201 - "appContainer.js"
+Cohesion: 0.05
+Nodes (24): createAppContainer(), fileNames, fs, path, resolveCatalogDirectory(), AiIpcController, CatalogIpcController, DialogIpcController (+16 more)
 
-### Community 206 - "split_values"
-Cohesion: 0.47
-Nodes (3): split_values(), style_identities(), TestStyleIdentityContract
+### Community 203 - "skillsSiteView.js"
+Cohesion: 0.31
+Nodes (4): describeBlockedNavigation(), skillsSite, isInstallRequest(), SkillsSiteController
 
-### Community 208 - "cliInstaller.js"
+### Community 206 - "importer.test.js"
+Cohesion: 0.25
+Nodes (8): assert, createFixture(), createSourceRepository(), fs, os, path, schemaDirectory, test
+
+### Community 207 - "repositoryUrl.js"
+Cohesion: 0.57
+Nodes (7): cleanSegments(), failure(), parseHttps(), parseRepositoryUrl(), parseSsh(), stoppingSegments, validateSegments()
+
+### Community 209 - "_row_identities"
 Cohesion: 0.33
-Nodes (5): crypto, fs, interpreterInvocations, parseMajor(), path
+Nodes (3): _exact_row_identity(), _row_identities(), _style_identity()
 
 ## Ambiguous Edges - Review These
 - `Codex standalone installer` → `Codex Windows install not confirmed`  [AMBIGUOUS]
@@ -908,22 +894,22 @@ Nodes (5): crypto, fs, interpreterInvocations, parseMajor(), path
 
 ## Knowledge Gaps
 - **87 isolated node(s):** `Neutralise delimiters`, `Least privilege execution`, `Codex 32 KiB combined limit`, `Gemini context fileName setting`, `Nearest file takes precedence` (+82 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1241 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **54 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1296 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **60 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Settings modal` connect `CLAUDE.md Group` to `README.md Group`?**
-  _High betweenness centrality (0.261) - this node is a cross-community bridge._
+- **Why does `Configuration sections` connect `README.md Group` to `createNoticeBanner`?**
+  _High betweenness centrality (0.251) - this node is a cross-community bridge._
 - **Are the 11 inferred relationships involving `createAppContainer()` (e.g. with `appContainer.js` and `.listModels()`) actually correct?**
   _`createAppContainer()` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Neutralise delimiters`, `Least privilege execution`, `Codex 32 KiB combined limit` to the rest of the system?**
   _87 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Catalog Service` be split into smaller, more focused modules?**
   _Cohesion score 0.05517503805175038 - nodes in this community are weakly interconnected._
-- **Why does `Configuration sections` connect `CLAUDE.md Group` to `showToast`?**
-  _High betweenness centrality (0.261) - this node is a cross-community bridge._
+- **Why does `Provider registry (adding an agent)` connect `Unverified or low-confidence provider registry rows Group` to `README.md Group`, `providerRegistry.js`?**
+  _High betweenness centrality (0.151) - this node is a cross-community bridge._
 
 ### Low-confidence Hints
 _AMBIGUOUS edges — the extractor was unsure. Verify before acting on these._

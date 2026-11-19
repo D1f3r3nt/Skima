@@ -14,6 +14,7 @@ Aplicación de escritorio (Electron) para descubrir, instalar y crear **skills**
 - **Global** y **Proyecto**: lo que ya está instalado en disco, con origen, buscador y filtro por agente. Cada proyecto tiene una cabecera (nombre editable, ruta, Abrir carpeta, Quitar proyecto) y cuatro pestañas: Contexto, Skills, Variables de entorno y Configuración.
 - **Editor**: asistente de preguntas para crear una skill, con optimización opcional por IA.
 - **Mis skills**: tus skills, listas para instalar, editar, duplicar, exportar o eliminar.
+- **Memorias**: carpetas de conocimiento compartido (brain) entre varios proyectos. Ver [Memorias](#memorias).
 - **Puente con los agentes por línea de comandos** (`runAgent`, `askAI`): base de las funciones de IA.
 - **Fuente de la Verdad** (`source-of-truth/`): documentación local que reciben las IAs para no buscar en internet.
 
@@ -131,6 +132,7 @@ En la carpeta de datos de la app (`app.getPath('userData')`):
 | `my-skills/<nombre>/` | Tus skills (solo los archivos de la skill). |
 | `my-skills-data/<nombre>.json` | Respuestas originales del asistente y datos de la optimización. Están aparte para que no se copien al instalar. |
 | `backups/mcp/` | Copias de los archivos MCP antes de modificarlos. |
+| `memories/memories.json` | Registro de memorias (id, nombre y ruta). Cada memoria vive en su propia carpeta, fuera de userData. |
 
 El nombre de un proyecto es solo de Skima: no se renombra la carpeta. El contexto todavía se guarda en `settings.json`; pasará al `AGENTS.md` del proyecto (ver `docs/plan-pendiente.md`).
 
@@ -254,6 +256,18 @@ Graphify construye un grafo de conocimiento del código del proyecto (`graphify-
 - Al regenerar el `AGENTS.md` desde la pestaña Contexto se conserva la sección `## graphify`.
 
 Detalles y lo que no se ha verificado (tráfico de red, macOS y Linux) en `graphify-usage-and-integration`.
+
+## Memorias
+
+Una memoria es una carpeta (brain) con el contexto, las decisiones y las soluciones que comparten varios proyectos. Una memoria puede tener muchos proyectos; un proyecto solo puede estar en una memoria.
+
+- **Crear**: nombre y carpeta padre; Skima crea `<carpeta>/<nombre-en-minúsculas-con-guiones>` con `README.md` (índice), `CLAUDE.md`, `context/`, `tech_solutions/`, `decisions/`, `projects/`, `playbooks/` e `inbox/`. El registro vive en `<datos de Skima>/memories/memories.json`.
+- **Añadir un proyecto**: escribe `MEMORY.md` en su raíz (`path: <ruta absoluta de la memoria>`), copia `.claude/hooks/get-memory.sh` (hook `PreToolUse` con matcher `Glob|Grep` que inyecta el `CLAUDE.md` y el índice de la memoria) y asigna el hook `maintain-memory` en `Stop`. Si falla un paso, deshace los anteriores. La pertenencia se lee siempre del `MEMORY.md`; un `MEMORY.md` ajeno a Skima no se sobrescribe.
+- **Sacar un proyecto**: borra su `MEMORY.md`, el script, su entrada `PreToolUse` y `maintain-memory`, y conserva el resto del `.claude/settings.json`.
+- **Reparar**: la pantalla comprueba cada proyecto (MEMORY.md, script, hook de carga, `maintain-memory` y la skill `update-memories` para Claude Code) y ofrece **Reparar**, que reinstala sin duplicar entradas.
+- **Eliminar memoria**: saca a todos sus proyectos y manda la carpeta a la papelera. Si no puede sacar alguno, no elimina nada.
+- **Memorizar**: lanza el prompt `memories-update` (configurable en Ajustes por prompt; por defecto el modelo más barato y permisos completos) con `askAi`, con la carpeta de la memoria como directorio de trabajo y la lista de proyectos con sus rutas. El agente usa la skill `update-memories` en modo A. Muestra el progreso en directo, se puede cancelar, sigue en marcha si cambias de pantalla (una ejecución por memoria) y al terminar enseña el resumen y refresca el árbol de archivos. Necesita al menos un proyecto en la memoria.
+- **Protegidos**: el hook `maintain-memory` y la skill `update-memories` no se pueden eliminar ni desinstalar, `maintain-memory` no se asigna ni se quita a mano y su tipo y skill no se pueden cambiar. El nombre de hook `get-memory` está reservado. Si `maintain-memory` falta en Skima, se vuelve a crear al vincular un proyecto.
 
 ## Carpeta `.skima/` por proyecto (ampliada)
 
