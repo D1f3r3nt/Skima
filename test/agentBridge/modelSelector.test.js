@@ -64,7 +64,7 @@ const createSelector = async ({ connectedAgents, defaultAgentId = null, quickMod
   return new ModelSelector({
     registry: providerRegistry,
     settingsStore,
-    platformPaths: createPlatformPaths({ platform: 'linux', homeDirectory: '/home/ana' }),
+    platformPaths: createPlatformPaths({ platform: 'linux', homeDirectory: '/home/ana', environment: {} }),
     executableLocator: { buildEnvironmentPath: async () => '' },
     processRunner: { run: async () => ({ exitCode: 0, stdout: openCodeOutput, stderr: '' }) },
     agentDetector: {

@@ -314,7 +314,12 @@ Solo la app instalada desde GitHub Releases busca versiones nuevas; si arrancas 
 
 ## Publicar una versión nueva
 
-Las releases las genera el flujo [`.github/workflows/release.yml`](.github/workflows/release.yml) al subir una etiqueta `v*`. Compila en Windows, macOS y Linux y sube a la release los instaladores y los archivos `latest*.yml` que lee el actualizador.
+Las releases las genera el flujo [`.github/workflows/release.yml`](.github/workflows/release.yml) al subir una etiqueta `v*`, en dos fases:
+
+- **Compilar** (Windows, macOS y Linux en paralelo): comprueba que la etiqueta coincide con `package.json`, pasa los tests y empaqueta con `--publish never`. No sube nada a GitHub: guarda los instaladores, los `.blockmap` y los `latest*.yml` como artefactos del flujo. Si falla un sistema, se cancelan los demás.
+- **Publicar** (solo si los tres han terminado bien): junta todos los archivos, comprueba que están `latest.yml`, `latest-mac.yml` y `latest-linux.yml`, y crea **una única** release con todos ellos.
+
+electron-builder no publica directamente porque sube varios archivos a la vez y cada subida crea la release si aún no existe: salían releases duplicadas con la misma etiqueta, una con el `.exe` y otra solo con el `.exe.blockmap`.
 
 1. Asegúrate de que `main` está al día y de que `npm test` pasa.
 2. Sube la versión en `package.json` siguiendo semver (sin crear la etiqueta todavía):
@@ -336,7 +341,7 @@ Las releases las genera el flujo [`.github/workflows/release.yml`](.github/workf
 
 5. Espera a que termine **Release** en la pestaña Actions. El flujo falla si la etiqueta no coincide con la versión de `package.json`. Al terminar, la release queda publicada y las apps instaladas verán el botón de actualizar en su siguiente comprobación.
 
-Para publicar desde tu equipo en lugar de GitHub Actions, define `GH_TOKEN` con un token con permiso de escritura en el repositorio y ejecuta `npm run release` en cada sistema operativo.
+Si el flujo falla, corrige el problema, sube la versión (por ejemplo, de `0.9.1` a `0.9.2`) y crea una etiqueta nueva. Volver a lanzar el flujo con la misma etiqueta usa el código de esa etiqueta, sin tus correcciones.
 
 No borres ni sustituyas los archivos de una release ya publicada: las apps instaladas comparan la versión con `latest.yml` (Windows), `latest-mac.yml` (macOS) y `latest-linux.yml` (Linux).
 

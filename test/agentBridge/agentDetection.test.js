@@ -62,7 +62,7 @@ test('en macOS y Linux añade el PATH del shell de login y las carpetas de gesto
 })
 
 test('valida la ruta del ejecutable indicada a mano', async () => {
-  const platformPaths = createPlatformPaths({ platform: 'linux', homeDirectory: '/home/ana' })
+  const platformPaths = createPlatformPaths({ platform: 'linux', homeDirectory: '/home/ana', environment: {} })
   const locator = new ExecutableLocator({ platformPaths, environment: {}, readLoginShellPath: async () => null, fileSystem: createFakeFileSystem(new Set(['/opt/claude'])) })
 
   assert.deepEqual(await locator.find('claude', { manualPath: '/opt/claude' }), { path: '/opt/claude', source: 'manual' })
@@ -71,7 +71,7 @@ test('valida la ruta del ejecutable indicada a mano', async () => {
 })
 
 test('detectAgents marca carpetas y ejecutables, versión y conexión sin lanzar excepciones', async () => {
-  const platformPaths = createPlatformPaths({ platform: 'linux', homeDirectory: '/home/ana' })
+  const platformPaths = createPlatformPaths({ platform: 'linux', homeDirectory: '/home/ana', environment: {} })
   const existingPaths = new Set(['/home/ana/.claude', '/home/ana/.config/opencode'])
   const executables = { claude: '/home/ana/.local/bin/claude', opencode: '/usr/local/bin/opencode' }
   const detector = new AgentDetector({

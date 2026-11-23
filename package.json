@@ -1,6 +1,6 @@
 {
   "name": "skima",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "Gestor de skills, servidores MCP y artefactos de IA para agentes de programación.",
   "license": "ISC",
   "author": "Marc Santisteban",
@@ -21,8 +21,7 @@
     "catalog:verify": "node scripts/catalogTasks.js verify",
     "catalog:refresh": "node scripts/catalogTasks.js refresh",
     "fetch:uv": "node scripts/fetchUv.js",
-    "icons": "electron scripts/buildIcons.js",
-    "release": "npm run fetch:uv && electron-builder --publish always"
+    "icons": "electron scripts/buildIcons.js"
   },
   "devDependencies": {
     "electron": "^45.0.0",

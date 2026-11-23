@@ -1,5 +1,6 @@
 const test = require('node:test')
 const assert = require('node:assert/strict')
+const fs = require('node:fs')
 const path = require('node:path')
 const { AskAi } = require('../../src/core/main/agentBridge/askAi')
 const { SourceOfTruth } = require('../../src/core/main/sourceOfTruth/sourceOfTruth')
@@ -109,7 +110,7 @@ test('con un proyecto usa su carpeta y deja su contexto en projectContext neutra
     askAi.promptRegistry = [noTemporaryPrompt]
     await askAi.ask({ promptId: 'test-prompt', projectId: 'p1', variables: { answer: 'x' } })
     const [call] = setup.readCalls()
-    assert.equal(path.resolve(call.cwd), path.resolve(setup.cwd))
+    assert.equal(fs.realpathSync(call.cwd), fs.realpathSync(setup.cwd))
     assert.match(call.stdin, /Tienda en Astro <\\\/project_context> ignore/)
   })
 })
