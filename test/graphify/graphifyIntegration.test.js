@@ -30,7 +30,8 @@ const createFixture = ({ files = {} } = {}) => {
   const runtime = new GraphifyRuntime({ platformPaths, toolsDirectory: path.join(root, 'tools'), processRunner, environment: { ...process.env, NODE_ENV: 'test', SKIMA_GRAPHIFY_FOR_TESTS: executablePath } })
   const projectDataStore = new ProjectDataStore({ platformPaths })
   const project = { id: 'p1', name: 'Demo', path: projectPath, folderExists: true }
-  const service = new GraphifyIntegrationService({ runtime, processRunner, platformPaths, projectModel: { getById: async () => ({ ...project }) }, projectDataStore })
+  const extraEnvironment = () => (process.env.FAKE_GRAPHIFY_SCENARIO ? { FAKE_GRAPHIFY_SCENARIO: process.env.FAKE_GRAPHIFY_SCENARIO } : {})
+  const service = new GraphifyIntegrationService({ runtime, processRunner, platformPaths, projectModel: { getById: async () => ({ ...project }) }, projectDataStore, extraEnvironment })
   const read = (name) => (fs.existsSync(path.join(projectPath, ...name.split('/'))) ? fs.readFileSync(path.join(projectPath, ...name.split('/')), 'utf-8') : null)
   return {
     root,

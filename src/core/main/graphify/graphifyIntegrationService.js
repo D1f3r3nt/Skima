@@ -81,12 +81,13 @@ const summarizeDiff = (before, after) => {
 const hashText = (text) => crypto.createHash('sha256').update(text ?? '\u0000absent').digest('hex')
 
 class GraphifyIntegrationService {
-  constructor({ runtime, processRunner, platformPaths, projectModel, projectDataStore, now = () => new Date() }) {
+  constructor({ runtime, processRunner, platformPaths, projectModel, projectDataStore, extraEnvironment = () => ({}), now = () => new Date() }) {
     this.runtime = runtime
     this.processRunner = processRunner
     this.platformPaths = platformPaths
     this.projectModel = projectModel
     this.projectDataStore = projectDataStore
+    this.extraEnvironment = extraEnvironment
     this.now = now
     this.busyProjects = new Set()
   }
@@ -175,7 +176,7 @@ class GraphifyIntegrationService {
         command: runtimeStatus.executablePath,
         args: [variant.id, action],
         cwd: sandboxProject,
-        environment: this.buildSandboxEnvironment(sandboxHome),
+        environment: { ...this.buildSandboxEnvironment(sandboxHome), ...this.extraEnvironment() },
         timeoutMs: runTimeoutMs,
         maxOutputBytes: 256 * 1024
       })
