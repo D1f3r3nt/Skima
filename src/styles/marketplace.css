@@ -106,6 +106,51 @@
     background: var(--color-background);
 }
 
+.skills-site__progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    height: 2px;
+    overflow: hidden;
+    background: var(--color-accent-soft);
+    pointer-events: none;
+}
+
+.skills-site__progress[hidden] {
+    display: none;
+}
+
+.skills-site__progress::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 35%;
+    background: var(--color-accent);
+    animation: skills-site-progress 1s ease-in-out infinite;
+}
+
+@keyframes skills-site-progress {
+    from {
+        left: -35%;
+    }
+
+    to {
+        left: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skills-site__progress::after {
+        animation: none;
+        left: 0;
+        width: 100%;
+        opacity: 0.6;
+    }
+}
+
 .skills-install__output {
     max-height: 280px;
 }

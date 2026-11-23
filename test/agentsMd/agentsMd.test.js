@@ -188,7 +188,6 @@ test('editar en su sitio conserva los saltos de línea y avisa si el archivo cam
 
 test('avisos por agente y archivo puente solo con confirmación', async () => {
   const claude = createProjectFixture({ agents: ['claude-code'] })
-  const gemini = createProjectFixture({ agents: ['gemini-cli'] })
   try {
     fs.writeFileSync(path.join(claude.projectPath, 'AGENTS.md'), '# A\n')
     fs.writeFileSync(path.join(claude.projectPath, 'CLAUDE.md'), '# Reglas\r\nUsa plan.\r\n')
@@ -200,17 +199,8 @@ test('avisos por agente y archivo puente solo con confirmación', async () => {
     assert.equal(fs.readdirSync(path.join(claude.projectPath, '.skima', 'backups')).length, 1)
     state = await claude.service.getState('p1')
     assert.equal(state.notices.length, 0)
-
-    fs.writeFileSync(path.join(gemini.projectPath, 'AGENTS.md'), '# A\n')
-    state = await gemini.service.getState('p1')
-    assert.equal(state.notices[0].id, 'gemini-bridge')
-    assert.equal(fs.existsSync(path.join(gemini.projectPath, 'GEMINI.md')), false)
-    await gemini.service.createBridge({ projectId: 'p1', bridgeId: 'gemini-bridge' })
-    assert.equal(fs.readFileSync(path.join(gemini.projectPath, 'GEMINI.md'), 'utf-8'), '@AGENTS.md\n')
-    await assert.rejects(() => gemini.service.createBridge({ projectId: 'p1', bridgeId: 'gemini-bridge' }), (error) => error.code === 'NOT_AVAILABLE')
   } finally {
     claude.cleanup()
-    gemini.cleanup()
   }
 })
 

@@ -97,17 +97,17 @@ test('sin agente por defecto compara precios conocidos', async () => {
 })
 
 test('si los precios no son comparables usa el orden del registro', async () => {
-  const selection = await (await createSelector({ connectedAgents: ['codex', 'gemini-cli'] })).pickCheapestModel()
-  assert.equal(selection.agentId, 'codex')
+  const selection = await (await createSelector({ connectedAgents: ['claude-code'] })).pickCheapestModel()
+  assert.equal(selection.agentId, 'claude-code')
   assert.match(selection.reason, /orden del registro/)
 })
 
 test('respeta el modelo fijado a mano y cae a automático si su agente no está conectado', async () => {
-  const manual = await (await createSelector({ connectedAgents: ['gemini-cli'], quickModel: { mode: 'manual', agentId: 'gemini-cli', model: 'flash' } })).pickCheapestModel()
-  assert.equal(manual.model, 'flash')
+  const manual = await (await createSelector({ connectedAgents: ['claude-code'], quickModel: { mode: 'manual', agentId: 'claude-code', model: 'sonnet' } })).pickCheapestModel()
+  assert.equal(manual.model, 'sonnet')
   assert.equal(manual.isManual, true)
 
-  const fallback = await (await createSelector({ connectedAgents: ['gemini-cli'], quickModel: { mode: 'manual', agentId: 'codex', model: 'x' } })).pickCheapestModel()
-  assert.equal(fallback.agentId, 'gemini-cli')
+  const fallback = await (await createSelector({ connectedAgents: ['claude-code'], quickModel: { mode: 'manual', agentId: 'opencode', model: 'x' } })).pickCheapestModel()
+  assert.equal(fallback.agentId, 'claude-code')
   assert.match(fallback.warning, /no está conectado/)
 })

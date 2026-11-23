@@ -66,6 +66,7 @@ export class GlobalHooksController {
         typeIcon: type.icon,
         typeClass: hook.type,
         summary: describeHookSummary(hook),
+        isSkimaArtifact: Boolean(hook.isSkimaArtifact),
         onOpen: () => this.openHook(hook)
       })
     }))

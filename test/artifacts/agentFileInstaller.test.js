@@ -11,7 +11,7 @@ const { createPlatformPaths } = require('../../src/core/main/platform/platformPa
 
 const subagentText = '---\nname: reviewer\ndescription: Reviews code\ntools: Read\n---\n\nYou review code.\n'
 
-const createFixture = ({ agents = ['claude-code', 'opencode', 'codex'], readers } = {}) => {
+const createFixture = ({ agents = ['claude-code', 'opencode'], readers } = {}) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'skima-agentfile-'))
   const home = path.join(root, 'home')
   const projectPath = path.join(root, 'project')
@@ -40,7 +40,7 @@ test('instala un subagente en cada agente compatible, traduce y avisa de los no 
   try {
     const plan = await fixture.installer.plan({ type: 'subagent', source: githubSource, scope: 'global' })
     assert.deepEqual(plan.destinations.map((destination) => destination.status), ['new', 'new'])
-    assert.deepEqual(plan.unsupported.map((agent) => agent.agentId), ['codex'])
+    assert.deepEqual(plan.unsupported, [])
     const { results } = await fixture.installer.execute({ planId: plan.planId })
     assert.deepEqual(results.map((result) => result.status), ['installed', 'installed'])
     assert.equal(fs.readFileSync(path.join(fixture.home, '.claude', 'agents', 'reviewer.md'), 'utf-8'), subagentText)
@@ -117,18 +117,13 @@ test('instala en un proyecto y nunca escribe fuera de las carpetas previstas', a
   }
 })
 
-test('rechaza formato inválido, nombres no portables y agentes que no soportan el tipo', async () => {
+test('rechaza formato inválido y nombres no portables', async () => {
   const invalid = createFixture({ readers: { github: async () => 'sin cabecera' } })
-  const onlyCodex = createFixture({ agents: ['codex'] })
   try {
     await assert.rejects(() => invalid.installer.plan({ type: 'subagent', source: githubSource, scope: 'global' }), (error) => error.code === 'INVALID_FILE')
     await assert.rejects(() => invalid.installer.plan({ type: 'subagent', source: { ...githubSource, path: 'agents/con.md' }, scope: 'global' }), (error) => error.code === 'INVALID_NAME')
-    const plan = await onlyCodex.installer.plan({ type: 'subagent', source: githubSource, scope: 'global' })
-    assert.equal(plan.destinations.length, 0)
-    assert.equal(plan.unsupported.length, 1)
   } finally {
     invalid.cleanup()
-    onlyCodex.cleanup()
   }
 })
 

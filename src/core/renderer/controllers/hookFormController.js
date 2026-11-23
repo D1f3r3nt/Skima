@@ -1,15 +1,15 @@
 import { showToast } from '../../../components/molecules/toast.js'
-import { hookFormLimits, hookNamePattern } from '../config/hookTypes.js'
+import { defaultHookAgentId, hookAgentOptions, hookFormLimits, hookNamePattern } from '../config/hookTypes.js'
 import { describeScanLocation, mergeSkillsByLocation } from '../services/skillLocationsMerger.js'
 import { buildPageUrl, navigateTo } from '../services/navigation.js'
 
-const hookAgentId = 'claude-code'
-const fallbackModels = Object.freeze(['haiku', 'sonnet', 'opus'])
+const isHookAgent = (agentId) => hookAgentOptions.some((option) => option.value === agentId)
 
 const createEmptyForm = () => ({
   name: '',
   type: 'prompt',
   skillName: '',
+  agentId: defaultHookAgentId,
   model: '',
   scriptPath: '',
   scriptDisplayName: '',
@@ -30,13 +30,14 @@ export class HookFormController {
       isEditing: Boolean(editName),
       isLoadingHook: Boolean(editName),
       skills: { isLoading: true, options: [], error: null },
-      models: [...fallbackModels],
+      models: { isLoading: true, options: [] },
       isSaving: false,
       error: null
     }
     this.handlers = {
       onChange: (changes) => this.updateForm(changes),
       onTypeChange: (type) => this.changeType(type),
+      onAgentChange: (agentId) => this.changeAgent(agentId),
       onPickScript: () => this.pickScript(),
       onSubmit: () => this.submit(),
       onOpenLibrary: () => navigateTo(buildPageUrl('global', { tab: 'hooks' }))
@@ -46,10 +47,34 @@ export class HookFormController {
   async init() {
     this.render()
     this.loadSkills()
-    this.loadModels()
     if (this.editName) {
       await this.loadHookForEditing()
+    } else {
+      await this.applyDefaultAgent()
     }
+    this.loadModels()
+  }
+
+  async applyDefaultAgent() {
+    try {
+      const { promptLaunch } = await this.apiClient.getPromptLaunchSettings()
+      if (isHookAgent(promptLaunch.defaultAgentId) && !this.agentTouched) {
+        this.state = { ...this.state, form: { ...this.state.form, agentId: promptLaunch.defaultAgentId } }
+        this.render()
+      }
+    } catch {
+      return
+    }
+  }
+
+  changeAgent(agentId) {
+    if (!isHookAgent(agentId) || agentId === this.state.form.agentId) {
+      return
+    }
+    this.agentTouched = true
+    this.state = { ...this.state, form: { ...this.state.form, agentId, model: '' }, models: { isLoading: true, options: [] } }
+    this.view.updateModels(this.state)
+    this.loadModels()
   }
 
   async loadHookForEditing() {
@@ -59,6 +84,7 @@ export class HookFormController {
         name: hook.name,
         type: hook.type,
         skillName: hook.skillName ?? '',
+        agentId: isHookAgent(hook.agentId) ? hook.agentId : defaultHookAgentId,
         model: hook.model ?? '',
         scriptPath: '',
         scriptDisplayName: hook.scriptOriginalName ?? '',
@@ -114,16 +140,19 @@ export class HookFormController {
   }
 
   async loadModels() {
+    const { agentId } = this.state.form
+    let options = []
     try {
-      const result = await this.apiClient.listAgentModels(hookAgentId)
-      const models = [...new Set((result.models ?? []).map(toModelName).filter(Boolean))]
-      if (models.length > 0) {
-        this.state = { ...this.state, models }
-        this.view.updateModels(this.state)
-      }
+      const result = await this.apiClient.listAgentModels(agentId)
+      options = [...new Set((result.models ?? []).map(toModelName).filter(Boolean))]
     } catch {
+      options = []
+    }
+    if (agentId !== this.state.form.agentId) {
       return
     }
+    this.state = { ...this.state, models: { isLoading: false, options } }
+    this.view.updateModels(this.state)
   }
 
   async pickScript() {
@@ -156,7 +185,7 @@ export class HookFormController {
     const common = { name: form.name.trim(), type: form.type, timeout: form.timeout, statusMessage: form.statusMessage }
     return form.type === 'command'
       ? { ...common, scriptPath: form.scriptPath, async: form.async }
-      : { ...common, skillName: form.skillName, model: form.model }
+      : { ...common, skillName: form.skillName, agentId: form.agentId, model: form.model }
   }
 
   async submit() {

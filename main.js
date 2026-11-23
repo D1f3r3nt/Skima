@@ -5,6 +5,7 @@ const { createMainWindow } = require('./src/core/main/windows/mainWindow')
 
 const { app, BrowserWindow } = electron
 const appUserModelId = 'com.skima.app'
+const appIconPath = path.join(__dirname, 'src', 'assets', 'icons', 'skima.png')
 
 app.setAppUserModelId(appUserModelId)
 
@@ -15,6 +16,9 @@ if (process.env.SKIMA_USER_DATA_DIR && path.isAbsolute(process.env.SKIMA_USER_DA
 let appContainer = null
 
 app.whenReady().then(async () => {
+  if (process.platform === 'darwin') {
+    app.dock?.setIcon(appIconPath)
+  }
   appContainer = await createAppContainer({ electron, appRootDirectory: __dirname })
   appContainer.registerControllers()
   createMainWindow()

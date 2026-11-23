@@ -16,7 +16,7 @@ class SkillUninstaller {
     }
     const normalized = this.platformPaths.path.resolve(candidate)
     if (isProtectedSkill(this.platformPaths.path.basename(normalized))) {
-      return { path: normalized, ok: false, reason: 'La necesitan las memorias de Skima; no se puede desinstalar.' }
+      return { path: normalized, ok: false, reason: 'La necesita Skima para funcionar; no se puede desinstalar.' }
     }
     const parentDirectory = this.platformPaths.path.dirname(normalized)
     const knownParent = knownDirectories.find((directory) => this.platformPaths.isSamePath(directory, parentDirectory))

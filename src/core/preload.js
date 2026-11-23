@@ -188,6 +188,13 @@ contextBridge.exposeInMainWorld('skimaApi', {
   toggleMaximizeWindow: () => ipcRenderer.invoke('window:toggle-maximize'),
   closeWindow: () => ipcRenderer.invoke('window:close'),
   isWindowMaximized: () => ipcRenderer.invoke('window:is-maximized'),
+  getUpdateState: () => ipcRenderer.invoke('updates:get-state'),
+  installUpdate: () => ipcRenderer.invoke('updates:install'),
+  onUpdateStateChange: (callback) => {
+    const listener = (event, state) => callback(state)
+    ipcRenderer.on('updates:state-changed', listener)
+    return () => ipcRenderer.removeListener('updates:state-changed', listener)
+  },
   onWindowMaximizedChange: (callback) => {
     const listener = (event, isMaximized) => callback(isMaximized)
     ipcRenderer.on('window:maximized-changed', listener)

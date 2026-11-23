@@ -20,7 +20,9 @@ export class SkillsSiteView {
     this.themeCssKey = null
     this.themePromise = Promise.resolve()
     this.loadingElement = null
+    this.progressElement = null
     this.loadingFallbackTimer = null
+    this.hasRevealed = false
   }
 
   createInfoBadge() {
@@ -82,17 +84,23 @@ export class SkillsSiteView {
     this.webviewElement.addEventListener('did-navigate', syncNavigation)
     this.webviewElement.addEventListener('did-navigate-in-page', syncNavigation)
     this.webviewElement.addEventListener('did-start-navigation', (event) => {
-      if (event.isMainFrame && !event.isInPage) {
-        this.setLoading(true)
+      if (event.isMainFrame && !event.isInPage && this.hasRevealed) {
+        this.setNavigating(true)
       }
     })
+    this.webviewElement.addEventListener('did-stop-loading', () => this.setNavigating(false))
     this.webviewElement.addEventListener('dom-ready', () => {
       this.themePromise = this.applyTheme()
     })
-    this.webviewElement.addEventListener('did-finish-load', () => this.revealWhenReady())
+    this.webviewElement.addEventListener('did-finish-load', () => {
+      if (!this.hasRevealed) {
+        this.revealWhenReady()
+      }
+    })
     this.webviewElement.addEventListener('did-fail-load', (event) => {
       if (event.isMainFrame && event.errorCode !== -3) {
         this.setLoading(false)
+        this.setNavigating(false)
         showToast({ message: `No se pudo cargar skills.sh (${event.errorDescription || event.errorCode}).`, variant: 'error' })
       }
     })
@@ -102,9 +110,15 @@ export class SkillsSiteView {
     this.loadingElement.className = 'skills-site__loading'
     this.loadingElement.append(createLoader({ label: 'Cargando skills.sh…' }))
 
+    this.progressElement = document.createElement('div')
+    this.progressElement.className = 'skills-site__progress'
+    this.progressElement.setAttribute('role', 'progressbar')
+    this.progressElement.setAttribute('aria-label', 'Cargando página')
+    this.progressElement.hidden = true
+
     const frameElement = document.createElement('div')
     frameElement.className = 'skills-site__frame'
-    frameElement.append(this.webviewElement, this.loadingElement, this.createInfoBadge())
+    frameElement.append(this.webviewElement, this.loadingElement, this.progressElement, this.createInfoBadge())
     this.setLoading(true)
 
     const sectionElement = document.createElement('section')
@@ -120,6 +134,14 @@ export class SkillsSiteView {
     this.loadingElement.style.display = isLoading ? '' : 'none'
     if (isLoading) {
       this.loadingFallbackTimer = setTimeout(() => this.setLoading(false), loadingFallbackMilliseconds)
+    } else {
+      this.hasRevealed = true
+    }
+  }
+
+  setNavigating(isNavigating) {
+    if (this.progressElement) {
+      this.progressElement.hidden = !isNavigating
     }
   }
 

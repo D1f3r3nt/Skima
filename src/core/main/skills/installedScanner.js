@@ -3,18 +3,20 @@ const { parseSkillManifest } = require('./skillManifest')
 const { skillSpecConstants } = require('./skillSpecConstants')
 const { hashSkillFolder } = require('./skillFolderHash')
 const { toCaseInsensitiveKey } = require('../platform/portableNames')
+const { isSkimaSkill } = require('../skimaArtifacts/skimaArtifactsConfig')
 
 const scanLimits = Object.freeze({ maximumEntriesPerDirectory: 500, maximumManifestBytes: 512 * 1024, hashFiles: 300, hashBytes: 20 * 1024 * 1024 })
 const cacheTtlMs = 15 * 1000
 
 class InstalledScanner {
-  constructor({ registry, pathResolver, platformPaths, settingsStore, projectModel, listMySkills = async () => [], limits = scanLimits, now = () => Date.now() }) {
+  constructor({ registry, pathResolver, platformPaths, settingsStore, projectModel, listMySkills = async () => [], ensureArtifacts = async () => {}, limits = scanLimits, now = () => Date.now() }) {
     this.registry = registry
     this.pathResolver = pathResolver
     this.platformPaths = platformPaths
     this.settingsStore = settingsStore
     this.projectModel = projectModel
     this.listMySkills = listMySkills
+    this.ensureArtifacts = ensureArtifacts
     this.limits = limits
     this.now = now
     this.cache = new Map()
@@ -196,6 +198,7 @@ class InstalledScanner {
         agentNames: [...new Set(row.installations.flatMap((installation) => installation.agentNames))],
         differentVersions: hashes.size > 1,
         origin: primaryOrigin,
+        isSkimaArtifact: isSkimaSkill(row.folderName) || isSkimaSkill(row.name),
         matchesMySkill: mySkillKeys.has(row.key) ? row.folderName : null
       }
     }).sort((first, second) => first.name.localeCompare(second.name))
@@ -208,6 +211,7 @@ class InstalledScanner {
       return cached.result
     }
 
+    await this.ensureArtifacts().catch(() => null)
     const settings = await this.settingsStore.get()
     let project = null
     if (scope === 'project') {

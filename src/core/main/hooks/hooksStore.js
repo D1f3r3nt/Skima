@@ -10,9 +10,11 @@ const {
   normalizeTimeout,
   normalizeStatusMessage,
   normalizeModel,
-  normalizeSkillName
+  normalizeSkillName,
+  normalizeHookAgentId
 } = require('./hookDefinitions')
-const { isProtectedHook, isReservedHookName } = require('../memories/memoryConstants')
+const { isProtectedHook, isReservedHookName, isUndeletableHook } = require('../memories/memoryConstants')
+const { isSkimaHook } = require('../skimaArtifacts/skimaArtifactsConfig')
 
 const libraryFileName = 'hooks.json'
 const scriptsFolderName = 'scripts'
@@ -59,7 +61,7 @@ class HooksStore {
   }
 
   describe(hook) {
-    return { ...hook, isProtected: isProtectedHook(hook.name), entry: buildHookEntry(hook) }
+    return { ...hook, isProtected: isProtectedHook(hook.name), isSkimaArtifact: isSkimaHook(hook.name), entry: buildHookEntry(hook) }
   }
 
   assertNameAvailable(name) {
@@ -133,7 +135,7 @@ class HooksStore {
       createdAt: existing?.createdAt ?? this.now().toISOString()
     }
     if (type === 'prompt') {
-      return { hook: { ...base, async: true, skillName: normalizeSkillName(request.skillName), model: normalizeModel(request.model) }, scriptSource: null }
+      return { hook: { ...base, async: true, skillName: normalizeSkillName(request.skillName), agentId: normalizeHookAgentId(request.agentId), model: normalizeModel(request.model) }, scriptSource: null }
     }
     const keepsExistingScript = existing?.type === 'command' && !String(request.scriptPath ?? '').trim()
     if (keepsExistingScript) {
@@ -184,8 +186,8 @@ class HooksStore {
   }
 
   assertDeletable(name) {
-    if (isProtectedHook(name)) {
-      throw new Error(`El hook «${name}» lo necesitan las memorias de Skima y no se puede eliminar.`)
+    if (isUndeletableHook(name)) {
+      throw new Error(`El hook «${name}» lo necesita Skima para funcionar y no se puede eliminar.`)
     }
   }
 

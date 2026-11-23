@@ -35,7 +35,9 @@ export function createInstalledSkillRow({ skill, onOpen, favorite = null, locati
   nameElement.className = 'installed-row__name'
   nameElement.textContent = skill.name
   titleRow.append(nameElement)
-  if (skill.origin.type !== 'manual') {
+  if (skill.isSkimaArtifact) {
+    titleRow.append(createBadge({ label: 'Skima', variant: 'warning' }))
+  } else if (skill.origin.type !== 'manual') {
     titleRow.append(createBadge({ label: skill.origin.type === 'mySkill' ? 'Propia' : 'GitHub', variant: originVariants[skill.origin.type] }))
   }
   if (!skill.headerValid) {

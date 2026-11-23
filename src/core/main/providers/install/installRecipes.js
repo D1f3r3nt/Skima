@@ -29,38 +29,6 @@ const claudeCodeInstall = Object.freeze({
   })
 })
 
-const geminiCliInstall = Object.freeze({
-  documentId: 'install-gemini-cli',
-  displayName: 'Gemini CLI',
-  platforms: Object.freeze({
-    win32: Object.freeze([
-      method({ id: 'npm', label: 'npm (paquete @google/gemini-cli)', recommended: true, requirements: [npmRequirement, nodeRequirement(20)], steps: [run('npm', ['install', '-g', '@google/gemini-cli'])], elevation: 'depends' })
-    ]),
-    darwin: Object.freeze([
-      method({ id: 'brew', label: 'Homebrew (fórmula gemini-cli)', recommended: true, requirements: [brewRequirement], steps: [run('brew', ['install', 'gemini-cli'])] }),
-      method({ id: 'npm', label: 'npm (paquete @google/gemini-cli)', requirements: [npmRequirement, nodeRequirement(20)], steps: [run('npm', ['install', '-g', '@google/gemini-cli'])], elevation: 'depends' })
-    ]),
-    linux: Object.freeze([
-      method({ id: 'brew', label: 'Homebrew (fórmula gemini-cli)', recommended: true, requirements: [brewRequirement], steps: [run('brew', ['install', 'gemini-cli'])] }),
-      method({ id: 'npm', label: 'npm (paquete @google/gemini-cli)', requirements: [npmRequirement, nodeRequirement(20)], steps: [run('npm', ['install', '-g', '@google/gemini-cli'])], elevation: 'depends' })
-    ])
-  })
-})
-
-const codexInstall = Object.freeze({
-  documentId: 'install-codex-cli',
-  displayName: 'Codex',
-  platforms: Object.freeze({
-    win32: Object.freeze([]),
-    darwin: Object.freeze([
-      method({ id: 'standalone-script', label: 'Instalador oficial (script de shell)', recommended: true, modifiesShellProfile: true, steps: [script('https://chatgpt.com/codex/install.sh', 'sh')], notes: ['Descarga y ejecuta un script. Puede modificar el perfil de tu shell.'] })
-    ]),
-    linux: Object.freeze([
-      method({ id: 'standalone-script', label: 'Instalador oficial (script de shell)', recommended: true, modifiesShellProfile: true, steps: [script('https://chatgpt.com/codex/install.sh', 'sh')], notes: ['Descarga y ejecuta un script. Puede modificar el perfil de tu shell.'] })
-    ])
-  })
-})
-
 const openCodeInstall = Object.freeze({
   documentId: 'install-opencode-cli',
   displayName: 'OpenCode',
@@ -85,8 +53,6 @@ const githubCliInstall = Object.freeze({
 
 const installRecipes = Object.freeze({
   'claude-code': claudeCodeInstall,
-  'gemini-cli': geminiCliInstall,
-  codex: codexInstall,
   opencode: openCodeInstall
 })
 

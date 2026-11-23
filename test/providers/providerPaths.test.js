@@ -12,29 +12,16 @@ const systems = {
 
 const expectedGlobalSkills = {
   'claude-code': { win32: 'C:\\Users\\ana\\.claude\\skills', darwin: '/Users/ana/.claude/skills', linux: '/home/ana/.claude/skills' },
-  opencode: { win32: 'C:\\Users\\ana\\.config\\opencode\\skills', darwin: '/Users/ana/.config/opencode/skills', linux: '/home/ana/.config/opencode/skills' },
-  codex: { win32: 'C:\\Users\\ana\\.agents\\skills', darwin: '/Users/ana/.agents/skills', linux: '/home/ana/.agents/skills' },
-  'gemini-cli': { win32: 'C:\\Users\\ana\\.gemini\\skills', darwin: '/Users/ana/.gemini/skills', linux: '/home/ana/.gemini/skills' },
-  cursor: { win32: 'C:\\Users\\ana\\.cursor\\skills', darwin: '/Users/ana/.cursor/skills', linux: '/home/ana/.cursor/skills' },
-  'github-copilot': { win32: 'C:\\Users\\ana\\.copilot\\skills', darwin: '/Users/ana/.copilot/skills', linux: '/home/ana/.copilot/skills' },
-  windsurf: { win32: 'C:\\Users\\ana\\AppData\\Roaming\\devin\\skills', darwin: '/Users/ana/.config/devin/skills', linux: '/home/ana/.config/devin/skills' },
-  amp: { win32: 'C:\\Users\\ana\\.config\\agents\\skills', darwin: '/Users/ana/.config/agents/skills', linux: '/home/ana/.config/agents/skills' },
-  goose: { win32: 'C:\\Users\\ana\\.config\\goose\\skills', darwin: '/Users/ana/.config/goose/skills', linux: '/home/ana/.config/goose/skills' },
-  'roo-code': { win32: 'C:\\Users\\ana\\.roo\\skills', darwin: '/Users/ana/.roo/skills', linux: '/home/ana/.roo/skills' },
-  'kilo-code': { win32: 'C:\\Users\\ana\\.kilocode\\skills', darwin: '/Users/ana/.kilocode/skills', linux: '/home/ana/.kilocode/skills' }
+  opencode: { win32: 'C:\\Users\\ana\\.config\\opencode\\skills', darwin: '/Users/ana/.config/opencode/skills', linux: '/home/ana/.config/opencode/skills' }
 }
 
 const expectedProjectSkills = {
-  'claude-code': '.claude/skills', opencode: '.opencode/skills', codex: '.agents/skills', 'gemini-cli': '.gemini/skills',
-  cursor: '.cursor/skills', 'github-copilot': '.github/skills', windsurf: '.devin/skills', amp: '.agents/skills',
-  goose: '.goose/skills', 'roo-code': '.roo/skills', 'kilo-code': '.kilocode/skills'
+  'claude-code': '.claude/skills', opencode: '.opencode/skills'
 }
 
 const expectedGlobalMcp = {
   'claude-code': { win32: 'C:\\Users\\ana\\.claude.json', darwin: '/Users/ana/.claude.json', linux: '/home/ana/.claude.json' },
-  opencode: { win32: 'C:\\Users\\ana\\.config\\opencode\\opencode.json', darwin: '/Users/ana/.config/opencode/opencode.json', linux: '/home/ana/.config/opencode/opencode.json' },
-  codex: { win32: 'C:\\Users\\ana\\.codex\\config.toml', darwin: '/Users/ana/.codex/config.toml', linux: '/home/ana/.codex/config.toml' },
-  'gemini-cli': { win32: 'C:\\Users\\ana\\.gemini\\settings.json', darwin: '/Users/ana/.gemini/settings.json', linux: '/home/ana/.gemini/settings.json' }
+  opencode: { win32: 'C:\\Users\\ana\\.config\\opencode\\opencode.json', darwin: '/Users/ana/.config/opencode/opencode.json', linux: '/home/ana/.config/opencode/opencode.json' }
 }
 
 const createResolver = (system, environment = {}) => new ProviderPathResolver({
@@ -78,12 +65,11 @@ for (const [systemName, system] of Object.entries(systems)) {
 }
 
 test('respeta las variables de entorno de cada agente', () => {
-  const resolver = createResolver(systems.linux, { CLAUDE_CONFIG_DIR: '/cfg/claude', CODEX_HOME: '/cfg/codex', OPENCODE_CONFIG_DIR: '/cfg/oc', XDG_CONFIG_HOME: '/xdg' })
+  const resolver = createResolver(systems.linux, { CLAUDE_CONFIG_DIR: '/cfg/claude', OPENCODE_CONFIG_DIR: '/cfg/oc', XDG_CONFIG_HOME: '/xdg' })
   assert.equal(resolver.resolve(findProvider('claude-code')).skillsGlobal, '/cfg/claude/skills')
   assert.equal(resolver.resolve(findProvider('claude-code')).mcpGlobal, '/cfg/claude/.claude.json')
-  assert.equal(resolver.resolve(findProvider('codex')).mcpGlobal, '/cfg/codex/config.toml')
   assert.equal(resolver.resolve(findProvider('opencode')).skillsGlobal, '/cfg/oc/skills')
-  assert.equal(resolver.resolve(findProvider('goose')).skillsGlobal, '/xdg/goose/skills')
+  assert.equal(resolver.resolve(findProvider('opencode')).mcpGlobal, '/cfg/oc/opencode.json')
 })
 
 test('muestra la convención de proyecto con el separador del sistema', () => {
@@ -94,8 +80,8 @@ test('muestra la convención de proyecto con el separador del sistema', () => {
 test('agrupa los agentes que comparten carpeta de skills', () => {
   const resolver = createResolver(systems.linux)
   const groups = resolver.findSharedSkillDirectories(
-    [findProvider('codex'), findProvider('amp'), findProvider('claude-code')],
+    [findProvider('opencode'), findProvider('claude-code')],
     { scope: 'project', projectPath: '/work/app' }
   )
-  assert.deepEqual(groups.map((group) => group.agentIds), [['codex', 'amp'], ['claude-code']])
+  assert.deepEqual(groups.map((group) => group.agentIds), [['opencode'], ['claude-code']])
 })

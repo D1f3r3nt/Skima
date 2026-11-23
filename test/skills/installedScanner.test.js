@@ -76,22 +76,21 @@ test('lista skills válidas, con cabecera rota (sin ocultarlas) y omite carpetas
 })
 
 test('une la misma skill instalada en varios agentes, detecta versiones distintas y no cuenta dos veces una carpeta compartida', async () => {
-  const setup = await createScannerSetup({ enabledAgents: ['claude-code', 'codex', 'amp', 'gemini-cli'] })
+  const setup = await createScannerSetup({ enabledAgents: ['claude-code', 'opencode'] })
   try {
     writeSkill(path.join(setup.projectDirectory, '.claude', 'skills'), 'review', validManifest('review'))
-    writeSkill(path.join(setup.projectDirectory, '.agents', 'skills'), 'review', validManifest('review'))
-    writeSkill(path.join(setup.projectDirectory, '.gemini', 'skills'), 'review', validManifest('review', 'Different content.'))
+    writeSkill(path.join(setup.projectDirectory, '.opencode', 'skills'), 'review', validManifest('review', 'Different content.'))
     writeSkill(path.join(setup.projectDirectory, '.agents', 'skills'), 'shared-only', validManifest('shared-only'))
 
     const result = await setup.scanner.scan({ scope: 'project', projectId: 'p1' })
     const review = result.skills.find((skill) => skill.folderName === 'review')
     const sharedOnly = result.skills.find((skill) => skill.folderName === 'shared-only')
 
-    assert.equal(review.installations.length, 3)
-    assert.deepEqual(review.agentIds.sort(), ['amp', 'claude-code', 'codex', 'gemini-cli'])
+    assert.equal(review.installations.length, 2)
+    assert.deepEqual(review.agentIds.sort(), ['claude-code', 'opencode'])
     assert.equal(review.differentVersions, true)
     assert.equal(sharedOnly.installations.length, 1)
-    assert.deepEqual(sharedOnly.installations[0].agentIds.sort(), ['amp', 'codex', 'gemini-cli'])
+    assert.deepEqual(sharedOnly.installations[0].agentIds.sort(), ['opencode'])
     assert.equal(result.skills.length, 2)
   } finally {
     setup.cleanup()

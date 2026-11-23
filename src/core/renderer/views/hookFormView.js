@@ -9,7 +9,7 @@ import { createToggleRow } from '../../../components/molecules/toggleRow.js'
 import { createChoiceCardGroup } from '../../../components/molecules/choiceCardGroup.js'
 import { createNoticeBanner } from '../../../components/molecules/noticeBanner.js'
 import { createEmptyState } from '../../../components/organisms/emptyState.js'
-import { hookTypeOptions } from '../config/hookTypes.js'
+import { hookAgentOptions, hookTypeOptions } from '../config/hookTypes.js'
 
 const pageTitle = 'Crear un hook'
 const pageDescription = 'Un hook es una acción que el agente lanza antes o después de la sesión o de cada prompt. Se guarda en Skima y lo activas desde la pestaña Hooks de cada proyecto.'
@@ -102,15 +102,29 @@ export class HookFormView {
     field.setError(skills.error ?? '')
   }
 
+  buildAgentField({ form, handlers }) {
+    const agentSelect = createSelectInput({ id: 'hookAgent', options: hookAgentOptions, value: form.agentId, onChange: (agentId) => handlers.onAgentChange(agentId) })
+    return createField({ id: 'hookAgent', label: 'Proveedor', control: agentSelect.element, hint: 'Programa que lanza la skill. Los modelos dependen del proveedor elegido.' }).element
+  }
+
   buildModelField({ form, models, handlers }) {
     const modelSelect = createSelectInput({ id: 'hookModel', onChange: (model) => handlers.onChange({ model }) })
     this.modelSelect = modelSelect
     this.updateModels({ form, models })
-    return createField({ id: 'hookModel', label: 'Model (opcional)', control: modelSelect.element, hint: 'Con Automático, el agente usa su modelo por defecto para hooks.' }).element
+    return createField({ id: 'hookModel', label: 'Model (opcional)', control: modelSelect.element, hint: 'Con Automático, el proveedor usa su modelo por defecto.' }).element
   }
 
   updateModels({ form, models }) {
-    this.modelSelect?.setOptions([{ value: automaticModelValue, label: 'Automático' }, ...models.map((model) => ({ value: model, label: model }))], form.model)
+    if (!this.modelSelect) {
+      return
+    }
+    const hasCustomModel = Boolean(form.model) && !models.options.includes(form.model)
+    this.modelSelect.setOptions([
+      { value: automaticModelValue, label: models.isLoading ? 'Cargando modelos…' : 'Automático' },
+      ...models.options.map((model) => ({ value: model, label: model })),
+      ...(hasCustomModel ? [{ value: form.model, label: form.model }] : [])
+    ], form.model)
+    this.modelSelect.element.disabled = models.isLoading
   }
 
   buildScriptField({ form, handlers }) {
@@ -150,7 +164,7 @@ export class HookFormView {
     }
     const typeFields = form.type === 'command'
       ? [this.buildScriptField({ form, handlers }), this.buildAsyncField({ form, handlers })]
-      : [this.buildSkillField({ form, skills, handlers }), this.buildModelField({ form, models, handlers })]
+      : [this.buildSkillField({ form, skills, handlers }), this.buildAgentField({ form, handlers }), this.buildModelField({ form, models, handlers })]
     sectionElement.append(...typeFields, this.buildTimeoutField({ form, limits, handlers }), this.buildStatusField({ form, limits, handlers }))
     return sectionElement
   }

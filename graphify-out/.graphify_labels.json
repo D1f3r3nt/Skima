@@ -1,6 +1,5 @@
 {
   "0": "Catalog Service",
-  "23": "IPC Controllers (AGENTS, AI, Catalog)",
   "27": "with Group",
   "28": "package.json Group",
   "37": "executableLocator.js Group",
@@ -25,7 +24,6 @@
   "94": "Headless mode Group",
   "95": "graphify command Group",
   "99": "CLAUDE.md Group",
-  "103": "agentFileIpcController.js Group",
   "105": "publishIpcController.js Group",
   "107": "Prompt injection attack forms Group",
   "108": "AgentsMdIpcController Group",
@@ -41,7 +39,6 @@
   "123": "Skill quality rubric Group",
   "124": "Skill frontmatter fields Group",
   "125": "Skima SKILL.md template Group",
-  "131": "InstallerIpcController Group",
   "135": "npm package claude-code Group",
   "136": "OpenCode version package name split Group",
   "137": "Skill description field Group",

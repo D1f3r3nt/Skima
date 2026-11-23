@@ -9,8 +9,8 @@ const { providerRegistry } = require('../../src/core/main/providers/providerRegi
 const { MemoryStorage } = require('./memoryStorage')
 
 const fakeAgentScript = path.join(__dirname, '..', 'fixtures', 'fakeAgent.js')
-const executableNames = { claude: 'claude', codex: 'codex', opencode: 'opencode', gemini: 'gemini' }
-const agentIdsByKind = { claude: 'claude-code', codex: 'codex', opencode: 'opencode', gemini: 'gemini-cli' }
+const executableNames = { claude: 'claude', opencode: 'opencode' }
+const agentIdsByKind = { claude: 'claude-code', opencode: 'opencode' }
 
 const createFakeExecutable = (directory, kind) => {
   if (process.platform === 'win32') {

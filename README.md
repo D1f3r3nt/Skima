@@ -1,6 +1,6 @@
 # Skima
 
-Aplicación de escritorio (Electron) para descubrir, instalar y crear **skills** y **servidores MCP** para agentes de programación: Claude Code, Codex, OpenCode, Gemini CLI, Cursor, GitHub Copilot y otros. Funciona en Windows, macOS y Linux.
+Aplicación de escritorio (Electron) para descubrir, instalar y crear **skills** y **servidores MCP** para agentes de programación. Por ahora solo trabaja con **Claude Code** y **OpenCode**. Funciona en Windows, macOS y Linux.
 
 ## Funciones
 
@@ -17,6 +17,8 @@ Aplicación de escritorio (Electron) para descubrir, instalar y crear **skills**
 - **Memorias**: carpetas de conocimiento compartido (brain) entre varios proyectos. Ver [Memorias](#memorias).
 - **Puente con los agentes por línea de comandos** (`runAgent`, `askAI`): base de las funciones de IA.
 - **Fuente de la Verdad** (`source-of-truth/`): documentación local que reciben las IAs para no buscar en internet.
+- **Artefactos de Skima**: skills y hooks que Skima instala siempre porque sus funciones los necesitan. Ver [Artefactos obligatorios](#artefactos-obligatorios).
+- **Actualizaciones**: la versión descargada de GitHub avisa cuando hay una versión nueva. Ver [Actualizaciones](#actualizaciones).
 
 ## Desarrollo
 
@@ -86,7 +88,7 @@ Cada agente es un archivo en `src/core/main/providers/agents/`, registrado en `p
 - `cli`: adaptador del puente (o `null` si el agente no tiene línea de comandos).
 - `confidence`, `windowsPaths`, `notes` y `sources`.
 
-Añadir un agente es añadir el archivo y una línea en el registro. Los tests de `test/providers/providerPaths.test.js` deben incluir sus rutas esperadas en Windows, macOS y Linux.
+Ahora mismo el registro solo tiene `claudeCode` y `openCode`. Añadir un agente es añadir el archivo y una línea en el registro. Los tests de `test/providers/providerPaths.test.js` deben incluir sus rutas esperadas en Windows, macOS y Linux.
 
 ## Dónde instala cada cosa
 
@@ -96,12 +98,6 @@ Rutas por defecto (en Windows `~` es `%USERPROFILE%`). Se pueden cambiar a mano 
 |---|---|---|---|---|
 | Claude Code | `~/.claude/skills` (`CLAUDE_CONFIG_DIR`) | `.claude/skills` | `~/.claude.json` | `.mcp.json` |
 | OpenCode | `~/.config/opencode/skills` (`OPENCODE_CONFIG_DIR`) | `.opencode/skills` | `~/.config/opencode/opencode.json(c)` | `opencode.json(c)` |
-| Codex | `~/.agents/skills` | `.agents/skills` | `~/.codex/config.toml` (`CODEX_HOME`) | `.codex/config.toml` |
-| Gemini CLI | `~/.gemini/skills` | `.gemini/skills` | `~/.gemini/settings.json` | `.gemini/settings.json` |
-| Cursor | `~/.cursor/skills` | `.cursor/skills` | `~/.cursor/mcp.json` | `.cursor/mcp.json` |
-| GitHub Copilot | `~/.copilot/skills` (`COPILOT_HOME`) | `.github/skills` | `~/.copilot/mcp-config.json` | `.vscode/mcp.json` |
-| Windsurf / Devin | `~/.config/devin/skills` (Windows: `%AppData%\devin\skills`) | `.devin/skills` | `mcp_config.json` | `.devin/mcp_config.json` |
-| Amp, Goose, Roo, Kilo | ver `lowConfidenceAgents.js` | | no se instala MCP | |
 
 Cuando varios agentes comparten carpeta, la skill se copia una vez. Si un agente ya lee la carpeta de otro activado (por ejemplo, OpenCode lee `.claude/skills`), no se duplica y se avisa.
 
@@ -245,7 +241,7 @@ En **Rutas de configuración**, la fila de un agente sin CLI instalado ofrece **
 
 - **Flujo.** Ventana de confirmación con el método elegido, los comandos exactos y los requisitos (si falta alguno no se instala: pasa a instrucciones manuales); ejecución con `spawn` sin shell, salida en vivo sin colores, cancelar y tiempo máximo; después se vuelve a detectar con el `PATH` actualizado (en Windows también el del registro).
 - **Seguridad.** Nunca se usa `sudo` ni se pide elevar permisos: si el método los necesita, la instalación se detiene y se muestran las instrucciones manuales. Se prefieren los gestores de paquetes a los scripts. Un script descargado se guarda en un archivo temporal, se muestra su origen y su SHA-256, y se ejecuta con el intérprete recibiendo el archivo como argumento (PowerShell con `-NoProfile`); el proyecto no publica una huella para comprobarla.
-- **Estado de las recetas.** Claude Code (npm, Homebrew, WinGet y script), Gemini CLI (npm y Homebrew), Codex (script en macOS y Linux) y GitHub CLI (WinGet y Homebrew) tienen método automático. **OpenCode** y Codex en Windows solo tienen instrucciones manuales porque la documentación consultada no permite confirmar los nombres de paquete con seguridad.
+- **Estado de las recetas.** Claude Code (npm, Homebrew, WinGet y script) y GitHub CLI (WinGet y Homebrew) tienen método automático. **OpenCode** solo tiene instrucciones manuales porque la documentación consultada no permite confirmar los nombres de paquete con seguridad.
 - Para añadir o corregir un agente, edita su entrada en `installRecipes.js` y su documento de la Fuente de la Verdad.
 
 ## Repositorio de Skima: publicar y mostrar skills
@@ -265,7 +261,7 @@ La pestaña **Contexto** gestiona el `AGENTS.md` de la raíz del proyecto (está
 - **Crear**: formulario guiado de 8 pasos (descripción, tecnologías, estructura, comandos, convenciones, pruebas, límites y flujo de trabajo) con progreso, explicación y ejemplo, y borrador guardado en `.skima/config.json`. La plantilla (`src/core/main/agentsMd/agentsMdTemplate.js`) omite las secciones vacías, escapa lo peligroso y coincide con el documento `agents-md-structure-template` de la Fuente de la Verdad. Antes de escribir hay vista previa con avisos (más de 200 líneas, más de 32 KiB, secciones importantes vacías o algo que parece un secreto). La escritura es segura y no pisa un archivo existente sin confirmar.
 - **Optimizar con IA** (opcional): prompt `agents-md-optimize`, solo texto de los huecos, JSON validado (mismos elementos, comandos idénticos, rutas e identificadores intactos), idioma original por defecto con opción de inglés, sin herramientas ni internet, modelo barato y carpeta temporal. Si algo falla se crea el archivo con tu texto. Se puede alternar entre «Mi texto» y «Optimizado».
 - **Ver**: se muestra renderizado; **Editar** convierte el texto en un editor en su sitio (avisa si el archivo cambió en disco) y **Regenerar** vuelve al formulario con las respuestas guardadas, guarda una copia en `.skima/backups/` y pide confirmación.
-- **Qué lee cada agente.** Claude Code (v2.1.277 o posterior) lee `AGENTS.md` solo si no hay `CLAUDE.md`; con ambos lee solo `CLAUDE.md`, que puede importarlo con `@AGENTS.md`. Gemini CLI lee `GEMINI.md`. La pestaña avisa y, solo si lo confirmas con vista previa, crea el archivo puente. Detalle y fuentes en `agents-md-per-agent-files`.
+- **Qué lee cada agente.** Claude Code (v2.1.277 o posterior) lee `AGENTS.md` solo si no hay `CLAUDE.md`; con ambos lee solo `CLAUDE.md`, que puede importarlo con `@AGENTS.md`. OpenCode lee `AGENTS.md`. La pestaña avisa y, solo si lo confirmas con vista previa, añade la importación a `CLAUDE.md`. Detalle y fuentes en `agents-md-per-agent-files`.
 - El texto de contexto antiguo guardado en los ajustes se ofrece una sola vez para rellenar el formulario y se borra al crear el `AGENTS.md`. `projectContext` de `askAi` se lee ahora de este archivo.
 
 ## Graphify
@@ -274,7 +270,7 @@ Graphify construye un grafo de conocimiento del código del proyecto (`graphify-
 
 - **Instalar o reparar Graphify** (cabecera del proyecto): un cuadro muestra los comandos exactos y pide confirmación. Skima trae el gestor `uv` (descargado al empaquetar con `npm run fetch:uv`, con huella SHA-256 fijada) y crea un entorno aislado en `<datos de Skima>/tools/graphify/venv` con Python 3.12 gestionado por `uv` y Graphify `0.9.105` desde `tools/graphify/requirements.lock` (solo ruedas, con huellas obligatorias). Necesita internet una sola vez, no usa `sudo`, no toca el `PATH` y se puede cancelar; si falla, borra el entorno a medias. **Reparar** borra solo esa carpeta `venv` y lo instala de nuevo.
 - **Generar grafo**: dos pasos con lista de argumentos y sin shell, `graphify extract . --code-only` y `graphify cluster-only . --no-label` (el segundo escribe el informe y el HTML sin llamar a ningún modelo). Una generación por proyecto, progreso, cancelar (mata el árbol), 15 minutos como máximo por paso y estado leído del disco. A Graphify no se le pasa ninguna clave ni token del entorno. **Abrir grafo** y **Abrir informe** usan `shell.openPath` solo dentro de `graphify-out/`, y hay un aviso opcional para ignorar la carpeta en git.
-- **Integrar con agentes**: para Claude Code, Codex, OpenCode y Cursor. Skima ejecuta la variante de Graphify en una copia temporal con un `HOME` falso y te enseña el cambio exacto en cada archivo (`CLAUDE.md`, `AGENTS.md`, `.claude/settings.json`, `.codex/hooks.json`, `.opencode/plugins/graphify.js`, `.cursor/rules/graphify.mdc`). Al aplicar, guarda copia en `.skima/backups/graphify-<fecha>/`, escribe solo si nada ha cambiado desde la vista previa y se puede deshacer con la misma pantalla. No se ofrece Gemini CLI porque su variante escribe una skill global. Los hooks contienen la ruta absoluta del Graphify de este equipo: no sirven en otro equipo. «No integrar» recuerda tu decisión en `.skima/config.json`.
+- **Integrar con agentes**: para Claude Code y OpenCode. Skima ejecuta la variante de Graphify en una copia temporal con un `HOME` falso y te enseña el cambio exacto en cada archivo (`CLAUDE.md`, `AGENTS.md`, `.claude/settings.json`, `.opencode/plugins/graphify.js`). Al aplicar, guarda copia en `.skima/backups/graphify-<fecha>/`, escribe solo si nada ha cambiado desde la vista previa y se puede deshacer con la misma pantalla. Los hooks contienen la ruta absoluta del Graphify de este equipo: no sirven en otro equipo. «No integrar» recuerda tu decisión en `.skima/config.json`.
 - Al regenerar el `AGENTS.md` desde la pestaña Contexto se conserva la sección `## graphify`.
 
 Detalles y lo que no se ha verificado (tráfico de red, macOS y Linux) en `graphify-usage-and-integration`.
@@ -289,7 +285,60 @@ Una memoria es una carpeta (brain) con el contexto, las decisiones y las solucio
 - **Reparar**: la pantalla comprueba cada proyecto (MEMORY.md, script, hook de carga, `maintain-memory` y la skill `update-memories` para Claude Code) y ofrece **Reparar**, que reinstala sin duplicar entradas.
 - **Eliminar memoria**: saca a todos sus proyectos y manda la carpeta a la papelera. Si no puede sacar alguno, no elimina nada.
 - **Memorizar**: lanza el prompt `memories-update` (configurable en Ajustes por prompt; por defecto el modelo más barato y permisos completos) con `askAi`, con la carpeta de la memoria como directorio de trabajo y la lista de proyectos con sus rutas. El agente usa la skill `update-memories` en modo A. Muestra el progreso en directo, se puede cancelar, sigue en marcha si cambias de pantalla (una ejecución por memoria) y al terminar enseña el resumen y refresca el árbol de archivos. Necesita al menos un proyecto en la memoria.
-- **Protegidos**: el hook `maintain-memory` y la skill `update-memories` no se pueden eliminar ni desinstalar, `maintain-memory` no se asigna ni se quita a mano y su tipo y skill no se pueden cambiar. El nombre de hook `get-memory` está reservado. Si `maintain-memory` falta en Skima, se vuelve a crear al vincular un proyecto.
+- **Protegidos**: el hook `maintain-memory` y la skill `update-memories` son [artefactos de Skima](#artefactos-obligatorios): no se pueden eliminar ni desinstalar, `maintain-memory` no se asigna ni se quita a mano y su tipo y skill no se pueden cambiar. El nombre de hook `get-memory` está reservado. Si `maintain-memory` falta en Skima, se vuelve a crear al vincular un proyecto.
+
+## Artefactos obligatorios
+
+Varias funciones de Skima lanzan prompts que usan skills y hooks concretos. Para que funcionen en cualquier ordenador, Skima los instala siempre:
+
+- Skills: `skill-creator`, `readme-checker`, `update-memories` y `graphify` (más el programa de Graphify, que se instala aparte con su copia aislada de Python).
+- Hooks: `maintain-memory` (usa `update-memories`) y `update-readme` (usa `readme-checker`).
+
+La lista está en [`src/config/skimaArtifacts.json`](src/config/skimaArtifacts.json) y las copias de las skills en `src/assets/skimaArtifacts/skills/<nombre>/`.
+
+- Al arrancar, antes de cada escaneo de skills instaladas y cada 5 minutos, Skima comprueba que cada skill esté en la carpeta global de Claude Code (`~/.claude/skills`, que OpenCode también lee). Si falta o se ha movido, la vuelve a copiar. Si existe, no la toca.
+- Los hooks se crean en la biblioteca de hooks de Skima si no existen. Se pueden editar (proveedor, modelo, timeout), pero no eliminar.
+- En la interfaz aparecen con la etiqueta **Skima** en lugar de **Propia** y no tienen la acción de eliminar o desinstalar.
+
+**Añadir o quitar un artefacto**: edita `src/config/skimaArtifacts.json`. Para una skill, copia también su carpeta (con `SKILL.md`) en `src/assets/skimaArtifacts/skills/`. Un hook necesita `name`, `type` (`prompt`), `skillName`, `agentId` (`claude-code` u `opencode`) y, opcionalmente, `model`, `timeout`, `statusMessage` y `async`.
+
+## Actualizaciones
+
+Solo la app instalada desde GitHub Releases busca versiones nuevas; si arrancas con `npm run start` no busca nada. Usa [`electron-updater`](https://www.electron.build/auto-update) contra las releases de `https://github.com/D1f3r3nt/Skima` (`src/core/main/updates/appUpdateService.js`).
+
+- Comprueba a los 10 segundos de arrancar y luego cada 4 horas.
+- Si hay una versión nueva, aparece en la barra de título el botón **Actualizar a vX.Y.Z**.
+- En Windows (NSIS) y en Linux (AppImage), el botón descarga la versión, cierra Skima, la instala y la vuelve a abrir.
+- En macOS (la app aún no está firmada) y en Linux con el paquete `.deb`, el botón abre la página de la release para descargar el instalador a mano.
+- `SKIMA_DISABLE_UPDATES=1` desactiva la comprobación.
+
+## Publicar una versión nueva
+
+Las releases las genera el flujo [`.github/workflows/release.yml`](.github/workflows/release.yml) al subir una etiqueta `v*`. Compila en Windows, macOS y Linux y sube a la release los instaladores y los archivos `latest*.yml` que lee el actualizador.
+
+1. Asegúrate de que `main` está al día y de que `npm test` pasa.
+2. Sube la versión en `package.json` siguiendo semver (sin crear la etiqueta todavía):
+
+   ```bash
+   npm version 0.9.0 --no-git-tag-version
+   ```
+
+3. Haz commit del cambio de versión y súbelo a `main`.
+4. Crea la etiqueta con el mismo número que `package.json`, precedido de `v`, y súbela:
+
+   ```bash
+   git tag v0.9.0
+   ```
+
+   ```bash
+   git push origin v0.9.0
+   ```
+
+5. Espera a que termine **Release** en la pestaña Actions. El flujo falla si la etiqueta no coincide con la versión de `package.json`. Al terminar, la release queda publicada y las apps instaladas verán el botón de actualizar en su siguiente comprobación.
+
+Para publicar desde tu equipo en lugar de GitHub Actions, define `GH_TOKEN` con un token con permiso de escritura en el repositorio y ejecuta `npm run release` en cada sistema operativo.
+
+No borres ni sustituyas los archivos de una release ya publicada: las apps instaladas comparan la versión con `latest.yml` (Windows), `latest-mac.yml` (macOS) y `latest-linux.yml` (Linux).
 
 ## Carpeta `.skima/` por proyecto (ampliada)
 
@@ -443,6 +492,6 @@ npm run dist:mac
 npm run dist:linux
 ```
 
-Los objetivos son NSIS en Windows, dmg y zip en macOS, y AppImage y deb en Linux; los paquetes se generan en `dist/`. La firma de código y la notarización de macOS están pendientes. La integración continua (`.github/workflows/ci.yml`) ejecuta tests, `sot:check` y empaquetado en Windows, macOS y Linux.
+Los objetivos son NSIS en Windows, dmg y zip en macOS, y AppImage y deb en Linux; los paquetes se generan en `dist/`. Los iconos salen de `src/assets/icons/`: `skima.ico` (Windows), `skima.icns` (macOS) y `png/` (Linux). Si cambias `skima.png` (1024×1024), regenera los demás con `npm run icons`. La firma de código y la notarización de macOS están pendientes. La integración continua (`.github/workflows/ci.yml`) ejecuta tests, `sot:check` y empaquetado en Windows, macOS y Linux.
 
 Las decisiones tomadas y las limitaciones conocidas están en [docs/decisiones.md](docs/decisiones.md).

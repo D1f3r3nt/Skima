@@ -97,7 +97,8 @@ class MySkillsStore {
       createdAt: data?.createdAt ?? null,
       updatedAt: data?.updatedAt ?? null,
       files: files.map((file) => file.relativePath),
-      contentHash: hash
+      contentHash: hash,
+      isProtected: isProtectedSkill(name)
     }
   }
 
@@ -204,7 +205,7 @@ class MySkillsStore {
 
   async remove(name) {
     if (isProtectedSkill(name)) {
-      throw createStoreError('PROTECTED_SKILL', `La skill «${name}» la necesitan las memorias de Skima y no se puede eliminar.`)
+      throw createStoreError('PROTECTED_SKILL', `La skill «${name}» la necesita Skima para funcionar y no se puede eliminar.`)
     }
     const skillPath = this.skillPath(name)
     await this.trashItem(skillPath)

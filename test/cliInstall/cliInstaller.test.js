@@ -16,7 +16,7 @@ const sourceDirectory = path.join(rootDirectory, 'source-of-truth')
 const sourceOfTruth = new SourceOfTruth({ directory: sourceDirectory })
 const fakeScript = path.join(__dirname, '..', 'fixtures', 'fakeInstallTool.js')
 const allSystems = ['win32', 'darwin', 'linux']
-const emptyAllowed = { codex: ['win32'], opencode: allSystems }
+const emptyAllowed = { opencode: allSystems }
 
 const readDoc = (id) => fs.readFileSync(path.join(sourceDirectory, `${id}.md`), 'utf-8')
 
@@ -61,7 +61,6 @@ test('datos: cada receta cita un documento que existe, con nombres de paquete of
     })
   })
   assert.match(readDoc('install-claude-code-cli'), /@anthropic-ai\/claude-code/)
-  assert.match(readDoc('install-gemini-cli'), /@google\/gemini-cli/)
   assert.match(readDoc('install-github-cli'), /GitHub\.cli/)
 })
 
@@ -208,7 +207,7 @@ test('requisito previo ausente: no se instala nada y se pasa a las instrucciones
 test('fallo del instalador: últimas líneas, detección de permisos y sin elevación automática', async () => {
   const fixture = createFixture({ scenario: 'eacces' })
   try {
-    const outcome = await fixture.installer.start({ toolId: 'gemini-cli', methodId: 'npm' })
+    const outcome = await fixture.installer.start({ toolId: 'claude-code', methodId: 'npm' })
     assert.equal(outcome.status, 'failed')
     assert.match(outcome.message, /administrador/)
     assert.ok(outcome.lastLines.some((line) => /EACCES/.test(line)))
@@ -223,12 +222,12 @@ test('cancelación, tiempo agotado y una sola instalación a la vez', async () =
   const slow = createFixture({ scenario: 'slow' })
   const limited = createFixture({ scenario: 'slow', timeoutMs: 1200 })
   try {
-    const running = slow.installer.start({ toolId: 'gemini-cli', methodId: 'npm' })
+    const running = slow.installer.start({ toolId: 'claude-code', methodId: 'npm' })
     await new Promise((resolve) => setTimeout(resolve, 1200))
-    await assert.rejects(() => slow.installer.start({ toolId: 'gemini-cli', methodId: 'npm' }), (error) => error.code === 'BUSY')
+    await assert.rejects(() => slow.installer.start({ toolId: 'claude-code', methodId: 'npm' }), (error) => error.code === 'BUSY')
     slow.installer.cancel()
     assert.equal((await running).status, 'cancelled')
-    const timedOut = await limited.installer.start({ toolId: 'gemini-cli', methodId: 'npm' })
+    const timedOut = await limited.installer.start({ toolId: 'claude-code', methodId: 'npm' })
     assert.equal(timedOut.status, 'failed')
     assert.match(timedOut.message, /tardado/)
   } finally {

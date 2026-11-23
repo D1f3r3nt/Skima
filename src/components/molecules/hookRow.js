@@ -1,7 +1,7 @@
 import { createIcon } from '../atoms/icon.js'
 import { createBadge } from '../atoms/badge.js'
 
-export function createHookRow({ name, typeLabel, typeIcon, typeClass, summary, onOpen }) {
+export function createHookRow({ name, typeLabel, typeIcon, typeClass, summary, isSkimaArtifact = false, onOpen }) {
   const itemElement = document.createElement('li')
   itemElement.className = 'installed-row__item'
 
@@ -21,7 +21,7 @@ export function createHookRow({ name, typeLabel, typeIcon, typeClass, summary, o
   const nameElement = document.createElement('span')
   nameElement.className = 'installed-row__name'
   nameElement.textContent = name
-  titleRow.append(nameElement, createBadge({ label: typeLabel }))
+  titleRow.append(nameElement, createBadge({ label: typeLabel }), ...(isSkimaArtifact ? [createBadge({ label: 'Skima', variant: 'warning' })] : []))
 
   const summaryElement = document.createElement('span')
   summaryElement.className = 'installed-row__description'

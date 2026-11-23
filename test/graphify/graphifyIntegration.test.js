@@ -83,7 +83,7 @@ test('aplicar guarda copia en .skima/backups, conserva lo del usuario y se puede
 
     const state = await fixture.service.getState('p1')
     assert.equal(state.variants.find((variant) => variant.id === 'claude').installed, true)
-    assert.equal(state.variants.find((variant) => variant.id === 'cursor').installed, false)
+    assert.equal(state.variants.find((variant) => variant.id === 'opencode').installed, false)
 
     const undo = await fixture.service.preview('p1', 'claude', 'uninstall')
     await fixture.service.apply('p1', 'claude', 'uninstall', undo.fingerprint)
@@ -110,24 +110,22 @@ test('si el archivo cambia entre la vista previa y aplicar, no se aplica nada', 
   }
 })
 
-test('las demás integraciones crean y quitan sus archivos, y AGENTS.md se comparte', async () => {
+test('la integración de OpenCode crea y quita sus archivos en AGENTS.md', async () => {
   const fixture = createFixture({ files: { 'AGENTS.md': '# Reglas\n' } })
   try {
-    for (const variantId of ['codex', 'opencode', 'cursor']) {
+    for (const variantId of ['opencode']) {
       const preview = await fixture.service.preview('p1', variantId, 'install')
       await fixture.service.apply('p1', variantId, 'install', preview.fingerprint)
     }
     assert.match(fixture.read('AGENTS.md'), /## graphify/)
     assert.equal(fixture.read('AGENTS.md').match(/## graphify/g).length, 1)
-    assert.ok(fixture.read('.codex/hooks.json').includes('hook-check'))
     assert.ok(fixture.read('.opencode/plugins/graphify.js'))
-    assert.ok(fixture.read('.cursor/rules/graphify.mdc'))
     const state = await fixture.service.getState('p1')
-    assert.deepEqual(state.variants.filter((variant) => variant.installed).map((variant) => variant.id).sort(), ['codex', 'cursor', 'opencode'])
-    const undo = await fixture.service.preview('p1', 'cursor', 'uninstall')
-    assert.equal(undo.changes[0].status, 'deleted')
-    await fixture.service.apply('p1', 'cursor', 'uninstall', undo.fingerprint)
-    assert.equal(fixture.read('.cursor/rules/graphify.mdc'), null)
+    assert.deepEqual(state.variants.filter((variant) => variant.installed).map((variant) => variant.id).sort(), ['opencode'])
+    const undo = await fixture.service.preview('p1', 'opencode', 'uninstall')
+    assert.ok(undo.changes.some((change) => change.status === 'deleted'))
+    await fixture.service.apply('p1', 'opencode', 'uninstall', undo.fingerprint)
+    assert.equal(fixture.read('.opencode/plugins/graphify.js'), null)
   } finally {
     fixture.cleanup()
   }

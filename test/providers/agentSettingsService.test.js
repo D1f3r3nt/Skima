@@ -31,14 +31,12 @@ test('activar un agente no lo hace por detección y marca carpetas compartidas',
     const initial = await service.listAgents()
     assert.ok(initial.agents.every((agent) => !agent.enabled))
 
-    await service.setEnabled('codex', true)
-    const { agents } = await service.setEnabled('amp', true)
-    assert.ok(agents.find((agent) => agent.id === 'codex').paths.skillsGlobal.endsWith(path.join('.agents', 'skills')))
-    assert.deepEqual(agents.find((agent) => agent.id === 'codex').sharedWith, [])
+    const { agents } = await service.setEnabled('claude-code', true)
+    assert.ok(agents.find((agent) => agent.id === 'claude-code').paths.skillsGlobal.endsWith(path.join('.claude', 'skills')))
+    assert.deepEqual(agents.find((agent) => agent.id === 'claude-code').sharedWith, [])
 
-    await service.setEnabled('claude-code', true)
     const withOpenCode = await service.setEnabled('opencode', true)
-    assert.deepEqual(withOpenCode.agents.find((agent) => agent.id === 'opencode').readsSkillsOf.sort(), ['claude-code', 'codex'])
+    assert.deepEqual(withOpenCode.agents.find((agent) => agent.id === 'opencode').readsSkillsOf.sort(), ['claude-code'])
   } finally {
     cleanup()
   }
@@ -71,12 +69,9 @@ test('valida la ruta personalizada de skills: absoluta, no un archivo y con escr
 test('valida la extensión del archivo MCP y la ruta del ejecutable', async () => {
   const { service, homeDirectory, cleanup } = createService()
   try {
-    const wrongExtension = await service.setPath('codex', 'mcpGlobalConfigPath', path.join(homeDirectory, 'config.json')).catch((error) => error)
-    assert.match(wrongExtension.message, /\.toml/)
-    await service.setPath('codex', 'mcpGlobalConfigPath', path.join(homeDirectory, 'codex', 'config.toml'))
-
-    const noMcp = await service.setPath('amp', 'mcpGlobalConfigPath', path.join(homeDirectory, 'amp.json')).catch((error) => error)
-    assert.match(noMcp.message, /no admite servidores MCP/)
+    const wrongExtension = await service.setPath('opencode', 'mcpGlobalConfigPath', path.join(homeDirectory, 'config.toml')).catch((error) => error)
+    assert.match(wrongExtension.message, /\.json/)
+    await service.setPath('opencode', 'mcpGlobalConfigPath', path.join(homeDirectory, 'opencode', 'opencode.json'))
 
     const badExecutable = await service.setPath('claude-code', 'executablePath', path.join(homeDirectory, 'missing')).catch((error) => error)
     assert.match(badExecutable.message, /No existe/)

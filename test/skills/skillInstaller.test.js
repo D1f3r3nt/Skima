@@ -106,21 +106,21 @@ const createInstallerSetup = async ({ enabledAgents, platform = process.platform
 const githubSource = { type: 'github', repository: 'owner/skills', ref: 'main', skillFolders: ['skills/pdf'] }
 
 test('instala una vez por carpeta compartida y evita duplicar en agentes que leen la carpeta de otro', async () => {
-  const setup = await createInstallerSetup({ enabledAgents: ['claude-code', 'opencode', 'codex', 'amp'] })
+  const setup = await createInstallerSetup({ enabledAgents: ['claude-code', 'opencode'] })
   try {
     const plan = await setup.installer.plan({ source: githubSource, scope: 'project', projectId: 'p1' })
     const directories = plan.targets.map((target) => target.agentIds.sort().join('+'))
 
-    assert.deepEqual(directories.sort(), ['amp+codex', 'claude-code'])
+    assert.deepEqual(directories.sort(), ['claude-code'])
     assert.equal(plan.coveredAgents.length, 1)
     assert.equal(plan.coveredAgents[0].agentId, 'opencode')
     assert.ok(plan.targets.every((target) => target.skills[0].status === 'new'))
 
     const { results, ok } = await setup.installer.execute({ planId: plan.planId })
     assert.equal(ok, true)
-    assert.equal(results.filter((result) => result.status === 'installed').length, 2)
+    assert.equal(results.filter((result) => result.status === 'installed').length, 1)
     assert.ok(fs.existsSync(path.join(setup.projectDirectory, '.claude', 'skills', 'pdf', 'SKILL.md')))
-    assert.ok(fs.existsSync(path.join(setup.projectDirectory, '.agents', 'skills', 'pdf', 'scripts', 'run.sh')))
+    assert.ok(fs.existsSync(path.join(setup.projectDirectory, '.claude', 'skills', 'pdf', 'scripts', 'run.sh')))
     assert.ok(!fs.existsSync(path.join(setup.projectDirectory, '.opencode')))
     assert.deepEqual(fs.readdirSync(path.join(setup.projectDirectory, '.claude', 'skills', 'pdf')).sort(), ['SKILL.md', 'scripts'])
     if (process.platform !== 'win32') {
@@ -131,7 +131,7 @@ test('instala una vez por carpeta compartida y evita duplicar en agentes que lee
     assert.equal(settings.installedOrigins.length, 1)
     assert.equal(settings.installedOrigins[0].source.repository, 'owner/skills')
     assert.equal(settings.installedOrigins[0].source.commit, 'a'.repeat(40))
-    assert.equal(settings.installedOrigins[0].targets.length, 2)
+    assert.equal(settings.installedOrigins[0].targets.length, 1)
     assert.equal(settings.installedOrigins[0].targets[0].projectId, 'p1')
   } finally {
     setup.cleanup()

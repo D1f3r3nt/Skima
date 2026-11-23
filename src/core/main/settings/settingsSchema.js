@@ -7,7 +7,7 @@ const quickModelModes = Object.freeze(['auto', 'manual'])
 const installScopes = Object.freeze(['global', 'project'])
 const originSourceTypes = Object.freeze(['github', 'mySkill', 'unknown'])
 const installKinds = Object.freeze(['skill', 'mcp'])
-const themeIds = Object.freeze(['cream', 'navy', 'silver', 'glacier-blue', 'deep-teal'])
+const themeIds = Object.freeze(['cream', 'navy', 'silver', 'deep-teal'])
 const defaultThemeId = 'cream'
 const maximumFavoriteSkills = 1000
 

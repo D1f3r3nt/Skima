@@ -66,7 +66,6 @@ test('construye la entrada en el formato de cada agente y envuelve npx en Window
   assert.equal(buildServerEntry({ style: 'openCode', definition, environmentValues: values, platform: 'linux', openCodeVersion: 2 }).enabled, undefined)
   assert.equal(buildServerEntry({ style: 'vscode', definition, environmentValues: {}, platform: 'linux' }).type, 'stdio')
   const remote = { name: 'notion', transport: 'http', url: 'https://mcp.notion.com/mcp', headers: {}, environment: [] }
-  assert.deepEqual(buildServerEntry({ style: 'gemini', definition: remote, environmentValues: {}, platform: 'linux' }), { httpUrl: 'https://mcp.notion.com/mcp' })
   assert.deepEqual(buildServerEntry({ style: 'claude', definition: remote, environmentValues: {}, platform: 'linux' }), { type: 'http', url: 'https://mcp.notion.com/mcp' })
 })
 
@@ -113,15 +112,13 @@ test('instala en cada agente activado, hace copia de seguridad, pregunta por los
   try {
     const homeDirectory = path.join(root, 'home')
     fs.mkdirSync(path.join(homeDirectory, '.config', 'opencode'), { recursive: true })
-    fs.mkdirSync(path.join(homeDirectory, '.codex'), { recursive: true })
     fs.writeFileSync(path.join(homeDirectory, '.claude.json'), '{\n  "numStartups": 4,\n  "mcpServers": {\n    "github": { "command": "old" }\n  }\n}\n')
     fs.writeFileSync(path.join(homeDirectory, '.config', 'opencode', 'opencode.jsonc'), '{\n  // opencode\n  "mcp": { "servers": { "other": { "type": "local", "command": ["x"] } } }\n}\n')
-    fs.writeFileSync(path.join(homeDirectory, '.codex', 'config.toml'), '# codex\n')
 
     const platformPaths = createPlatformPaths({ platform: process.platform, homeDirectory, environment: {}, temporaryDirectory: root })
     const settingsStore = new SettingsStore({ storage: new MemoryStorage() })
     await settingsStore.update((settings) => {
-      ['claude-code', 'opencode', 'codex', 'amp'].forEach((agentId) => { settings.agents[agentId] = { enabled: true } })
+      ['claude-code', 'opencode'].forEach((agentId) => { settings.agents[agentId] = { enabled: true } })
     })
     const installer = new McpInstaller({
       registry: providerRegistry,
@@ -137,7 +134,6 @@ test('instala en cada agente activado, hace copia de seguridad, pregunta por los
     assert.equal(byAgent['claude-code'].conflict, true)
     assert.equal(byAgent.opencode.openCodeVersion, 2)
     assert.ok(byAgent.opencode.displayConfigPath.endsWith('opencode.jsonc'))
-    assert.equal(byAgent.amp.supported, false)
     assert.ok(!JSON.stringify(plan).includes('secret-value'))
 
     await assert.rejects(() => installer.execute({ planId: plan.planId, environmentValues: {} }), /Faltan valores/)
@@ -147,30 +143,28 @@ test('instala en cada agente activado, hace copia de seguridad, pregunta por los
     const results = Object.fromEntries(outcome.results.map((result) => [result.agentId, result]))
     assert.equal(results['claude-code'].status, 'skipped')
     assert.equal(results.opencode.status, 'installed')
-    assert.equal(results.codex.status, 'installed')
     assert.ok(results.opencode.backupPath)
 
     const openCodeConfig = jsonc.parse(fs.readFileSync(path.join(homeDirectory, '.config', 'opencode', 'opencode.jsonc'), 'utf-8'))
     assert.deepEqual(Object.keys(openCodeConfig.mcp.servers), ['other', 'github'])
     assert.equal(openCodeConfig.mcp.servers.github.environment.GITHUB_PERSONAL_ACCESS_TOKEN, 'secret-value')
     assert.match(fs.readFileSync(path.join(homeDirectory, '.config', 'opencode', 'opencode.jsonc'), 'utf-8'), /\/\/ opencode/)
-    assert.equal(TOML.parse(fs.readFileSync(path.join(homeDirectory, '.codex', 'config.toml'), 'utf-8')).mcp_servers.github.env.GITHUB_PERSONAL_ACCESS_TOKEN, 'secret-value')
     assert.equal(JSON.parse(fs.readFileSync(path.join(homeDirectory, '.claude.json'), 'utf-8')).mcpServers.github.command, 'old')
-    assert.equal(fs.readdirSync(path.join(root, 'backups')).length, 2)
+    assert.equal(fs.readdirSync(path.join(root, 'backups')).length, 1)
 
     const settings = await settingsStore.get()
     assert.ok(!JSON.stringify(settings).includes('secret-value'))
     assert.equal(settings.installedOrigins[0].kind, 'mcp')
 
     const overwritePlan = await installer.plan({ definition, scope: 'global' })
-    const overwrite = await installer.execute({ planId: overwritePlan.planId, environmentValues: { GITHUB_PERSONAL_ACCESS_TOKEN: 't' }, decisions: { 'claude-code': 'overwrite', opencode: 'skip', codex: 'skip' } })
+    const overwrite = await installer.execute({ planId: overwritePlan.planId, environmentValues: { GITHUB_PERSONAL_ACCESS_TOKEN: 't' }, decisions: { 'claude-code': 'overwrite', opencode: 'skip' } })
     assert.equal(overwrite.results.find((result) => result.agentId === 'claude-code').status, 'installed')
     const claudeConfig = JSON.parse(fs.readFileSync(path.join(homeDirectory, '.claude.json'), 'utf-8'))
     assert.equal(claudeConfig.numStartups, 4)
     assert.equal(claudeConfig.mcpServers.github.args.includes('@modelcontextprotocol/server-github@1.2.3'), true)
 
     const locations = await installer.findInstallations({ serverName: 'github' })
-    assert.equal(locations.length, 3)
+    assert.equal(locations.length, 2)
   } finally {
     fs.rmSync(root, { recursive: true, force: true })
   }

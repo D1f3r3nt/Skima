@@ -13,8 +13,8 @@ export class ShellView {
     this.titleBar = null
   }
 
-  mount({ onMinimize, onToggleMaximize, onClose, onNavigationAction }) {
-    this.titleBar = createTitleBar({ onMinimize, onToggleMaximize, onClose })
+  mount({ onMinimize, onToggleMaximize, onClose, onUpdate, onNavigationAction }) {
+    this.titleBar = createTitleBar({ onMinimize, onToggleMaximize, onClose, onUpdate })
     const sidebar = createSidebar({ navigationGroups, activePageId: this.activePageId, activeSubPageId: this.activeSubPageId, onAction: onNavigationAction })
     const appShell = createAppShell({ titleBar: this.titleBar.element, sidebar })
 
@@ -24,6 +24,10 @@ export class ShellView {
 
   setMaximized(isMaximized) {
     this.titleBar.setMaximized(isMaximized)
+  }
+
+  setUpdateState(updateState) {
+    this.titleBar.setUpdateState(updateState)
   }
 
   showError(message) {

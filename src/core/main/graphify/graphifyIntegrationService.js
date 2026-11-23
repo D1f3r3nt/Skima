@@ -20,26 +20,12 @@ const integrationVariants = Object.freeze({
     isInstalled: (texts) => graphifyHeadingPattern.test(texts['CLAUDE.md'] ?? '') || (texts['.claude/settings.json'] ?? '').includes('hook-guard'),
     notes: ['Añade una sección «graphify» a CLAUDE.md y avisos (hooks) en .claude/settings.json que recuerdan consultar el grafo antes de buscar en el código. Son avisos informativos: no impiden usar ninguna herramienta.']
   },
-  codex: {
-    id: 'codex',
-    label: 'Codex',
-    files: ['AGENTS.md', '.codex/hooks.json'],
-    isInstalled: (texts) => graphifyHeadingPattern.test(texts['AGENTS.md'] ?? '') || (texts['.codex/hooks.json'] ?? '').includes('hook-check'),
-    notes: ['Añade una sección «graphify» a AGENTS.md y registra un hook en .codex/hooks.json que no hace nada: la guía llega por AGENTS.md.']
-  },
   opencode: {
     id: 'opencode',
     label: 'OpenCode',
     files: ['AGENTS.md', '.opencode/plugins/graphify.js'],
     isInstalled: (texts, existing) => graphifyHeadingPattern.test(texts['AGENTS.md'] ?? '') || existing.has('.opencode/plugins/graphify.js'),
     notes: ['Añade una sección «graphify» a AGENTS.md y un plugin en .opencode/plugins/graphify.js que antepone un recordatorio al primer comando de shell de la sesión.']
-  },
-  cursor: {
-    id: 'cursor',
-    label: 'Cursor',
-    files: ['.cursor/rules/graphify.mdc'],
-    isInstalled: (texts, existing) => existing.has('.cursor/rules/graphify.mdc'),
-    notes: ['Crea la regla .cursor/rules/graphify.mdc, que Cursor incluye siempre en el contexto.']
   }
 })
 

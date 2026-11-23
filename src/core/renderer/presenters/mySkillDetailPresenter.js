@@ -1,11 +1,11 @@
 import { formatDate } from '../services/formatters.js'
 import { presentInstallations } from './installedDetailPresenter.js'
-import { isProtectedSkillName, protectedSkillNotice } from '../config/protectedArtifacts.js'
+import { protectedSkillNotice, skimaArtifactBadge } from '../config/protectedArtifacts.js'
 
 export const presentMySkillDetail = (skill, { installations, handlers }) => {
   const outdated = installations.items.filter((installation) => installation.contentHash && installation.contentHash !== skill.contentHash)
   const generation = skill.generation ?? {}
-  const isProtected = isProtectedSkillName(skill.name)
+  const isProtected = Boolean(skill.isProtected)
   return {
     variant: 'mySkill',
     typeId: 'skill',
@@ -14,7 +14,7 @@ export const presentMySkillDetail = (skill, { installations, handlers }) => {
     title: skill.name,
     author: null,
     description: skill.description ?? '',
-    badges: [{ label: 'Creada por ti', variant: 'accent' }, ...(isProtected ? [{ label: 'Memorias', variant: 'warning' }] : [])],
+    badges: isProtected ? [skimaArtifactBadge] : [{ label: 'Creada por ti', variant: 'accent' }],
     compactActions: true,
     primaryAction: { label: 'Instalar', icon: 'download', onClick: handlers.onInstall },
     secondaryActions: [],

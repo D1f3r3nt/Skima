@@ -1,6 +1,8 @@
 const hookTypes = Object.freeze(['prompt', 'agent', 'command'])
 const implementedHookTypes = Object.freeze(['prompt', 'command'])
 const hookEvents = Object.freeze(['SessionStart', 'UserPromptSubmit', 'Stop', 'SessionEnd'])
+const hookAgentIds = Object.freeze(['claude-code', 'opencode'])
+const defaultHookAgentId = 'claude-code'
 
 const hookLimits = Object.freeze({
   nameMaxLength: 64,
@@ -22,10 +24,16 @@ const buildCommandPath = (hookName) => `${projectDirectoryVariable}/.claude/hook
 
 const recursionGuardVariable = 'SKIMA_HOOK_ACTIVE'
 
-const buildSkillCommand = ({ skillName, model }) => {
-  const modelFlag = model ? ` --model "${model}"` : ''
-  const invocation = `claude -p "Usa la skill ${skillName} con la informacion recibida por stdin"${modelFlag} --permission-mode acceptEdits --allowedTools "Bash(git diff:*),Bash(git status:*),Bash(git log:*)"`
-  return `[ -n "$${recursionGuardVariable}" ] || ${recursionGuardVariable}=1 ${invocation}`
+const buildSkillInstruction = (skillName) => `"Usa la skill ${skillName} con la informacion recibida por stdin"`
+
+const skillInvocationBuilders = Object.freeze({
+  'claude-code': ({ skillName, model }) => `claude -p ${buildSkillInstruction(skillName)}${model ? ` --model "${model}"` : ''} --permission-mode acceptEdits --allowedTools "Bash(git diff:*),Bash(git status:*),Bash(git log:*)"`,
+  opencode: ({ skillName, model }) => `opencode run${model ? ` -m "${model}"` : ''} ${buildSkillInstruction(skillName)}`
+})
+
+const buildSkillCommand = ({ skillName, model, agentId }) => {
+  const buildInvocation = skillInvocationBuilders[agentId] ?? skillInvocationBuilders[defaultHookAgentId]
+  return `[ -n "$${recursionGuardVariable}" ] || ${recursionGuardVariable}=1 ${buildInvocation({ skillName, model })}`
 }
 
 const buildHookEntry = (hook) => {
@@ -104,6 +112,17 @@ const normalizeSkillName = (rawSkillName) => {
   return skillName
 }
 
+const normalizeHookAgentId = (rawAgentId) => {
+  const agentId = String(rawAgentId ?? '').trim()
+  if (!agentId) {
+    return defaultHookAgentId
+  }
+  if (!hookAgentIds.includes(agentId)) {
+    throw new Error('El proveedor del hook no es válido.')
+  }
+  return agentId
+}
+
 const assertHookEvent = (event) => {
   if (!hookEvents.includes(event)) {
     throw new Error('El evento del hook no es válido.')
@@ -115,6 +134,8 @@ module.exports = {
   hookTypes,
   implementedHookTypes,
   hookEvents,
+  hookAgentIds,
+  defaultHookAgentId,
   hookLimits,
   buildHookEntry,
   buildScriptFileName,
@@ -124,5 +145,6 @@ module.exports = {
   normalizeStatusMessage,
   normalizeModel,
   normalizeSkillName,
+  normalizeHookAgentId,
   assertHookEvent
 }

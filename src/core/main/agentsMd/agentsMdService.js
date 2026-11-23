@@ -100,13 +100,6 @@ class AgentsMdService {
         notices.push({ id: 'claude-direct', agentId: 'claude-code', severity: 'info', message: 'Claude Code (v2.1.277 o posterior) lee AGENTS.md directamente porque este proyecto no tiene CLAUDE.md.' })
       }
     }
-    if (enabled('gemini-cli') && agentsMdExists) {
-      const geminiMd = await readTextIfExists(this.resolveFile(project.path, 'GEMINI.md')).catch(() => null)
-      const settingsText = await readTextIfExists(this.resolveFile(project.path, '.gemini', 'settings.json')).catch(() => null)
-      if (!(geminiMd ?? '').includes(importLine) && !(settingsText ?? '').includes('AGENTS.md')) {
-        notices.push({ id: 'gemini-bridge', agentId: 'gemini-cli', severity: 'warning', message: 'Gemini CLI lee GEMINI.md por defecto, no AGENTS.md.', preview: geminiMd === null ? `Se crea GEMINI.md con este contenido:\n${importLine}` : null, actionLabel: geminiMd === null ? 'Crear GEMINI.md' : null })
-      }
-    }
     return notices
   }
 
@@ -246,14 +239,6 @@ class AgentsMdService {
     const notice = notices.find((candidate) => candidate.id === bridgeId && candidate.actionLabel)
     if (!notice) {
       throw createError('NOT_AVAILABLE', 'Esa acción ya no está disponible.')
-    }
-    if (bridgeId === 'gemini-bridge') {
-      const target = this.resolveFile(project.path, 'GEMINI.md')
-      if ((await readTextIfExists(target)) !== null) {
-        throw createError('ALREADY_EXISTS', 'GEMINI.md ya existe; Skima no lo modifica.')
-      }
-      await writeFileAtomic(target, `${importLine}\n`)
-      return { created: 'GEMINI.md' }
     }
     const segments = (await readTextIfExists(this.resolveFile(project.path, 'CLAUDE.md')).catch(() => null)) !== null ? ['CLAUDE.md'] : ['.claude', 'CLAUDE.md']
     const target = this.resolveFile(project.path, ...segments)

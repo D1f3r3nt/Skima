@@ -8,7 +8,7 @@ import { createEmptyState } from '../../../components/organisms/emptyState.js'
 import { describeHookType } from '../config/hookTypes.js'
 import { describeHookEvent } from '../config/hookEvents.js'
 import { buildHookMetadataEntries, describeHookSummary } from '../presenters/hookPresenter.js'
-import { protectedHookNotice } from '../config/protectedArtifacts.js'
+import { protectedHookNotice, skimaArtifactBadge, skimaHookNotice } from '../config/protectedArtifacts.js'
 
 const createSectionTitle = (text) => {
   const titleElement = document.createElement('h2')
@@ -80,11 +80,12 @@ export class HookDetailView {
     titleElement.textContent = hook.name
     const subtitleElement = document.createElement('div')
     subtitleElement.className = 'item-detail__subtitle'
-    subtitleElement.append(createBadge({ label: `Hook · ${type.label}`, variant: 'accent' }), ...(hook.isProtected ? [createBadge({ label: 'Memorias', variant: 'warning' })] : []))
+    subtitleElement.append(createBadge({ label: `Hook · ${type.label}`, variant: 'accent' }), ...(hook.isSkimaArtifact ? [createBadge(skimaArtifactBadge)] : []))
     const descriptionElement = document.createElement('p')
     descriptionElement.className = 'item-detail__description'
-    descriptionElement.textContent = hook.isProtected ? `${describeHookSummary(hook)}. ${protectedHookNotice}` : describeHookSummary(hook)
-    headingElement.append(titleElement, subtitleElement, descriptionElement, this.buildActions({ ...actions, hookName: hook.name, isProtected: Boolean(hook.isProtected) }))
+    const notice = hook.isProtected ? protectedHookNotice : hook.isSkimaArtifact ? skimaHookNotice : ''
+    descriptionElement.textContent = notice ? `${describeHookSummary(hook)}. ${notice}` : describeHookSummary(hook)
+    headingElement.append(titleElement, subtitleElement, descriptionElement, this.buildActions({ ...actions, hookName: hook.name, isProtected: Boolean(hook.isProtected || hook.isSkimaArtifact) }))
 
     headerElement.append(iconElement, headingElement)
     return headerElement

@@ -5,9 +5,6 @@ const sourcePattern = /^(https:\/\/github\.com\/)?[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-
 const skillPattern = /^[A-Za-z0-9_.-]+$/
 const ansiPattern = /\u001b\[[0-9;?]*[A-Za-z]/g
 const scopes = ['global', 'project']
-const cliAgentIdOverrides = Object.freeze({ 'roo-code': 'roo', 'kilo-code': 'kilo' })
-
-const toCliAgentId = (providerId) => cliAgentIdOverrides[providerId] ?? providerId
 const stripAnsi = (text) => String(text).replace(ansiPattern, '')
 
 const createCodedError = (code, message) => Object.assign(new Error(message), { code })
@@ -49,7 +46,7 @@ class SkillsShInstaller {
     const settings = await this.settingsStore.get()
     return this.registry
       .filter((entry) => settings.agents[entry.id]?.enabled)
-      .map((entry) => ({ id: entry.id, name: entry.name, cliAgentId: toCliAgentId(entry.id) }))
+      .map((entry) => ({ id: entry.id, name: entry.name, cliAgentId: entry.id }))
   }
 
   async describe(request) {
@@ -141,4 +138,4 @@ class SkillsShInstaller {
   }
 }
 
-module.exports = { SkillsShInstaller, buildCliArguments, toCliAgentId, validateTarget, stripAnsi }
+module.exports = { SkillsShInstaller, buildCliArguments, validateTarget, stripAnsi }

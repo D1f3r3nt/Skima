@@ -150,7 +150,10 @@ const ipcChannels = Object.freeze({
   toggleMaximizeWindow: 'window:toggle-maximize',
   closeWindow: 'window:close',
   isWindowMaximized: 'window:is-maximized',
-  windowMaximizedChanged: 'window:maximized-changed'
+  windowMaximizedChanged: 'window:maximized-changed',
+  getUpdateState: 'updates:get-state',
+  installUpdate: 'updates:install',
+  updateStateChanged: 'updates:state-changed'
 })
 
 module.exports = { ipcChannels }

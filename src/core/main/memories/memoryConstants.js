@@ -1,3 +1,5 @@
+const { isSkimaSkill, isSkimaHook, findSkimaHook } = require('../skimaArtifacts/skimaArtifactsConfig')
+
 const memoryFileName = 'MEMORY.md'
 const memoryIndexFileName = 'README.md'
 const memoryInstructionsFileName = 'CLAUDE.md'
@@ -12,15 +14,18 @@ const memoryLoaderCommand = `"$CLAUDE_PROJECT_DIR/.claude/hooks/${memoryLoaderSc
 const memoryNameMaxLength = 60
 const claudeCodeAgentId = 'claude-code'
 
-const defaultMaintainMemoryHook = Object.freeze({
+const toHookDefinition = ({ description, ...definition }) => definition
+
+const defaultMaintainMemoryHook = Object.freeze(toHookDefinition(findSkimaHook(maintainMemoryHookName) ?? {
   name: maintainMemoryHookName,
   type: 'prompt',
   timeout: 120,
   statusMessage: 'Actualizando memoria',
   async: true,
   skillName: updateMemoriesSkillName,
+  agentId: claudeCodeAgentId,
   model: 'haiku'
-})
+}))
 
 const protectedHookNames = Object.freeze([maintainMemoryHookName])
 const reservedHookNames = Object.freeze([memoryLoaderHookName])
@@ -28,7 +33,8 @@ const protectedSkillNames = Object.freeze([updateMemoriesSkillName])
 
 const isProtectedHook = (name) => protectedHookNames.includes(String(name ?? ''))
 const isReservedHookName = (name) => reservedHookNames.includes(String(name ?? ''))
-const isProtectedSkill = (name) => protectedSkillNames.includes(String(name ?? '').toLowerCase())
+const isProtectedSkill = (name) => protectedSkillNames.includes(String(name ?? '').toLowerCase()) || isSkimaSkill(name)
+const isUndeletableHook = (name) => isProtectedHook(name) || isSkimaHook(name)
 
 module.exports = {
   memoryFileName,
@@ -49,5 +55,6 @@ module.exports = {
   protectedSkillNames,
   isProtectedHook,
   isReservedHookName,
-  isProtectedSkill
+  isProtectedSkill,
+  isUndeletableHook
 }

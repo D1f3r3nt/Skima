@@ -36,7 +36,6 @@ const windowsCommonDirectoryTemplates = Object.freeze([
   '{localAppData}/Volta/bin',
   '{localAppData}/pnpm',
   '{localAppData}/Programs/claude',
-  '{localAppData}/Programs/cursor/resources/app/bin',
   '{localAppData}/Programs/Microsoft VS Code/bin'
 ])
 

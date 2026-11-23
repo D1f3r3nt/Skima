@@ -1,6 +1,6 @@
 {
   "name": "skima",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Gestor de skills, servidores MCP y artefactos de IA para agentes de programación.",
   "license": "ISC",
   "author": "Marc Santisteban",
@@ -20,7 +20,9 @@
     "catalog:validate": "node scripts/catalogTasks.js validate",
     "catalog:verify": "node scripts/catalogTasks.js verify",
     "catalog:refresh": "node scripts/catalogTasks.js refresh",
-    "fetch:uv": "node scripts/fetchUv.js"
+    "fetch:uv": "node scripts/fetchUv.js",
+    "icons": "electron scripts/buildIcons.js",
+    "release": "npm run fetch:uv && electron-builder --publish always"
   },
   "devDependencies": {
     "electron": "^45.0.0",
@@ -29,6 +31,7 @@
   "dependencies": {
     "ajv": "8.20.0",
     "dotenv": "16.6.1",
+    "electron-updater": "6.8.12",
     "fflate": "0.7.5",
     "highlight.js": "11.12.0",
     "jsonc-parser": "3.3.1",
@@ -42,6 +45,15 @@
   "build": {
     "appId": "com.skima.app",
     "productName": "Skima",
+    "icon": "src/assets/icons/skima.png",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "D1f3r3nt",
+        "repo": "Skima",
+        "releaseType": "release"
+      }
+    ],
     "directories": {
       "output": "dist",
       "buildResources": "src/assets/icons"
@@ -100,7 +112,7 @@
         "zip"
       ],
       "category": "public.app-category.developer-tools",
-      "icon": "src/assets/icons/skima.png",
+      "icon": "src/assets/icons/skima.icns",
       "identity": null
     },
     "linux": {
@@ -109,7 +121,7 @@
         "deb"
       ],
       "category": "Development",
-      "icon": "src/assets/icons/skima.png",
+      "icon": "src/assets/icons/png",
       "maintainer": "Marc Santisteban <santistebanmarc@gmail.com>"
     }
   }

@@ -612,6 +612,18 @@ export class SkimaApiClient {
     return this.bridge.onWindowMaximizedChange(callback)
   }
 
+  getUpdateState() {
+    return this.unwrap(this.bridge.getUpdateState())
+  }
+
+  installUpdate() {
+    return this.unwrap(this.bridge.installUpdate())
+  }
+
+  onUpdateStateChange(callback) {
+    return this.bridge.onUpdateStateChange(callback)
+  }
+
   async unwrapCoded(pendingResponse) {
     const result = await this.unwrap(pendingResponse)
     if (!result.ok) {

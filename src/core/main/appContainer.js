@@ -98,8 +98,13 @@ const { MeasurementProtocolClient } = require('./analytics/measurementProtocolCl
 const { UsageSnapshotCollector } = require('./analytics/usageSnapshotCollector')
 const { AnalyticsService } = require('./analytics/analyticsService')
 const { describeAnalyticsEnvironment } = require('./analytics/analyticsEnvironment')
+const { SkimaArtifactsService } = require('./skimaArtifacts/skimaArtifactsService')
+const { AppUpdateService } = require('./updates/appUpdateService')
+const { UpdatesIpcController } = require('./controllers/updatesIpcController')
 
 const { ipcChannels } = require('./ipcChannels')
+
+const artifactsCheckIntervalMs = 5 * 60 * 1000
 
 const fileNames = Object.freeze({
   settings: 'settings.json',
@@ -225,7 +230,15 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     platformPaths,
     trashItem: (itemPath) => shell.trashItem(itemPath)
   })
-  const scanner = new InstalledScanner({ registry: providerRegistry, pathResolver, platformPaths, settingsStore, projectModel, listMySkills: () => mySkillsStore.listNames() })
+  const hooksStore = new HooksStore({ directory: path.join(userDataDirectory, 'hooks') })
+  const skimaArtifactsService = new SkimaArtifactsService({
+    bundleDirectory: path.join(appRootDirectory, 'src', 'assets', 'skimaArtifacts', 'skills'),
+    registry: providerRegistry,
+    pathResolver,
+    settingsStore,
+    hooksStore
+  })
+  const scanner = new InstalledScanner({ registry: providerRegistry, pathResolver, platformPaths, settingsStore, projectModel, listMySkills: () => mySkillsStore.listNames(), ensureArtifacts: () => skimaArtifactsService.ensureInstalled() })
   const uninstaller = new SkillUninstaller({ scanner, platformPaths, settingsStore, trashItem: (itemPath) => shell.trashItem(itemPath) })
   const installationLocator = new InstallationLocator({ scanner, projectModel })
   const installedDetailsService = new InstalledDetailsService({ scanner, markdownRenderer, repositoryDetailsService, platformPaths })
@@ -293,7 +306,6 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     platformPaths
   })
 
-  const hooksStore = new HooksStore({ directory: path.join(userDataDirectory, 'hooks') })
   const projectHooksService = new ProjectHooksService({ projectModel, hooksStore, platformPaths })
   const memoriesService = new MemoriesService({
     memoriesStore: new MemoriesStore({ storage: new JsonFileStorage(path.join(userDataDirectory, 'memories', 'memories.json'), []) }),
@@ -345,6 +357,16 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     broadcast: (text) => broadcast(ipcChannels.skillsSiteInstallOutput, text)
   })
 
+  let artifactsTimer = null
+
+  const appUpdateService = new AppUpdateService({
+    isEnabled: app.isPackaged && process.env.SKIMA_DISABLE_UPDATES !== '1',
+    currentVersion: app.getVersion(),
+    loadUpdater: () => require('electron-updater').autoUpdater,
+    openExternal: (url) => shell.openExternal(url),
+    broadcast: (state) => broadcast(ipcChannels.updateStateChanged, state)
+  })
+
   const registerControllers = () => {
     new ProjectIpcController({ ipcMain, projectModel, projectDataStore, analyticsService }).register()
     new EnvironmentIpcController({ ipcMain, projectModel, envFileService }).register()
@@ -371,11 +393,18 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     new DialogIpcController({ ipcMain, folderDialogService: new FolderDialogService({ dialog, BrowserWindow }) }).register()
     new LinkIpcController({ ipcMain, externalLinkService: new ExternalLinkService({ shell }) }).register()
     new WindowIpcController({ ipcMain, BrowserWindow }).register()
+    new UpdatesIpcController({ ipcMain, appUpdateService }).register()
+    appUpdateService.start()
     analyticsService.trackAppLaunch().catch(() => {})
+    skimaArtifactsService.ensureInstalled().then(() => scanner.invalidate()).catch(() => {})
+    artifactsTimer = setInterval(() => skimaArtifactsService.ensureInstalled().catch(() => {}), artifactsCheckIntervalMs)
+    artifactsTimer.unref?.()
   }
 
   const dispose = () => {
     catalogService.stop()
+    clearInterval(artifactsTimer)
+    appUpdateService.dispose()
   }
 
   return {
@@ -415,6 +444,7 @@ const createAppContainer = async ({ electron, appRootDirectory }) => {
     importedLibraryStore,
     mySkillsStore,
     hooksStore,
+    skimaArtifactsService,
     projectHooksService,
     memoriesService,
     scanner,

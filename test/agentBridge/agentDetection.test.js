@@ -73,7 +73,7 @@ test('valida la ruta del ejecutable indicada a mano', async () => {
 test('detectAgents marca carpetas y ejecutables, versión y conexión sin lanzar excepciones', async () => {
   const platformPaths = createPlatformPaths({ platform: 'linux', homeDirectory: '/home/ana' })
   const existingPaths = new Set(['/home/ana/.claude', '/home/ana/.config/opencode'])
-  const executables = { claude: '/home/ana/.local/bin/claude', codex: '/usr/local/bin/codex' }
+  const executables = { claude: '/home/ana/.local/bin/claude', opencode: '/usr/local/bin/opencode' }
   const detector = new AgentDetector({
     registry: providerRegistry,
     platformPaths,
@@ -88,7 +88,7 @@ test('detectAgents marca carpetas y ejecutables, versión y conexión sin lanzar
     processRunner: {
       run: async ({ command, args }) => {
         if (args[0] === '--version') {
-          return command.endsWith('codex') ? { exitCode: 1, stdout: '', stderr: 'boom' } : { exitCode: 0, stdout: '2.1.300 (Claude Code)', stderr: '' }
+          return command.endsWith('opencode') ? { exitCode: 1, stdout: '', stderr: 'boom' } : { exitCode: 0, stdout: '2.1.300 (Claude Code)', stderr: '' }
         }
         return { exitCode: 0, stdout: '{"loggedIn":true}', stderr: '' }
       }
@@ -104,8 +104,6 @@ test('detectAgents marca carpetas y ejecutables, versión y conexión sin lanzar
   assert.equal(byId['claude-code'].cli.connected, true)
   assert.equal(byId.opencode.detected, true)
   assert.equal(byId.opencode.cli.installed, false)
-  assert.equal(byId.codex.cli.installed, false)
-  assert.match(byId.codex.cli.error, /código 1/)
-  assert.equal(byId.cursor.cli.available, false)
-  assert.equal(byId.cursor.detected, false)
+  assert.match(byId.opencode.cli.error, /código 1/)
+  assert.deepEqual(Object.keys(byId).sort(), ['claude-code', 'opencode'])
 })

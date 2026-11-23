@@ -73,14 +73,8 @@ const buildServerEntry = ({ style, definition, environmentValues, platform, wrap
     switch (style) {
       case 'claude':
         return withOptional({ type: 'http', url: definition.url }, 'headers', headers)
-      case 'gemini':
-        return withOptional({ httpUrl: definition.url }, 'headers', headers)
       case 'vscode':
         return withOptional({ type: 'http', url: definition.url }, 'headers', headers)
-      case 'windsurf':
-        return withOptional({ serverUrl: definition.url }, 'headers', headers)
-      case 'codex':
-        return { url: definition.url }
       case 'openCode':
         return withOptional({ type: 'remote', url: definition.url, ...(openCodeVersion === 1 ? { enabled: true } : {}) }, 'headers', headers)
       default:

@@ -42,15 +42,15 @@
     "semantic_hash": "16e490841862db06d40a4c3db1ebf683"
   },
   "main.js": {
-    "mtime": 1794244109.450397,
-    "seen": 1794303652.1122725,
-    "ast_hash": "a100931863c949c2d45c20cafa2ace83",
-    "semantic_hash": "a100931863c949c2d45c20cafa2ace83"
+    "mtime": 1795439867.1803071,
+    "seen": 1795440277.8226364,
+    "ast_hash": "447180b3f741a000a59ebc12b3efb121",
+    "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1795014360.6664708,
-    "seen": 1795014497.806175,
-    "ast_hash": "e7c4488bf3a14ae4b01a5e6be94e25c9",
+    "mtime": 1795439867.1711893,
+    "seen": 1795440277.8226364,
+    "ast_hash": "7c261d539b582abd53ff6b757f5b1a30",
     "semantic_hash": ""
   },
   "scripts/catalogTasks.js": {
@@ -150,9 +150,9 @@
     "semantic_hash": "df00b88aed14b374f881ef2e91ac3f3d"
   },
   "src/components/molecules/installedSkillRow.js": {
-    "mtime": 1795010932.624853,
-    "seen": 1795014497.806175,
-    "ast_hash": "59d75e3861e52e213a64493778d1b4fa",
+    "mtime": 1795439688.0500221,
+    "seen": 1795440277.8226364,
+    "ast_hash": "cdfce8fd8d7e41c06d00a02e29ceb00c",
     "semantic_hash": ""
   },
   "src/components/molecules/metadataList.js": {
@@ -294,10 +294,10 @@
     "semantic_hash": ""
   },
   "src/components/organisms/titleBar.js": {
-    "mtime": 1793734114.3864222,
-    "seen": 1794303652.1122725,
-    "ast_hash": "30bd9b82b0eb7e61a71e34378bb141c0",
-    "semantic_hash": "30bd9b82b0eb7e61a71e34378bb141c0"
+    "mtime": 1795439823.619113,
+    "seen": 1795440277.8226364,
+    "ast_hash": "b39c21e4cc51b5a403aa0779317d6405",
+    "semantic_hash": ""
   },
   "src/components/organisms/typedConfirmDialog.js": {
     "mtime": 1794268644.5824533,
@@ -327,18 +327,6 @@
     "mtime": 1794933925.221385,
     "seen": 1794934073.4563813,
     "ast_hash": "038734022901d571c5a93725346e63d7",
-    "semantic_hash": ""
-  },
-  "src/core/main/agentBridge/adapters/codexCli.js": {
-    "mtime": 1794933925.221385,
-    "seen": 1794934073.4563813,
-    "ast_hash": "243c26504e341e21bc428a15e007d6fa",
-    "semantic_hash": ""
-  },
-  "src/core/main/agentBridge/adapters/geminiCliAdapter.js": {
-    "mtime": 1794933925.222746,
-    "seen": 1794934073.4563813,
-    "ast_hash": "ebb6366c37b93fbdfb48c7f313c6f0b6",
     "semantic_hash": ""
   },
   "src/core/main/agentBridge/adapters/openCodeCli.js": {
@@ -396,9 +384,9 @@
     "semantic_hash": "904f74438e4d4d804481c45b540f4105"
   },
   "src/core/main/agentsMd/agentsMdService.js": {
-    "mtime": 1794305308.4375687,
-    "seen": 1794305608.702539,
-    "ast_hash": "919e4b9bc674c998c014593f2dd801ab",
+    "mtime": 1795439230.302909,
+    "seen": 1795440277.8226364,
+    "ast_hash": "50311d33c0a1195747bf491959e6a119",
     "semantic_hash": ""
   },
   "src/core/main/agentsMd/agentsMdTemplate.js": {
@@ -414,9 +402,9 @@
     "semantic_hash": "d46fb531fbb210761682a2f6a3988634"
   },
   "src/core/main/appContainer.js": {
-    "mtime": 1795108264.5031066,
-    "seen": 1795108332.900157,
-    "ast_hash": "6a1190f06ecc731fcc641d2e4a7faddc",
+    "mtime": 1795439823.619113,
+    "seen": 1795440277.8226364,
+    "ast_hash": "76d49b5e8427d71343da37d41657d3aa",
     "semantic_hash": ""
   },
   "src/core/main/artifacts/agentFileAdapters.js": {
@@ -714,9 +702,9 @@
     "semantic_hash": "581d08fd067b002547023bc90c76cd11"
   },
   "src/core/main/ipcChannels.js": {
-    "mtime": 1795108264.5071516,
-    "seen": 1795108332.900157,
-    "ast_hash": "3ba2832f857452e0f1c67d91f2f1ec77",
+    "mtime": 1795439823.61809,
+    "seen": 1795440277.8236413,
+    "ast_hash": "57613b37aeed1f2026eaaa07d5a59668",
     "semantic_hash": ""
   },
   "src/core/main/markdown/markdownRenderer.js": {
@@ -738,10 +726,10 @@
     "semantic_hash": "9a4f9b31fccae2a8e05bb99bac099aed"
   },
   "src/core/main/mcp/mcpEntryBuilders.js": {
-    "mtime": 1794247482.6687956,
-    "seen": 1794303652.1122725,
-    "ast_hash": "e4bc591868aeb796ee8abd06ce001251",
-    "semantic_hash": "e4bc591868aeb796ee8abd06ce001251"
+    "mtime": 1795439230.302909,
+    "seen": 1795440277.8236413,
+    "ast_hash": "421e7836ab3fde628c87844a0bcaafc3",
+    "semantic_hash": ""
   },
   "src/core/main/mcp/mcpInstaller.js": {
     "mtime": 1794298042.925764,
@@ -774,10 +762,10 @@
     "semantic_hash": "85749b50fd97953d9ebdd8fa159b7251"
   },
   "src/core/main/platform/executableLocator.js": {
-    "mtime": 1794301055.3817403,
-    "seen": 1794303652.1122725,
-    "ast_hash": "e0417ed5163801507b627e0b9079ff5c",
-    "semantic_hash": "e0417ed5163801507b627e0b9079ff5c"
+    "mtime": 1795439221.1135228,
+    "seen": 1795440277.8236413,
+    "ast_hash": "ccb4ebdd589db65b2794449e22384794",
+    "semantic_hash": ""
   },
   "src/core/main/platform/platformPaths.js": {
     "mtime": 1794245468.1536126,
@@ -887,53 +875,17 @@
     "ast_hash": "546787729a187f64211b195606c46f44",
     "semantic_hash": "546787729a187f64211b195606c46f44"
   },
-  "src/core/main/providers/agents/codex.js": {
-    "mtime": 1794247492.7758293,
-    "seen": 1794303652.1132734,
-    "ast_hash": "7d8e86c1397b2d31e04320597423d26c",
-    "semantic_hash": "7d8e86c1397b2d31e04320597423d26c"
-  },
-  "src/core/main/providers/agents/cursor.js": {
-    "mtime": 1794247492.7758293,
-    "seen": 1794303652.1132734,
-    "ast_hash": "57614343e907fc8274fd12bb8f8b944c",
-    "semantic_hash": "57614343e907fc8274fd12bb8f8b944c"
-  },
-  "src/core/main/providers/agents/geminiCli.js": {
-    "mtime": 1794247492.7758293,
-    "seen": 1794303652.1132734,
-    "ast_hash": "a8f7c6b536a9b884a0ab86e9a1991e92",
-    "semantic_hash": "a8f7c6b536a9b884a0ab86e9a1991e92"
-  },
-  "src/core/main/providers/agents/githubCopilot.js": {
-    "mtime": 1794247492.7901099,
-    "seen": 1794303652.1132734,
-    "ast_hash": "fab26c76af2148406893106482db7d28",
-    "semantic_hash": "fab26c76af2148406893106482db7d28"
-  },
-  "src/core/main/providers/agents/lowConfidenceAgents.js": {
-    "mtime": 1794245389.356181,
-    "seen": 1794303652.1132734,
-    "ast_hash": "f1305a9c3e9ea5c56fb30d8eac3911d3",
-    "semantic_hash": "f1305a9c3e9ea5c56fb30d8eac3911d3"
-  },
   "src/core/main/providers/agents/openCode.js": {
     "mtime": 1794298136.6786025,
     "seen": 1794303652.1132734,
     "ast_hash": "ebe078e020bbdd0ae7219cf028c45bff",
     "semantic_hash": "ebe078e020bbdd0ae7219cf028c45bff"
   },
-  "src/core/main/providers/agents/windsurf.js": {
-    "mtime": 1794247492.7901099,
-    "seen": 1794303652.1132734,
-    "ast_hash": "1e024cb22b1c3b66758828df19650a7e",
-    "semantic_hash": "1e024cb22b1c3b66758828df19650a7e"
-  },
   "src/core/main/providers/install/installRecipes.js": {
-    "mtime": 1794300987.07173,
-    "seen": 1794303652.1132734,
-    "ast_hash": "7b9f6cb4f257009c92d4f613ae777de5",
-    "semantic_hash": "7b9f6cb4f257009c92d4f613ae777de5"
+    "mtime": 1795439221.1135228,
+    "seen": 1795440277.8236413,
+    "ast_hash": "f14518ca89c4d3b018245b04d39b5c56",
+    "semantic_hash": ""
   },
   "src/core/main/providers/providerPathResolver.js": {
     "mtime": 1794298136.6786025,
@@ -942,10 +894,10 @@
     "semantic_hash": "5118a94b40174307aa022bdb891be2d6"
   },
   "src/core/main/providers/providerRegistry.js": {
-    "mtime": 1794301098.175231,
-    "seen": 1794303652.1132734,
-    "ast_hash": "915fa3bc6d1bbfe93b8f9ed39646064b",
-    "semantic_hash": "915fa3bc6d1bbfe93b8f9ed39646064b"
+    "mtime": 1795439220.9829538,
+    "seen": 1795440277.8236413,
+    "ast_hash": "be267cd00d3fb74e037ec87c47e51e7e",
+    "semantic_hash": ""
   },
   "src/core/main/publishing/publishRules.js": {
     "mtime": 1794304142.1481547,
@@ -990,9 +942,9 @@
     "semantic_hash": "aa67f7ea032e8d3055f708eb17ad273f"
   },
   "src/core/main/settings/settingsSchema.js": {
-    "mtime": 1795108264.5071516,
-    "seen": 1795108332.900157,
-    "ast_hash": "4c0c76e00e8e53170faae0be1e706664",
+    "mtime": 1795439164.5805743,
+    "seen": 1795440277.8236413,
+    "ast_hash": "b9afb5656210c9f37c4cc7c240189319",
     "semantic_hash": ""
   },
   "src/core/main/settings/settingsStore.js": {
@@ -1020,9 +972,9 @@
     "semantic_hash": "9f564dff148b1a80c55ba1aac6ca57e5"
   },
   "src/core/main/skills/installedScanner.js": {
-    "mtime": 1795010927.9981275,
-    "seen": 1795014497.806175,
-    "ast_hash": "231f7ecd556e88dca566fd91d75c62e5",
+    "mtime": 1795439671.260915,
+    "seen": 1795440277.8236413,
+    "ast_hash": "00d6c96c0bcde7c503ef61cab792409e",
     "semantic_hash": ""
   },
   "src/core/main/skills/installedSkillSource.js": {
@@ -1032,9 +984,9 @@
     "semantic_hash": "fe0af590a7a8a6d13551f7bb5d492434"
   },
   "src/core/main/skills/mySkillsStore.js": {
-    "mtime": 1795104204.7005634,
-    "seen": 1795104476.681521,
-    "ast_hash": "03ab0a16662e3adbcb0bab059f5ec3bf",
+    "mtime": 1795439671.2619157,
+    "seen": 1795440277.8236413,
+    "ast_hash": "961ad7a8e71d440b312cee9886eee2b4",
     "semantic_hash": ""
   },
   "src/core/main/skills/skillFolderHash.js": {
@@ -1068,9 +1020,9 @@
     "semantic_hash": "ffab0bb3e14fba9b012b2efcbbbbfbd6"
   },
   "src/core/main/skills/skillUninstaller.js": {
-    "mtime": 1795104204.701807,
-    "seen": 1795104476.681521,
-    "ast_hash": "85e0b607d5666294669c97cba39b426c",
+    "mtime": 1795439671.2619157,
+    "seen": 1795440277.8236413,
+    "ast_hash": "c21c688e6344dccdfb60d4d1dc7d13a5",
     "semantic_hash": ""
   },
   "src/core/main/skima/skimaRepositoryConfig.js": {
@@ -1116,9 +1068,9 @@
     "semantic_hash": ""
   },
   "src/core/preload.js": {
-    "mtime": 1795108264.5084803,
-    "seen": 1795108332.900157,
-    "ast_hash": "eac8b86db4873f3ba7770b5c1ae99fc0",
+    "mtime": 1795439823.61809,
+    "seen": 1795440277.8236413,
+    "ast_hash": "006bc6b501fcf5985de7f089a12eddb0",
     "semantic_hash": ""
   },
   "src/core/renderer/bootstrapPage.js": {
@@ -1218,10 +1170,10 @@
     "semantic_hash": ""
   },
   "src/core/renderer/controllers/shellController.js": {
-    "mtime": 1794247230.6657343,
-    "seen": 1794303652.1132734,
-    "ast_hash": "a5aa3e6c88dbd35480fbaabe41b31075",
-    "semantic_hash": "a5aa3e6c88dbd35480fbaabe41b31075"
+    "mtime": 1795439823.619113,
+    "seen": 1795440277.8236413,
+    "ast_hash": "ae990f7da4659ba1d1636f45282872ca",
+    "semantic_hash": ""
   },
   "src/core/renderer/controllers/skillInstallFlow.js": {
     "mtime": 1794959920.782144,
@@ -1284,15 +1236,15 @@
     "semantic_hash": "20a78cfafdd1717d73df3b15d70e439a"
   },
   "src/core/renderer/presenters/installedDetailPresenter.js": {
-    "mtime": 1795104273.3405714,
-    "seen": 1795104476.681521,
-    "ast_hash": "64325f6f8c69db78274a72c02ab420d6",
+    "mtime": 1795439688.0500221,
+    "seen": 1795440277.8236413,
+    "ast_hash": "e4b9b3bd20ee580878c60acab0eb7aeb",
     "semantic_hash": ""
   },
   "src/core/renderer/presenters/mySkillDetailPresenter.js": {
-    "mtime": 1795104279.0541487,
-    "seen": 1795104476.681521,
-    "ast_hash": "1aa66b45a8f09b86dafd13b8ddef36cc",
+    "mtime": 1795439688.0500221,
+    "seen": 1795440277.8236413,
+    "ast_hash": "4daf8f98d55b60a93a21be65f7add15d",
     "semantic_hash": ""
   },
   "src/core/renderer/projectTabs/contextTab.js": {
@@ -1374,9 +1326,9 @@
     "semantic_hash": "5b51a0cc3f17e5386c4db4843a0a82ff"
   },
   "src/core/renderer/services/skimaApiClient.js": {
-    "mtime": 1795108264.5084803,
-    "seen": 1795108332.900157,
-    "ast_hash": "bd83d578560d5aa8ca443621f9487285",
+    "mtime": 1795439823.61809,
+    "seen": 1795440277.8236413,
+    "ast_hash": "76fae435094ef6f22b76febfc1570ba8",
     "semantic_hash": ""
   },
   "src/core/renderer/services/wizardEngine.js": {
@@ -1422,9 +1374,9 @@
     "semantic_hash": "1082e0290d104070e9b96ed908f59875"
   },
   "src/core/renderer/views/shellView.js": {
-    "mtime": 1795005207.3135955,
-    "seen": 1795005358.139876,
-    "ast_hash": "648e107a49d9cc0850411403615279a6",
+    "mtime": 1795439823.619113,
+    "seen": 1795440277.8236413,
+    "ast_hash": "56f04a30d869f5ff618d7732b8a6bf7b",
     "semantic_hash": ""
   },
   "src/data/libraryCatalog.json": {
@@ -1434,16 +1386,16 @@
     "semantic_hash": "eacc5e586950e399ff4bd61921189d0c"
   },
   "test/agentBridge/agentBridge.test.js": {
-    "mtime": 1794245542.1975152,
-    "seen": 1794303652.1132734,
-    "ast_hash": "71031af1bc264f84244c87b2c7de8145",
-    "semantic_hash": "71031af1bc264f84244c87b2c7de8145"
+    "mtime": 1795439267.580711,
+    "seen": 1795440277.8236413,
+    "ast_hash": "ecba39c655de2ec44e00a7dc5b89b27b",
+    "semantic_hash": ""
   },
   "test/agentBridge/agentDetection.test.js": {
-    "mtime": 1794245572.778525,
-    "seen": 1794303652.1132734,
-    "ast_hash": "d6b5c90392782485afb5a910623ae645",
-    "semantic_hash": "d6b5c90392782485afb5a910623ae645"
+    "mtime": 1795439285.2216072,
+    "seen": 1795440277.8236413,
+    "ast_hash": "8e2db785324b3851bec775f8379c7b40",
+    "semantic_hash": ""
   },
   "test/agentBridge/askAi.test.js": {
     "mtime": 1794246534.3745677,
@@ -1452,21 +1404,21 @@
     "semantic_hash": "6a50fdc9fbc2882756b104d81b979ea5"
   },
   "test/agentBridge/modelSelector.test.js": {
-    "mtime": 1794246110.4909716,
-    "seen": 1794303652.1132734,
-    "ast_hash": "14c81c232ce7b9557629e21af608aa92",
-    "semantic_hash": "14c81c232ce7b9557629e21af608aa92"
+    "mtime": 1795439285.2216072,
+    "seen": 1795440277.8236413,
+    "ast_hash": "d773142c084be3b334a0fbdb7d7a10dc",
+    "semantic_hash": ""
   },
   "test/agentsMd/agentsMd.test.js": {
-    "mtime": 1794305459.8993425,
-    "seen": 1794305608.702539,
-    "ast_hash": "dadcd7cde75afdc9e058a061191fe95a",
+    "mtime": 1795439315.164356,
+    "seen": 1795440277.8236413,
+    "ast_hash": "d640ba8c7ce2677a5d18f4860c6b795e",
     "semantic_hash": ""
   },
   "test/artifacts/agentFileInstaller.test.js": {
-    "mtime": 1794305596.7960513,
-    "seen": 1794305608.702539,
-    "ast_hash": "c98db7f3ed0011738196edc9a6a841a7",
+    "mtime": 1795439315.164356,
+    "seen": 1795440277.8236413,
+    "ast_hash": "efea06548597fa93cfd6293884e17ad3",
     "semantic_hash": ""
   },
   "test/catalog/catalogService.test.js": {
@@ -1500,10 +1452,10 @@
     "semantic_hash": "2474bcfc12f5472295af6f51a1a81fad"
   },
   "test/cliInstall/cliInstaller.test.js": {
-    "mtime": 1794301223.006981,
-    "seen": 1794303652.1132734,
-    "ast_hash": "0f3782d424e3a6601fe2a5c1180aae4c",
-    "semantic_hash": "0f3782d424e3a6601fe2a5c1180aae4c"
+    "mtime": 1795439367.0327704,
+    "seen": 1795440277.8236413,
+    "ast_hash": "905df9b6703a183bc148ee37d1ccfa40",
+    "semantic_hash": ""
   },
   "test/fixtures/catalogSample/library.json": {
     "mtime": 1794298268.068228,
@@ -1548,10 +1500,10 @@
     "semantic_hash": ""
   },
   "test/helpers/fakeAgentEnvironment.js": {
-    "mtime": 1794268966.430678,
-    "seen": 1794303652.1132734,
-    "ast_hash": "4ec8e4425e6f1f6a3ec70794ea762d04",
-    "semantic_hash": "4ec8e4425e6f1f6a3ec70794ea762d04"
+    "mtime": 1795439267.580711,
+    "seen": 1795440277.8236413,
+    "ast_hash": "7782afe67767b62c4d9ec6343b07406b",
+    "semantic_hash": ""
   },
   "test/helpers/fakeGitEnvironment.js": {
     "mtime": 1794299866.9803958,
@@ -1578,10 +1530,10 @@
     "semantic_hash": "4c6c9cd6f81a95d2630e6fb6e60807a0"
   },
   "test/mcp/mcpInstall.test.js": {
-    "mtime": 1794247592.9385664,
-    "seen": 1794303652.1132734,
-    "ast_hash": "dbb90f2e7d7293d45852d363746e91a8",
-    "semantic_hash": "dbb90f2e7d7293d45852d363746e91a8"
+    "mtime": 1795439358.0226717,
+    "seen": 1795440277.8236413,
+    "ast_hash": "0afd093f963c41b25e8b6e183661f965",
+    "semantic_hash": ""
   },
   "test/platform/commandsAcrossSystems.test.js": {
     "mtime": 1794301300.1026194,
@@ -1626,16 +1578,16 @@
     "semantic_hash": "15792855d196e57aea8324d03a25790e"
   },
   "test/providers/agentSettingsService.test.js": {
-    "mtime": 1794246110.5528429,
-    "seen": 1794303652.1132734,
-    "ast_hash": "e5e930bf33ee56781ccddd09a0b91e33",
-    "semantic_hash": "e5e930bf33ee56781ccddd09a0b91e33"
+    "mtime": 1795439431.4288468,
+    "seen": 1795440277.8236413,
+    "ast_hash": "fe18769db36c0f6031d56d5fe6e8de10",
+    "semantic_hash": ""
   },
   "test/providers/providerPaths.test.js": {
-    "mtime": 1794245188.102774,
-    "seen": 1794303652.1132734,
-    "ast_hash": "9765216d1c8a6702c09edfa38f80d821",
-    "semantic_hash": "9765216d1c8a6702c09edfa38f80d821"
+    "mtime": 1795439426.9787862,
+    "seen": 1795440277.8236413,
+    "ast_hash": "3b2f6e908282289e252cd92e91e755a9",
+    "semantic_hash": ""
   },
   "test/publishing/skillPublisher.test.js": {
     "mtime": 1794304061.430697,
@@ -1668,10 +1620,10 @@
     "semantic_hash": "332f23cb6e32725f8534219e684a94ac"
   },
   "test/skills/installedScanner.test.js": {
-    "mtime": 1794247029.6707022,
-    "seen": 1794303652.1132734,
-    "ast_hash": "6b5006f546f95ef9cebf6b1a877c9f92",
-    "semantic_hash": "6b5006f546f95ef9cebf6b1a877c9f92"
+    "mtime": 1795439447.5727353,
+    "seen": 1795440277.8236413,
+    "ast_hash": "f76e948e4e4e02e7cdbda5fa747e10a4",
+    "semantic_hash": ""
   },
   "test/skills/mySkills.test.js": {
     "mtime": 1794933925.2300208,
@@ -1680,10 +1632,10 @@
     "semantic_hash": ""
   },
   "test/skills/skillInstaller.test.js": {
-    "mtime": 1794246721.972831,
-    "seen": 1794303652.1132734,
-    "ast_hash": "4f05bcd0a487f8f3d16e2b345631beaf",
-    "semantic_hash": "4f05bcd0a487f8f3d16e2b345631beaf"
+    "mtime": 1795439447.5727353,
+    "seen": 1795440277.8236413,
+    "ast_hash": "7fe9ecdaac6888d5e72d16e7cef39fdf",
+    "semantic_hash": ""
   },
   "test/skills/skillManifest.test.js": {
     "mtime": 1794244806.7494936,
@@ -1716,9 +1668,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1795108365.7347558,
-    "seen": 1795108372.6235616,
-    "ast_hash": "02755fc852600fcd9a3cd531197ef969",
+    "mtime": 1795439915.0023856,
+    "seen": 1795440277.8236413,
+    "ast_hash": "abae78177169b6c838d7c7ee8107c67d",
     "semantic_hash": ""
   },
   "catalog/verification-report.md": {
@@ -1992,9 +1944,9 @@
     "semantic_hash": ""
   },
   "src/core/main/graphify/graphifyIntegrationService.js": {
-    "mtime": 1794940313.4716263,
-    "seen": 1794940799.408418,
-    "ast_hash": "bfed8f1bdfdc352a9e799a4a5caf8ebd",
+    "mtime": 1795439221.1135228,
+    "seen": 1795440277.8236413,
+    "ast_hash": "88994ea0a4f86fda36b84335852a1d3f",
     "semantic_hash": ""
   },
   "src/core/main/graphify/graphifySection.js": {
@@ -2016,9 +1968,9 @@
     "semantic_hash": ""
   },
   "test/graphify/graphifyIntegration.test.js": {
-    "mtime": 1794305379.366196,
-    "seen": 1794305608.702539,
-    "ast_hash": "5378b1110a43bc6bf20adde68a97fb9e",
+    "mtime": 1795439377.8204002,
+    "seen": 1795440277.8236413,
+    "ast_hash": "e67b079996f1962580831eae0d8bd164",
     "semantic_hash": ""
   },
   "test/helpers/fakeGraphifyExecutable.js": {
@@ -2082,9 +2034,9 @@
     "semantic_hash": ""
   },
   "src/core/main/skillsSite/skillsShInstaller.js": {
-    "mtime": 1794957821.337669,
-    "seen": 1794958183.085589,
-    "ast_hash": "fd3069d4caa89e824dbf9e39fcc787c4",
+    "mtime": 1795439225.0767057,
+    "seen": 1795440277.8236413,
+    "ast_hash": "a55b889e6a0b0d9ab9b2db01a13e389a",
     "semantic_hash": ""
   },
   "src/core/main/skillsSite/skillsSiteGuard.js": {
@@ -2118,9 +2070,9 @@
     "semantic_hash": ""
   },
   "src/core/renderer/views/skillsSiteView.js": {
-    "mtime": 1795011298.6240244,
-    "seen": 1795014497.8071792,
-    "ast_hash": "b75373ab61691c71f3eb6247d2f19ded",
+    "mtime": 1795439164.5816932,
+    "seen": 1795440277.8236413,
+    "ast_hash": "e16385db08d1bb59c1963bc5a1bb2b58",
     "semantic_hash": ""
   },
   "src/core/skillsSitePreload.js": {
@@ -2130,9 +2082,9 @@
     "semantic_hash": ""
   },
   "test/skillsSite/skillsSite.test.js": {
-    "mtime": 1794957821.337669,
-    "seen": 1794958183.085589,
-    "ast_hash": "426945bc03e5fc4fad29dd16c14f14d9",
+    "mtime": 1795439331.6476545,
+    "seen": 1795440277.8236413,
+    "ast_hash": "16e56529b485c9490edbc48889f84e5a",
     "semantic_hash": ""
   },
   "prompts/04_add_vercel_skills.md": {
@@ -2430,9 +2382,9 @@
     "semantic_hash": ""
   },
   "src/core/renderer/config/themes.js": {
-    "mtime": 1794957691.385474,
-    "seen": 1794958183.085589,
-    "ast_hash": "d5e7875918896203cef9957606866c09",
+    "mtime": 1795439164.5805743,
+    "seen": 1795440277.8236413,
+    "ast_hash": "e5fa6eb5a6f100b0feaf845116d2566a",
     "semantic_hash": ""
   },
   "src/core/renderer/controllers/allSkillsController.js": {
@@ -2496,9 +2448,9 @@
     "semantic_hash": ""
   },
   "src/core/renderer/themeBoot.js": {
-    "mtime": 1794957691.412136,
-    "seen": 1794958183.085589,
-    "ast_hash": "6e1e0e0e7f5360d71119003213d1abca",
+    "mtime": 1795439164.5816932,
+    "seen": 1795440277.8236413,
+    "ast_hash": "0c2a3df7f7b65c4a0ae35e229eabb080",
     "semantic_hash": ""
   },
   ".claude/skills/ui-ux-pro-max/SKILL.md": {
@@ -2610,9 +2562,9 @@
     "semantic_hash": ""
   },
   "src/components/molecules/hookRow.js": {
-    "mtime": 1795004871.4471283,
-    "seen": 1795005358.139876,
-    "ast_hash": "bcb4945117e4b96b0238de607c5a1c9b",
+    "mtime": 1795439700.414956,
+    "seen": 1795440277.8226364,
+    "ast_hash": "4780f00b0e59cfe0717936a38cfd5600",
     "semantic_hash": ""
   },
   "src/components/organisms/hookEventCard.js": {
@@ -2628,15 +2580,15 @@
     "semantic_hash": ""
   },
   "src/core/main/hooks/hookDefinitions.js": {
-    "mtime": 1795014137.654855,
-    "seen": 1795014497.806175,
-    "ast_hash": "2c53cf9f7ab9e1cb107fc4c60fbf8659",
+    "mtime": 1795439565.8811605,
+    "seen": 1795440277.8236413,
+    "ast_hash": "d6f10487e0561793220a30020e7715df",
     "semantic_hash": ""
   },
   "src/core/main/hooks/hooksStore.js": {
-    "mtime": 1795104204.699394,
-    "seen": 1795104476.681521,
-    "ast_hash": "bd33f87432e2c55393ce98b7ce35f2e0",
+    "mtime": 1795439671.260915,
+    "seen": 1795440277.8236413,
+    "ast_hash": "f40fb9a6258e970a172e04f967682e39",
     "semantic_hash": ""
   },
   "src/core/main/hooks/projectHooksService.js": {
@@ -2658,9 +2610,9 @@
     "semantic_hash": ""
   },
   "src/core/renderer/config/hookTypes.js": {
-    "mtime": 1795013872.7343445,
-    "seen": 1795014497.806175,
-    "ast_hash": "d85d3c07855f2f50f2a9653b8e947ab8",
+    "mtime": 1795439565.8821619,
+    "seen": 1795440277.8236413,
+    "ast_hash": "a61ff1250c970a8194e5d308ea2f8231",
     "semantic_hash": ""
   },
   "src/core/renderer/controllers/globalController.js": {
@@ -2670,9 +2622,9 @@
     "semantic_hash": ""
   },
   "src/core/renderer/controllers/globalHooksController.js": {
-    "mtime": 1795010234.5017204,
-    "seen": 1795014497.806175,
-    "ast_hash": "c3e9943b833837a3c0a8ee730b5ef0a0",
+    "mtime": 1795439700.414956,
+    "seen": 1795440277.8236413,
+    "ast_hash": "c566400e5ebbb39ccd2a248f12a6d697",
     "semantic_hash": ""
   },
   "src/core/renderer/controllers/hookDetailController.js": {
@@ -2682,9 +2634,9 @@
     "semantic_hash": ""
   },
   "src/core/renderer/controllers/hookFormController.js": {
-    "mtime": 1795012218.8351624,
-    "seen": 1795014497.806175,
-    "ast_hash": "a696eb2d8775603b9a865ea9c3cbc4d5",
+    "mtime": 1795439565.8821619,
+    "seen": 1795440277.8236413,
+    "ast_hash": "131b2d8921be997fd075d766a8a7c54e",
     "semantic_hash": ""
   },
   "src/core/renderer/controllers/projectHooksController.js": {
@@ -2700,21 +2652,21 @@
     "semantic_hash": ""
   },
   "src/core/renderer/presenters/hookPresenter.js": {
-    "mtime": 1795004871.4277623,
-    "seen": 1795005358.139876,
-    "ast_hash": "93336207e1c26ef10ca0a8bfe2b2ac72",
+    "mtime": 1795439565.8821619,
+    "seen": 1795440277.8236413,
+    "ast_hash": "9dd30169afa29810fc8a75a3f0996efd",
     "semantic_hash": ""
   },
   "src/core/renderer/views/hookDetailView.js": {
-    "mtime": 1795104708.6951168,
-    "seen": 1795104829.703463,
-    "ast_hash": "53db0d25743315c800204ae7ded65871",
+    "mtime": 1795439700.414956,
+    "seen": 1795440277.8236413,
+    "ast_hash": "5b8ce8e3ec826e3aad57f987f3ee255f",
     "semantic_hash": ""
   },
   "src/core/renderer/views/hookFormView.js": {
-    "mtime": 1795012218.837216,
-    "seen": 1795014497.8071792,
-    "ast_hash": "650d156ac469fd120ae5ddf34b692ab8",
+    "mtime": 1795439565.883242,
+    "seen": 1795440277.8236413,
+    "ast_hash": "bbd91a8b55bfb074783ee57df1ce7eac",
     "semantic_hash": ""
   },
   "src/core/renderer/views/projectHooksView.js": {
@@ -2784,9 +2736,9 @@
     "semantic_hash": ""
   },
   "src/core/main/memories/memoryConstants.js": {
-    "mtime": 1795103897.1059675,
-    "seen": 1795104476.681521,
-    "ast_hash": "1234c1b83299c33eff1edaedb086885b",
+    "mtime": 1795439671.260915,
+    "seen": 1795440277.8236413,
+    "ast_hash": "54ec6d3d32e5e7f448abf2b55f118b8f",
     "semantic_hash": ""
   },
   "src/core/main/memories/memoryFile.js": {
@@ -2820,9 +2772,9 @@
     "semantic_hash": ""
   },
   "src/core/renderer/config/protectedArtifacts.js": {
-    "mtime": 1795104273.0622823,
-    "seen": 1795104476.681521,
-    "ast_hash": "1d0a40e6286991a505c9640e90867806",
+    "mtime": 1795439688.0490203,
+    "seen": 1795440277.8236413,
+    "ast_hash": "8ee65d0c92c3d4560018cc11726d0f5d",
     "semantic_hash": ""
   },
   "src/core/renderer/controllers/memoriesController.js": {
@@ -2886,9 +2838,9 @@
     "semantic_hash": ""
   },
   "src/core/main/analytics/analyticsConfig.js": {
-    "mtime": 1795108365.7347558,
-    "seen": 1795108372.6225617,
-    "ast_hash": "82731ebe37f89b1a59b3201d132e9549",
+    "mtime": 1795108627.1415095,
+    "seen": 1795440277.8226364,
+    "ast_hash": "8bcc522f8512a9f731f133ff57c86e31",
     "semantic_hash": ""
   },
   "src/core/main/analytics/analyticsEnvironment.js": {
@@ -2939,10 +2891,298 @@
     "ast_hash": "a8f424e5579a8ce306731577a720bd9a",
     "semantic_hash": ""
   },
+  ".github/workflows/release.yml": {
+    "mtime": 1795439872.7591834,
+    "seen": 1795440277.8226364,
+    "ast_hash": "e244e5ff2b53c3f74e834d3393a4f2ba",
+    "semantic_hash": ""
+  },
+  "scripts/buildIcons.js": {
+    "mtime": 1795439849.905425,
+    "seen": 1795440277.8226364,
+    "ast_hash": "63dca1a98b1621cd24210230da928dee",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/eval-viewer/generate_review.py": {
+    "mtime": 1795439622.1505013,
+    "seen": 1795440277.8226364,
+    "ast_hash": "3ec67448bf48beb2ce336e8a050e4618",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/scripts/__init__.py": {
+    "mtime": 1795439622.1610458,
+    "seen": 1795440277.8226364,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/scripts/aggregate_benchmark.py": {
+    "mtime": 1795439622.156676,
+    "seen": 1795440277.8226364,
+    "ast_hash": "341cc9da943bb8515f22774f3fb1f151",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/scripts/generate_report.py": {
+    "mtime": 1795439622.1603048,
+    "seen": 1795440277.8226364,
+    "ast_hash": "e103b279b5aeb66bdc6360b2882f7461",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/scripts/improve_description.py": {
+    "mtime": 1795439622.1551654,
+    "seen": 1795440277.8226364,
+    "ast_hash": "90f7eca93679d893581c64f5ad408e63",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/scripts/package_skill.py": {
+    "mtime": 1795439622.1610458,
+    "seen": 1795440277.8226364,
+    "ast_hash": "b3e2d0f02bd130c6865edaeb13042f71",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/scripts/quick_validate.py": {
+    "mtime": 1795439622.1539457,
+    "seen": 1795440277.8226364,
+    "ast_hash": "1c14726b2f21750beffe0bef97c7f8d9",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/scripts/run_eval.py": {
+    "mtime": 1795439622.1577845,
+    "seen": 1795440277.8226364,
+    "ast_hash": "561ec9772f276cb1bea459e477f03fd9",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/scripts/run_loop.py": {
+    "mtime": 1795439622.1625786,
+    "seen": 1795440277.8226364,
+    "ast_hash": "8d7f8fc75b5b06df80837f05dcd33445",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/scripts/utils.py": {
+    "mtime": 1795439622.1539457,
+    "seen": 1795440277.8226364,
+    "ast_hash": "77d0ec8142dfb2f06f5d150c4beaf333",
+    "semantic_hash": ""
+  },
+  "src/components/molecules/updateButton.js": {
+    "mtime": 1795439822.8433394,
+    "seen": 1795440277.8226364,
+    "ast_hash": "367c4c1b6392b9cbe2aacb50f1f8f08e",
+    "semantic_hash": ""
+  },
+  "src/config/skimaArtifacts.json": {
+    "mtime": 1795439622.3498056,
+    "seen": 1795440277.8226364,
+    "ast_hash": "15fc99e325c6cf8ddd7f1cc7e23906b0",
+    "semantic_hash": ""
+  },
+  "src/core/main/controllers/updatesIpcController.js": {
+    "mtime": 1795439796.546142,
+    "seen": 1795440277.8236413,
+    "ast_hash": "ac291fd0f261a2e90e4d6c076e717f1d",
+    "semantic_hash": ""
+  },
+  "src/core/main/skimaArtifacts/skimaArtifactsConfig.js": {
+    "mtime": 1795439629.9435601,
+    "seen": 1795440277.8236413,
+    "ast_hash": "0a4b055b4f2a380e2947e2ee436d1341",
+    "semantic_hash": ""
+  },
+  "src/core/main/skimaArtifacts/skimaArtifactsService.js": {
+    "mtime": 1795439646.6208413,
+    "seen": 1795440277.8236413,
+    "ast_hash": "e37f2679a8d24bd860cc48a7721593cb",
+    "semantic_hash": ""
+  },
+  "src/core/main/updates/appUpdateService.js": {
+    "mtime": 1795439796.4625256,
+    "seen": 1795440277.8236413,
+    "ast_hash": "6c2d1eed22d9beb9bb452b2228ea681e",
+    "semantic_hash": ""
+  },
+  "test/skimaArtifacts/skimaArtifacts.test.js": {
+    "mtime": 1795439737.6734965,
+    "seen": 1795440277.8236413,
+    "ast_hash": "623c38f4b31db0e8c51ded3ff7c61a7f",
+    "semantic_hash": ""
+  },
+  "test/updates/appUpdateService.test.js": {
+    "mtime": 1795440245.7204678,
+    "seen": 1795440277.8236413,
+    "ast_hash": "822dcef91116b17b823bb5fc95f8070b",
+    "semantic_hash": ""
+  },
+  "prompts/11_cambios_proveedores.md": {
+    "mtime": 1795438762.6297092,
+    "seen": 1795440277.8236413,
+    "ast_hash": "98c6229feeaaca34aca48d471d3cfc8a",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/graphify/SKILL.md": {
+    "mtime": 1795439622.2453103,
+    "seen": 1795440277.8236413,
+    "ast_hash": "804bdfcc75de8fc822bf31864e313952",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/graphify/references/add-watch.md": {
+    "mtime": 1795439622.2497838,
+    "seen": 1795440277.8236413,
+    "ast_hash": "c1f65eb4102ad515149303c7f296b718",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/graphify/references/exports.md": {
+    "mtime": 1795439622.2453103,
+    "seen": 1795440277.8236413,
+    "ast_hash": "73968e2842f6eb742f96cf04c1f8db68",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/graphify/references/extraction-spec.md": {
+    "mtime": 1795439622.246311,
+    "seen": 1795440277.8236413,
+    "ast_hash": "dd4fa29bbcde5c54d19470f0d52ed67d",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/graphify/references/github-and-merge.md": {
+    "mtime": 1795439622.2473142,
+    "seen": 1795440277.8236413,
+    "ast_hash": "cde13df085e4c492aeb7ba298a996d0d",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/graphify/references/hooks.md": {
+    "mtime": 1795439622.248775,
+    "seen": 1795440277.8236413,
+    "ast_hash": "c21eee36b3f335e4b1bdd6f5cb73b877",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/graphify/references/query.md": {
+    "mtime": 1795439622.25113,
+    "seen": 1795440277.8236413,
+    "ast_hash": "209df1f5ef56fe44c09f5818207ac2fa",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/graphify/references/transcribe.md": {
+    "mtime": 1795439622.2473142,
+    "seen": 1795440277.8236413,
+    "ast_hash": "67b6a5fa6c0974e18f60db9f8932fbd8",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/graphify/references/update.md": {
+    "mtime": 1795439622.2473142,
+    "seen": 1795440277.8236413,
+    "ast_hash": "9055a9ce9bb3bf9d8bfe0c6312f0acbe",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/readme-checker/SKILL.md": {
+    "mtime": 1795439622.1953833,
+    "seen": 1795440277.8236413,
+    "ast_hash": "c4b82abea46f2f5dc47049d5b51be9d0",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/LICENSE.txt": {
+    "mtime": 1795439622.1630938,
+    "seen": 1795440277.8236413,
+    "ast_hash": "b895df9142976f87a996eaf2e50fcfc0",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/SKILL.md": {
+    "mtime": 1795439622.1651037,
+    "seen": 1795440277.8236413,
+    "ast_hash": "26aa26467de6ecf13ce7047858007335",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/agents/analyzer.md": {
+    "mtime": 1795439622.1495,
+    "seen": 1795440277.8236413,
+    "ast_hash": "60ccb8eaf4baa1284f3d5833ae0992bb",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/agents/comparator.md": {
+    "mtime": 1795439622.1484988,
+    "seen": 1795440277.8236413,
+    "ast_hash": "142cb6a33c43956ad89e328a6a0bcc24",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/agents/grader.md": {
+    "mtime": 1795439622.1495,
+    "seen": 1795440277.8236413,
+    "ast_hash": "a20d81caedc41baa552eee0dedfad071",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/assets/eval_review.html": {
+    "mtime": 1795439622.1474996,
+    "seen": 1795440277.8236413,
+    "ast_hash": "b4ec70f8062506594d13a550e9128205",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/eval-viewer/viewer.html": {
+    "mtime": 1795439622.1514997,
+    "seen": 1795440277.8236413,
+    "ast_hash": "1bfb666af186113482785fd24c69b342",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/skill-creator/references/schemas.md": {
+    "mtime": 1795439622.1525002,
+    "seen": 1795440277.8236413,
+    "ast_hash": "914dfa3b885881574e14b406d8c23465",
+    "semantic_hash": ""
+  },
+  "src/assets/skimaArtifacts/skills/update-memories/SKILL.md": {
+    "mtime": 1795439622.2196329,
+    "seen": 1795440277.8236413,
+    "ast_hash": "c495b03e0c2c63abbc2e633f60ad6d20",
+    "semantic_hash": ""
+  },
+  "src/assets/icons/png/1024x1024.png": {
+    "mtime": 1795439853.1093836,
+    "seen": 1795440277.8236413,
+    "ast_hash": "b0c7e9bd48a337a7e9d0cdbb470b2ca1",
+    "semantic_hash": ""
+  },
+  "src/assets/icons/png/128x128.png": {
+    "mtime": 1795439852.9447753,
+    "seen": 1795440277.8236413,
+    "ast_hash": "4de12e4b61e21928f9a84c8c19c366d3",
+    "semantic_hash": ""
+  },
+  "src/assets/icons/png/16x16.png": {
+    "mtime": 1795439852.9241142,
+    "seen": 1795440277.8236413,
+    "ast_hash": "99d9f7cfd7cb6f045bbfe5b81ef52078",
+    "semantic_hash": ""
+  },
+  "src/assets/icons/png/256x256.png": {
+    "mtime": 1795439852.9655478,
+    "seen": 1795440277.8236413,
+    "ast_hash": "0bff1fd09109fa3304167830cde49abf",
+    "semantic_hash": ""
+  },
+  "src/assets/icons/png/32x32.png": {
+    "mtime": 1795439852.9276385,
+    "seen": 1795440277.8236413,
+    "ast_hash": "968c81aef5db4fed50e6f47066197e4d",
+    "semantic_hash": ""
+  },
+  "src/assets/icons/png/48x48.png": {
+    "mtime": 1795439852.9316394,
+    "seen": 1795440277.8236413,
+    "ast_hash": "2ec15037db93460b61d1f16d432dbfcc",
+    "semantic_hash": ""
+  },
+  "src/assets/icons/png/512x512.png": {
+    "mtime": 1795439853.0293705,
+    "seen": 1795440277.8236413,
+    "ast_hash": "f7a812d87494a139176f639a064bc2d9",
+    "semantic_hash": ""
+  },
+  "src/assets/icons/png/64x64.png": {
+    "mtime": 1795439852.9360971,
+    "seen": 1795440277.8236413,
+    "ast_hash": "c048ea9b2b809a0ecf5296179c420bcb",
+    "semantic_hash": ""
+  },
   "package-lock.json": {
-    "mtime": 1794297706.748455,
-    "seen": 1794304172.07758,
-    "ast_hash": "1b3415edb4a25f4348b6789cb9cb0385",
+    "mtime": 1795439762.1136603,
+    "seen": 1795440277.8236413,
+    "ast_hash": "3ffeae721f5191adda17396c3021c1db",
     "semantic_hash": ""
   }
 }

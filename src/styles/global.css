@@ -41,16 +41,6 @@
     --theme-aim-text: 80%;
 }
 
-[data-theme="glacier-blue"] {
-    --theme-scheme: light;
-    --theme-background: #368BC1;
-    --theme-text: #0F1B3D;
-    --theme-aim: #F2EA1E;
-    --theme-on-aim: #0F1B3D;
-    --theme-tint: 35%;
-    --theme-aim-text: 25%;
-}
-
 [data-theme="deep-teal"] {
     --theme-scheme: dark;
     --theme-background: #013230;
@@ -514,6 +504,54 @@ h3 {
     display: flex;
     align-items: center;
     padding: 0 18px;
+}
+
+.title-bar__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+}
+
+.update-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 26px;
+    padding: 0 12px;
+    background: var(--color-accent);
+    border: none;
+    border-radius: var(--radius-medium);
+    color: var(--color-on-accent);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+    transition: background-color var(--transition-fast);
+}
+
+.update-button[hidden] {
+    display: none;
+}
+
+.update-button:hover:not(:disabled) {
+    background: var(--color-accent-hover);
+}
+
+.update-button:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+}
+
+.update-button:disabled {
+    cursor: progress;
+    opacity: 0.85;
+}
+
+.update-button--error {
+    background: var(--color-danger);
+    color: var(--color-on-danger);
 }
 
 .app-logo {

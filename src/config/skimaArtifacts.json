@@ -1,0 +1,30 @@
+{
+  "skills": [
+    { "name": "skill-creator", "description": "Crea y mejora skills desde el editor de Skima." },
+    { "name": "readme-checker", "description": "Mantiene el README al día; la usa el hook update-readme." },
+    { "name": "update-memories", "description": "Mantiene las memorias (brain) al día; la usa el hook maintain-memory." },
+    { "name": "graphify", "description": "Grafo de conocimiento del código que usan las funciones de Graphify." }
+  ],
+  "hooks": [
+    {
+      "name": "maintain-memory",
+      "type": "prompt",
+      "skillName": "update-memories",
+      "agentId": "claude-code",
+      "model": "haiku",
+      "timeout": 120,
+      "statusMessage": "Actualizando memoria",
+      "async": true
+    },
+    {
+      "name": "update-readme",
+      "type": "prompt",
+      "skillName": "readme-checker",
+      "agentId": "claude-code",
+      "model": "haiku",
+      "timeout": 60,
+      "statusMessage": "Actualizando el README",
+      "async": true
+    }
+  ]
+}

@@ -15,11 +15,17 @@ export class ShellController {
         await flushPendingWork()
         await this.apiClient.closeWindow()
       }),
+      onUpdate: () => this.runWindowAction(async () => {
+        await flushPendingWork()
+        this.view.setUpdateState(await this.apiClient.installUpdate())
+      }),
       onNavigationAction: (action) => this.handleNavigationAction(action)
     })
 
     this.guardPendingWork()
     this.apiClient.onWindowMaximizedChange((isMaximized) => this.view.setMaximized(isMaximized))
+    this.apiClient.onUpdateStateChange((updateState) => this.view.setUpdateState(updateState))
+    this.apiClient.getUpdateState().then((updateState) => this.view.setUpdateState(updateState)).catch(() => {})
     await this.runWindowAction(async () => this.view.setMaximized(await this.apiClient.isWindowMaximized()))
   }
 
